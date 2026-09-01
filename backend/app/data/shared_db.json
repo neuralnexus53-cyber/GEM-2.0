@@ -1,0 +1,3790 @@
+{
+  "vendors": {
+    "VEND-OEM-8902": {
+      "id": "VEND-OEM-8902",
+      "user_id": "usr-1",
+      "name": "Apex Dynamics & Energy Systems Ltd.",
+      "role": "OEM_SELLER",
+      "gstin": "07AAACA4952J1ZM",
+      "pan": "AAACA4952J",
+      "turnoverCr": 48.5,
+      "experienceYears": 9,
+      "brandName": "ApexPower\u2122",
+      "oemCertifications": [
+        "BIS IS-16221",
+        "ISO 9001:2015",
+        "CE Certified",
+        "BEE 5-Star Rating",
+        "RoHS Compliant"
+      ],
+      "udyamNumber": "",
+      "dpiitRegistered": false,
+      "contractorClass": "",
+      "miiPercentage": 74,
+      "complianceScore": 96,
+      "verifiedDocsCount": 14,
+      "totalDocsCount": 14,
+      "updatedAt": "2026-08-31T06:55:48.070414"
+    },
+    "VEND-MSME-3412": {
+      "id": "VEND-MSME-3412",
+      "user_id": "usr-2",
+      "name": "Novavolt Instruments & Automation Pvt Ltd",
+      "role": "MSME_STARTUP",
+      "gstin": "27AABCN8712P1ZL",
+      "pan": "AABCN8712P",
+      "turnoverCr": 4.2,
+      "experienceYears": 3,
+      "brandName": "NovaSense\u2122",
+      "oemCertifications": [
+        "ISO 9001:2015",
+        "DPIIT Startup India ID: DIPP98214"
+      ],
+      "udyamNumber": "UDYAM-MH-03-0098412",
+      "dpiitRegistered": true,
+      "contractorClass": "",
+      "miiPercentage": 88,
+      "complianceScore": 92,
+      "verifiedDocsCount": 11,
+      "totalDocsCount": 12,
+      "updatedAt": "2026-08-31T06:55:48.070442"
+    },
+    "VEND-WORKS-7105": {
+      "id": "VEND-WORKS-7105",
+      "user_id": "usr-3",
+      "name": "Bharat Infra-Tech & EPC Solutions",
+      "role": "WORKS_CONTRACTOR",
+      "gstin": "29AAGCB5541Q1ZP",
+      "pan": "AAGCB5541Q",
+      "turnoverCr": 32.8,
+      "experienceYears": 12,
+      "brandName": "",
+      "oemCertifications": [
+        "ISO 14001",
+        "OHSAS 18001 Safety",
+        "CPWD Class-1 Enlistment",
+        "NHAI Pre-Qualified"
+      ],
+      "udyamNumber": "",
+      "dpiitRegistered": false,
+      "contractorClass": "Class-1 Super (Unlimited EPC)",
+      "miiPercentage": 92,
+      "complianceScore": 89,
+      "verifiedDocsCount": 18,
+      "totalDocsCount": 20,
+      "updatedAt": "2026-08-31T06:55:48.070458"
+    }
+  },
+  "users": {
+    "apex@apexdynamics.in": {
+      "id": "usr-1",
+      "email": "apex@apexdynamics.in",
+      "password_hash": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+      "full_name": "Vikram Malhotra",
+      "vendor_id": "VEND-OEM-8902",
+      "role": "OEM_SELLER",
+      "plan_id": "PRO"
+    },
+    "contact@novavolt.in": {
+      "id": "usr-2",
+      "email": "contact@novavolt.in",
+      "password_hash": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+      "full_name": "Priya Sharma",
+      "vendor_id": "VEND-MSME-3412",
+      "role": "MSME_STARTUP",
+      "plan_id": "STARTER"
+    },
+    "projects@bharatinfra.co.in": {
+      "id": "usr-3",
+      "email": "projects@bharatinfra.co.in",
+      "password_hash": "$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW",
+      "full_name": "Rajeshwar Singh",
+      "vendor_id": "VEND-WORKS-7105",
+      "role": "WORKS_CONTRACTOR",
+      "plan_id": "PRO"
+    }
+  },
+  "subscriptions": {
+    "usr-1": {
+      "id": "sub_01",
+      "user_id": "usr-1",
+      "vendor_id": "VEND-OEM-8902",
+      "plan_id": "PRO",
+      "status": "ACTIVE",
+      "current_period_end": "2026-09-30T00:00:00Z",
+      "is_autopay": true,
+      "evaluations_used": 14,
+      "evaluations_limit": -1
+    },
+    "usr-2": {
+      "id": "sub_02",
+      "user_id": "usr-2",
+      "vendor_id": "VEND-MSME-3412",
+      "plan_id": "STARTER",
+      "status": "ACTIVE",
+      "current_period_end": "2026-09-28T00:00:00Z",
+      "is_autopay": false,
+      "evaluations_used": 12,
+      "evaluations_limit": 50
+    },
+    "usr-3": {
+      "id": "sub_03",
+      "user_id": "usr-3",
+      "vendor_id": "VEND-WORKS-7105",
+      "plan_id": "PRO",
+      "status": "ACTIVE",
+      "current_period_end": "2026-09-30T00:00:00Z",
+      "is_autopay": true,
+      "evaluations_used": 28,
+      "evaluations_limit": -1
+    }
+  },
+  "tenders": {
+    "TND-2026-001": {
+      "id": "TND-2026-001",
+      "tenderNumber": "GEM/2026/B/894210",
+      "tenderRefNumber": "GEM/2026/B/894210",
+      "title": "Procurement of Enterprise Cloud AI Compute Cluster & Quantum-Safe HSM Array",
+      "department": "Ministry of Electronics and Information Technology (MeitY)",
+      "organization": "Ministry of Electronics & IT (MeitY)",
+      "gemCategory": "High Performance Compute & Cryptographic Hardware",
+      "category": "Goods",
+      "portal": "GeM",
+      "estimatedBudget": 42.5,
+      "estimatedValueCr": 42.5,
+      "emdAmount": 85.0,
+      "emdAmountLakhs": 85.0,
+      "publishedDate": "2026-08-10T10:00:00Z",
+      "closingDate": "2026-09-15T17:00:00Z",
+      "submissionDeadline": "15-Sep-2026",
+      "daysRemaining": 15,
+      "aiMatchScore": 96,
+      "location": "New Delhi / Remote Data Centers",
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "status": "TECHNICAL_EVALUATION",
+      "evaluationMode": "QCBS",
+      "weights": {
+        "technical": 50,
+        "statutory": 15,
+        "aiCompliance": 15,
+        "miiLocalContent": 20
+      },
+      "keyPqc": [
+        "Turnover >= 15 Cr in last 3 audited FYs",
+        "Past deployment of 2+ AI GPU clusters in PSU/Defense",
+        "Valid GSTN active status with zero defaults",
+        "Make in India Class-I Local Supplier (>= 50%)"
+      ],
+      "pqcCriteria": [
+        {
+          "id": "PQC-1",
+          "clauseNumber": "Clause 4.1.1",
+          "description": "Average Annual Turnover of at least \u20b915 Cr in last 3 audited financial years (CA Certified).",
+          "mandatory": true,
+          "minThreshold": "\u20b915.00 Cr",
+          "category": "FINANCIAL"
+        },
+        {
+          "id": "PQC-2",
+          "clauseNumber": "Clause 4.2.3",
+          "description": "Past successful deployment of 2 or more tier-3 AI GPU infrastructure clusters in PSU/Defense.",
+          "mandatory": true,
+          "minThreshold": "2 Completed Deployments",
+          "category": "TECHNICAL"
+        },
+        {
+          "id": "PQC-3",
+          "clauseNumber": "Clause 4.3.1",
+          "description": "Valid GSTN active status with zero defaults in GSTR-3B and EPFO active compliance.",
+          "mandatory": true,
+          "minThreshold": "100% Statutory Health",
+          "category": "STATUTORY"
+        },
+        {
+          "id": "PQC-4",
+          "clauseNumber": "Clause 4.4.2",
+          "description": "Make in India Class-I Local Supplier (Minimum 50% Domestic Value Addition) under DPIIT PPP-MII.",
+          "mandatory": true,
+          "minThreshold": ">= 50% Local Content",
+          "category": "ESG_MII"
+        }
+      ]
+    },
+    "TND-2026-002": {
+      "id": "TND-2026-002",
+      "tenderNumber": "GEM/2026/B/771042",
+      "tenderRefNumber": "GEM/2026/B/771042",
+      "title": "Automated Toll & Expressway LiDAR Traffic Analytics Edge Sensor Network",
+      "department": "National Highways Authority of India (NHAI)",
+      "organization": "National Highways Authority of India (NHAI)",
+      "gemCategory": "Intelligent Transportation Systems (ITS)",
+      "category": "Works",
+      "portal": "CPPP",
+      "estimatedBudget": 18.2,
+      "estimatedValueCr": 18.2,
+      "emdAmount": 36.4,
+      "emdAmountLakhs": 36.4,
+      "publishedDate": "2026-08-14T09:30:00Z",
+      "closingDate": "2026-09-20T18:00:00Z",
+      "submissionDeadline": "20-Sep-2026",
+      "daysRemaining": 20,
+      "aiMatchScore": 91,
+      "location": "NH-48 Corridor (Delhi - Jaipur)",
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "status": "TECHNICAL_EVALUATION",
+      "evaluationMode": "QCBS",
+      "weights": {
+        "technical": 40,
+        "statutory": 20,
+        "aiCompliance": 20,
+        "miiLocalContent": 20
+      },
+      "keyPqc": [
+        "Minimum 5 years OEM experience in edge sensory telemetry",
+        "Minimum 50% Make in India domestic component assembly",
+        "Active CPWD / NHAI Class-1 enlistment"
+      ],
+      "pqcCriteria": [
+        {
+          "id": "PQC-11",
+          "clauseNumber": "Clause 3.1.2",
+          "description": "Minimum 5 years OEM experience in edge sensory telemetry with ISO 9001/27001 certifications.",
+          "mandatory": true,
+          "minThreshold": "5 Years OEM",
+          "category": "TECHNICAL"
+        },
+        {
+          "id": "PQC-12",
+          "clauseNumber": "Clause 3.3.0",
+          "description": "Minimum 50% Make in India domestic component assembly in accordance with MII Order 2017.",
+          "mandatory": true,
+          "minThreshold": ">= 50%",
+          "category": "ESG_MII"
+        }
+      ]
+    },
+    "TND-2026-003": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-003",
+      "estimatedValueCr": 35.0
+    },
+    "TND-2026-004": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-004",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-005": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-005",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-006": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-006",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-007": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-007",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-008": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-008",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-009": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-009",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-010": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-010",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-011": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-011",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-012": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-012",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-013": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-013",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-014": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-014",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-015": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-015",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    },
+    "TND-2026-016": {
+      "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+      "department": "Ministry of Road Transport and Highways (MoRTH)",
+      "gemCategory": "Surveillance & Edge Analytics",
+      "estimatedBudget": 35.0,
+      "status": "TECHNICAL_EVALUATION",
+      "pqcCriteria": [
+        {
+          "id": "PQC-TEST",
+          "description": "Turnover >= 10 Cr (CA Certified)",
+          "mandatory": true
+        }
+      ],
+      "id": "TND-2026-016",
+      "estimatedValueCr": 35.0,
+      "organization": "Ministry of Road Transport and Highways (MoRTH)",
+      "portal": "GeM",
+      "location": "Pan-India",
+      "daysRemaining": 20,
+      "submissionDeadline": "30-Sep-2026",
+      "aiMatchScore": 92,
+      "hasMsmePreference": true,
+      "hasMiiPreference": true,
+      "emdAmountLakhs": 10.0,
+      "keyPqc": [
+        "Turnover >= 10 Cr (CA Certified)"
+      ]
+    }
+  },
+  "submissions": {
+    "SUB-001": {
+      "id": "SUB-001",
+      "tenderId": "TND-2026-001",
+      "maskedVendorId": "VEN-ANON-9041",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0x9F4B3C8120A1-KMS",
+      "actualVendorNameHidden": "Bharat Quantum Systems Ltd",
+      "actualPanHidden": "AAACB1234K",
+      "actualGstinHidden": "07AAACB1234K1Z5",
+      "submittedAt": "2026-08-20T14:22:10Z",
+      "status": "TEC_BLIND_EVAL",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 28.45,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 142,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 118
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2018PLC33****",
+          "paidUpCapitalCr": 12.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-001****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 6,
+          "rootCertFingerprint": "SHA256:9F8120AC8841B903E7",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-08-30T10:00:00Z"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 28.45,
+          "gross26asCreditCr": 28.6,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": false,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 98,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 94,
+        "confidenceRate": 97.5,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 12,
+            "sourceDoc": "Audited_Financials_FY24-25.pdf",
+            "extractedSnippet": "Average turnover over preceding 3 FYs stands at \u20b928.45 Cr as certified by statutory CA.",
+            "aiExplanation": "Exceeds minimum requirement of \u20b915 Cr. Cross-verified with GSTN return data."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Past Technical Experience",
+            "status": "COMPLIANT",
+            "confidenceScore": 96,
+            "pageRef": 24,
+            "sourceDoc": "Past_Performance_Dossier.pdf",
+            "extractedSnippet": "Delivered 32-node H100 AI Compute Cluster for DRDO Lab in Oct 2024 and 16-node cluster for BEL.",
+            "aiExplanation": "2 high-performance deployments in defense PSU fully documented with client completion certificates."
+          },
+          {
+            "clauseId": "PQC-3",
+            "clauseTitle": "Statutory Health & Tax Returns",
+            "status": "COMPLIANT",
+            "confidenceScore": 99,
+            "pageRef": 5,
+            "sourceDoc": "Statutory_Declaration_Seal.pdf",
+            "extractedSnippet": "GSTR-3B filings up to July 2026 validated without default penalties.",
+            "aiExplanation": "Real-time GSTN & EPFO query verified continuous regular compliance."
+          },
+          {
+            "clauseId": "PQC-4",
+            "clauseTitle": "Make in India Class-I Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 31,
+            "sourceDoc": "MII_BoM_CA_Certificate.pdf",
+            "extractedSnippet": "Verified local value addition calculated at 68.4% domestic component sourcing.",
+            "aiExplanation": "Meets Class-I threshold (>= 50%). Verified through BoM itemization check."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 68.4,
+        "verifiedPercentage": 68.4,
+        "auditorCertificateHash": "SHA256:7b8e91a0c8b2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": [
+          {
+            "componentName": "Cryptographic HSM ASIC Board & Chassis",
+            "countryOfOrigin": "India (Noida Fab)",
+            "localContentPercent": 82.0,
+            "costWeight": 35.0,
+            "domesticValueAdditionInr": 12150000
+          },
+          {
+            "componentName": "Power Distribution & Liquid Cooling Unit",
+            "countryOfOrigin": "India (Bengaluru)",
+            "localContentPercent": 78.5,
+            "costWeight": 25.0,
+            "domesticValueAdditionInr": 8320000
+          },
+          {
+            "componentName": "High-Bandwidth Interconnect Fabric",
+            "countryOfOrigin": "Taiwan",
+            "localContentPercent": 15.0,
+            "costWeight": 40.0,
+            "domesticValueAdditionInr": 2540000
+          }
+        ]
+      },
+      "officerReviews": []
+    },
+    "SUB-002": {
+      "id": "SUB-002",
+      "tenderId": "TND-2026-001",
+      "maskedVendorId": "VEN-ANON-8F92",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0x7C104AE9901B-KMS",
+      "actualVendorNameHidden": "Indo-Nordic Defense Tech Pvt Ltd",
+      "actualPanHidden": "AACCI5678M",
+      "actualGstinHidden": "29AACCI5678M1Z2",
+      "submittedAt": "2026-08-21T09:15:40Z",
+      "status": "STATUTORY_FLAGGED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 41.2,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "June 2026"
+        },
+        "epfo": {
+          "status": "DEFAULT_DETECTED",
+          "activeEmployeesCount": 88,
+          "lastChallanDate": "2026-05-10",
+          "duesPending": 4.85
+        },
+        "esic": {
+          "status": "DEFAULT",
+          "contributionMonthsRegular": 18,
+          "lastContributionDate": "2026-05-14",
+          "employeeCount": 65
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U74999KA2016PTC09****",
+          "paidUpCapitalCr": 8.5,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "NOT_APPLICABLE",
+          "udyamNumberMasked": "NOT_REGISTERED",
+          "enterpriseType": "LARGE",
+          "priorityProcurementEligible": false,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 4,
+          "rootCertFingerprint": "SHA256:4C982001AC7F104",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "FLAGGED",
+          "debarmentCategory": "Show-Cause Issued by State PSU (Karnataka PWD)",
+          "blacklistingAuthority": "State Tech Directorate",
+          "checkedAt": "2026-08-30T10:00:00Z"
+        },
+        "itr26as": {
+          "status": "MISMATCH",
+          "reportedTurnoverCr": 41.2,
+          "gross26asCreditCr": 31.5,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": false,
+          "nsicRegistered": false,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 62,
+        "flags": [
+          "EPFO Alert: Challan default for June/July 2026 (\u20b94.85L dues pending)",
+          "Form 26AS Mismatch: Declared \u20b941.2 Cr vs 26AS Gross Credit \u20b931.5 Cr",
+          "CPPP Advisory: State PSU show-cause notice active on entity PAN"
+        ]
+      },
+      "aiScorecard": {
+        "complianceScore": 71,
+        "confidenceRate": 91.2,
+        "clausesPassed": 3,
+        "clausesTotal": 4,
+        "redFlags": [
+          "Form 26AS mismatch against audited balance sheet turnover declaration",
+          "Statutory EPFO default detected on live sovereign gateway"
+        ],
+        "anomaliesDetected": [
+          "Mismatch: Document stated Local Content is 58% but Bill of Material calculations yield 42.0%"
+        ],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "PARTIAL",
+            "confidenceScore": 78,
+            "pageRef": 8,
+            "sourceDoc": "Turnover_CA_Statement.pdf",
+            "extractedSnippet": "Certified turnover \u20b941.2 Cr reported by CA firm.",
+            "aiExplanation": "Mismatch flagged: Form 26AS gross receipt reflects only \u20b931.5 Cr. Discrepancy of \u20b99.7 Cr needs reconciliation."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Past Technical Experience",
+            "status": "COMPLIANT",
+            "confidenceScore": 94,
+            "pageRef": 18,
+            "sourceDoc": "Tech_Execution_History.pdf",
+            "extractedSnippet": "Delivered Edge AI cluster at ISRO Telemetry Centre.",
+            "aiExplanation": "Satisfies technical clause requirement with verified client sign-off."
+          },
+          {
+            "clauseId": "PQC-3",
+            "clauseTitle": "Statutory Health",
+            "status": "NON_COMPLIANT",
+            "confidenceScore": 99,
+            "pageRef": 3,
+            "sourceDoc": "EPFO_Declaration.pdf",
+            "extractedSnippet": "Claimed zero default status across all social security bodies.",
+            "aiExplanation": "Failed: Live EPFO portal returns default with pending dues of \u20b94.85 Lakhs."
+          },
+          {
+            "clauseId": "PQC-4",
+            "clauseTitle": "Make in India Class-I Local Content",
+            "status": "NON_COMPLIANT",
+            "confidenceScore": 88,
+            "pageRef": 42,
+            "sourceDoc": "BoM_Origin_Breakdown.pdf",
+            "extractedSnippet": "Declared 58.0% local content, but imported components aggregate to 58.0% (Local = 42.0%).",
+            "aiExplanation": "Class-II supplier (42.0%), not Class-I as mandated in Clause 4.4.2."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-II",
+        "declaredPercentage": 58.0,
+        "verifiedPercentage": 42.0,
+        "auditorCertificateHash": "SHA256:91a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2",
+        "auditorCertValid": false,
+        "purchasePreferenceEligible": false,
+        "marginOfPreference": 0,
+        "bomItems": [
+          {
+            "componentName": "Bare Metal Server Chassis & Fans",
+            "countryOfOrigin": "India (Pune)",
+            "localContentPercent": 100.0,
+            "costWeight": 42.0,
+            "domesticValueAdditionInr": 12200000
+          }
+        ]
+      },
+      "officerReviews": []
+    },
+    "SUB-003": {
+      "id": "SUB-003",
+      "tenderId": "TND-2026-001",
+      "maskedVendorId": "VEN-ANON-4C1B",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0x1A2B3C4D5E6F-KMS",
+      "actualVendorNameHidden": "Vanguard Cyber Infra Corp",
+      "actualPanHidden": "AABCV9988P",
+      "actualGstinHidden": "27AABCV9988P1Z8",
+      "submittedAt": "2026-08-22T11:04:12Z",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 19.8,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 94,
+          "lastChallanDate": "2026-08-14",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-11",
+          "employeeCount": 82
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72200MH2019PTC32****",
+          "paidUpCapitalCr": 6.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-MH-19-002****",
+          "enterpriseType": "SMALL",
+          "priorityProcurementEligible": true,
+          "womenOwned": true,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:7B8F9A01C2945D",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-08-30T10:00:00Z"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 19.8,
+          "gross26asCreditCr": 19.9,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "startupCertificateNo": "DPIIT-STP-2021-9981",
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 100,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 91,
+        "confidenceRate": 96.0,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 97,
+            "pageRef": 10,
+            "sourceDoc": "Financial_Statements.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b919.8 Cr (Exceeds \u20b915 Cr threshold).",
+            "aiExplanation": "Compliant with PQC clause 4.1.1."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Past Technical Experience",
+            "status": "COMPLIANT",
+            "confidenceScore": 92,
+            "pageRef": 16,
+            "sourceDoc": "Deployment_SignOff.pdf",
+            "extractedSnippet": "Designed HSM array for National Payments switch architecture.",
+            "aiExplanation": "Technical experience compliant."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 82.5,
+        "verifiedPercentage": 82.5,
+        "auditorCertificateHash": "SHA256:7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "officerName": "Shri Rajesh Sharma",
+          "evaluatedAt": "2026-08-28T16:30:00Z",
+          "technicalScore": 95,
+          "criteriaScores": {
+            "technicalCapability": 38,
+            "pastExperience": 24,
+            "methodologyWorkplan": 19,
+            "keyPersonnel": 14
+          },
+          "flagRaised": "NONE",
+          "remarks": "Exemplary technical architecture with high indigenous IP."
+        }
+      ]
+    },
+    "SUB-004": {
+      "id": "SUB-004",
+      "tenderId": "TND-2026-003",
+      "maskedVendorId": "VEN-ANON-B68F",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-08-31T06:55:48.880813",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-08-31T06:55:48.880870"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-005": {
+      "id": "SUB-005",
+      "tenderId": "TND-2026-004",
+      "maskedVendorId": "VEN-ANON-279C",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-08-31T11:24:27.911009",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-08-31T11:24:27.911039"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-006": {
+      "id": "SUB-006",
+      "tenderId": "TND-2026-005",
+      "maskedVendorId": "VEN-ANON-16BF",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-08-31T11:29:38.755819",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-08-31T11:29:38.755852"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-007": {
+      "id": "SUB-007",
+      "tenderId": "TND-2026-006",
+      "maskedVendorId": "VEN-ANON-C15F",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-08-31T12:25:15.100330",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-08-31T12:25:15.100382"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-008": {
+      "id": "SUB-008",
+      "tenderId": "TND-2026-007",
+      "maskedVendorId": "VEN-ANON-9991",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-08-31T12:53:28.155331",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-08-31T12:53:28.155391"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-009": {
+      "id": "SUB-009",
+      "tenderId": "TND-2026-008",
+      "maskedVendorId": "VEN-ANON-4E4A",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-08-31T13:05:37.470291",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-08-31T13:05:37.470345"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-010": {
+      "id": "SUB-010",
+      "tenderId": "TND-2026-009",
+      "maskedVendorId": "VEN-ANON-5F2E",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-08-31T13:45:53.116704",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-08-31T13:45:53.116746"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-011": {
+      "id": "SUB-011",
+      "tenderId": "TND-2026-010",
+      "maskedVendorId": "VEN-ANON-5382",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-09-01T03:45:25.920351",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-09-01T03:45:25.920411"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-012": {
+      "id": "SUB-012",
+      "tenderId": "TND-2026-011",
+      "maskedVendorId": "VEN-ANON-FEC5",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-09-01T05:51:17.283305",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-09-01T05:51:17.283336"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-013": {
+      "id": "SUB-013",
+      "tenderId": "TND-2026-012",
+      "maskedVendorId": "VEN-ANON-D025",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-09-01T07:34:41.351049",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-09-01T07:34:41.351096"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-014": {
+      "id": "SUB-014",
+      "tenderId": "TND-2026-013",
+      "maskedVendorId": "VEN-ANON-DC0B",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-09-01T08:18:31.278338",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-09-01T08:18:31.278400"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-015": {
+      "id": "SUB-015",
+      "tenderId": "TND-2026-014",
+      "maskedVendorId": "VEN-ANON-608B",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-09-01T11:20:09.956571",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-09-01T11:20:09.957631"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-016": {
+      "id": "SUB-016",
+      "tenderId": "TND-2026-015",
+      "maskedVendorId": "VEN-ANON-1D49",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-09-01T16:12:57.791660",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-09-01T16:12:57.791706"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    },
+    "SUB-017": {
+      "id": "SUB-017",
+      "tenderId": "TND-2026-016",
+      "maskedVendorId": "VEN-ANON-DA07",
+      "vaultCipherToken": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+      "actualVendorNameHidden": "Novavolt Instruments & Automation Pvt Ltd",
+      "actualPanHidden": "AABCN8712P",
+      "actualGstinHidden": "27AABCN8712P1ZL",
+      "submittedAt": "2026-09-01T17:03:43.793785",
+      "status": "EVALUATION_APPROVED",
+      "statutory": {
+        "gstn": {
+          "status": "ACTIVE",
+          "regular3BFiling": true,
+          "turnoverVerifiedCr": 14.5,
+          "panGstCrossMatch": true,
+          "lastFilingMonth": "July 2026"
+        },
+        "epfo": {
+          "status": "COMPLIANT",
+          "activeEmployeesCount": 110,
+          "lastChallanDate": "2026-08-15",
+          "duesPending": 0.0
+        },
+        "esic": {
+          "status": "COMPLIANT",
+          "contributionMonthsRegular": 24,
+          "lastContributionDate": "2026-08-12",
+          "employeeCount": 95
+        },
+        "mca21": {
+          "status": "ACTIVE",
+          "cinMasked": "U72900DL2020PTC12****",
+          "paidUpCapitalCr": 10.0,
+          "disqualifiedDirectorsCount": 0,
+          "chargeSatisfied": true
+        },
+        "udyam": {
+          "status": "VERIFIED",
+          "udyamNumberMasked": "UDYAM-DL-03-009****",
+          "enterpriseType": "MEDIUM",
+          "priorityProcurementEligible": true,
+          "womenOwned": false,
+          "scStOwned": false
+        },
+        "digilocker": {
+          "status": "AUTHENTICATED",
+          "verifiedHashesCount": 5,
+          "rootCertFingerprint": "SHA256:BE85E0E228F49E9B",
+          "docketSealVerified": true
+        },
+        "cpppDebarment": {
+          "status": "CLEAR",
+          "checkedAt": "2026-09-01T17:03:43.793813"
+        },
+        "itr26as": {
+          "status": "CONSISTENT",
+          "reportedTurnoverCr": 14.5,
+          "gross26asCreditCr": 14.65,
+          "filingAssessmentYear": "AY 2025-26"
+        },
+        "nsicStartup": {
+          "isDpiitStartup": true,
+          "nsicRegistered": true,
+          "oemAuthorizationValid": true
+        },
+        "overallHealthScore": 96,
+        "flags": []
+      },
+      "aiScorecard": {
+        "complianceScore": 92,
+        "confidenceRate": 96.8,
+        "clausesPassed": 4,
+        "clausesTotal": 4,
+        "redFlags": [],
+        "anomaliesDetected": [],
+        "citations": [
+          {
+            "clauseId": "PQC-1",
+            "clauseTitle": "Annual Financial Turnover",
+            "status": "COMPLIANT",
+            "confidenceScore": 98,
+            "pageRef": 5,
+            "sourceDoc": "CA_Audited_Turnover_Statement.pdf",
+            "extractedSnippet": "3-year average turnover verified at \u20b914.5 Cr.",
+            "aiExplanation": "Verified against GSTN and CA UDIN registry."
+          },
+          {
+            "clauseId": "PQC-2",
+            "clauseTitle": "Make in India Local Content",
+            "status": "COMPLIANT",
+            "confidenceScore": 95,
+            "pageRef": 14,
+            "sourceDoc": "MII_Undertaking.pdf",
+            "extractedSnippet": "Declared domestic value addition stands at 88.0%.",
+            "aiExplanation": "Meets Class-I / Class-II preference threshold."
+          }
+        ],
+        "discrepancies": []
+      },
+      "miiAudit": {
+        "supplierClass": "Class-I",
+        "declaredPercentage": 88.0,
+        "verifiedPercentage": 88.0,
+        "auditorCertificateHash": "SHA256:d3cbef0b7957adb853026adb10ca48a42e5efe4f955cb4a8429597f2bbcee9a1",
+        "auditorCertValid": true,
+        "purchasePreferenceEligible": true,
+        "marginOfPreference": 20,
+        "bomItems": []
+      },
+      "officerReviews": [
+        {
+          "officerId": "GEM-OFF-9041",
+          "technicalScore": 94,
+          "flagRaised": "NONE",
+          "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+        }
+      ]
+    }
+  },
+  "cag_ledger": [
+    {
+      "blockHeight": 101,
+      "blockHash": "0x3a9f1b2c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a",
+      "previousHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+      "timestamp": "2026-08-10T10:00:00Z",
+      "tenderId": "GEM/2026/B/894210",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_TENDER_SPECIFICATIONS",
+      "evaluationPayload": {
+        "tenderNumber": "GEM/2026/B/894210",
+        "budgetCr": 42.5,
+        "pqcClausesCount": 4,
+        "evaluationScheme": "QCBS (50:15:15:20)"
+      },
+      "merkleRoot": "0x91a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2",
+      "signature": "MEQCIG7X9W...1QYIQD8Z0V...NIC_CLASS3",
+      "verified": true
+    },
+    {
+      "blockHeight": 102,
+      "blockHash": "0x8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7d",
+      "previousHash": "0x3a9f1b2c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a",
+      "timestamp": "2026-08-20T14:22:10Z",
+      "tenderId": "GEM/2026/B/894210",
+      "maskedVendorId": "VEN-ANON-9041",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-9041",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0x9F4B3C8120A1-KMS",
+        "registryAutoQueriesTriggered": [
+          "GSTN",
+          "EPFO",
+          "ESIC",
+          "MCA21",
+          "UDYAM",
+          "DIGILOCKER",
+          "CPPP",
+          "ITR26AS"
+        ]
+      },
+      "merkleRoot": "0x89a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0",
+      "signature": "MEQCID4K1L...2RYJQE9Z1W...ZK_GATEWAY",
+      "verified": true
+    },
+    {
+      "blockHeight": 103,
+      "blockHash": "0x5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d",
+      "previousHash": "0x8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7d",
+      "timestamp": "2026-08-28T16:30:00Z",
+      "tenderId": "GEM/2026/B/894210",
+      "maskedVendorId": "VEN-ANON-4C1B",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 95,
+        "scoresBreakdown": {
+          "technicalCapability": 38,
+          "pastExperience": 24,
+          "methodologyWorkplan": 19,
+          "keyPersonnel": 14
+        },
+        "flagType": "NONE",
+        "remarks": "Exemplary technical architecture with high indigenous IP."
+      },
+      "merkleRoot": "0x7b8f9a01c2945df8812456ae3290fe19823467ab908123479b0e1f42a188bc99",
+      "signature": "MEQCIG7X9W...DSC_X509_PKCS11_8941_9F2B81",
+      "verified": true
+    },
+    {
+      "blockHeight": 104,
+      "blockHash": "0x24deb4a55cd9e2be3d3262e9af483519485baf72f20802d8c5533f50af30615b",
+      "previousHash": "0x5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d",
+      "timestamp": "2026-08-31T06:55:48.862990",
+      "tenderId": "TND-2026-003",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x0492e112236e0f9a526497fcc7456adb5d8ef20ce9add6ae916fab3f10ab7853",
+      "signature": "MEQCIDCFC7C295...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 105,
+      "blockHash": "0x349244a3998e08ca0e15c9a665515b2f3d0186f55ffc8613703037d61b3460e5",
+      "previousHash": "0x24deb4a55cd9e2be3d3262e9af483519485baf72f20802d8c5533f50af30615b",
+      "timestamp": "2026-08-31T06:55:48.885740",
+      "tenderId": "TND-2026-003",
+      "maskedVendorId": "VEN-ANON-B68F",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-B68F",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0xb350425146c8401795d3b4020d58ff563bff1edd7f9fd0a5e882bd4e5bc2339a",
+      "signature": "MEQCID2DF86B9C...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 106,
+      "blockHash": "0x83d749d5e10bbaea6b5de9761b097581e5ef3655b51c4c8af075f4bd72f8ae7f",
+      "previousHash": "0x349244a3998e08ca0e15c9a665515b2f3d0186f55ffc8613703037d61b3460e5",
+      "timestamp": "2026-08-31T06:55:48.909729",
+      "tenderId": "TND-2026-003",
+      "maskedVendorId": "VEN-ANON-B68F",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0x22aa71b3717d0b441cedda72e73a719c8139376d78a642d90a824a86b70f3586",
+      "signature": "MEQCIDB3259F07...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 107,
+      "blockHash": "0x6d0892d036f8e0987075c2e8c6a7fc3d0f1be9a20b710edcce8cff087d9d73c8",
+      "previousHash": "0x83d749d5e10bbaea6b5de9761b097581e5ef3655b51c4c8af075f4bd72f8ae7f",
+      "timestamp": "2026-08-31T11:24:27.812569",
+      "tenderId": "TND-2026-004",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0xd9f89ce7e9e7845b35c92cb3f05ac9095adcdbb6001bf77ac173a1a804b92a04",
+      "signature": "MEQCIDCD432BBF...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 108,
+      "blockHash": "0xc568d1694431b5ba624fd3d210c1297bca46aeaf52d2493e13d3afdfcd72f783",
+      "previousHash": "0x6d0892d036f8e0987075c2e8c6a7fc3d0f1be9a20b710edcce8cff087d9d73c8",
+      "timestamp": "2026-08-31T11:24:27.920312",
+      "tenderId": "TND-2026-004",
+      "maskedVendorId": "VEN-ANON-279C",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-279C",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0x93311e5ecf93d8c1bece67c9c177a7380c55e00a9a728cc965cc29ebfed8e8fc",
+      "signature": "MEQCID27138AA4...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 109,
+      "blockHash": "0x4bad1f14e405229209153c785a7964fb73cbff9d96b95a44f0dac5c298528ed0",
+      "previousHash": "0xc568d1694431b5ba624fd3d210c1297bca46aeaf52d2493e13d3afdfcd72f783",
+      "timestamp": "2026-08-31T11:24:27.986518",
+      "tenderId": "TND-2026-004",
+      "maskedVendorId": "VEN-ANON-279C",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0xc175e7681805348d40211e3930d8a79765951ee8aa52f0245b969f4575cf998c",
+      "signature": "MEQCID4C3A2B4F...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 110,
+      "blockHash": "0x9a4532674ad47917a84a651d005b3f08c9c2f2c5078ed00852c9200167021e3e",
+      "previousHash": "0x4bad1f14e405229209153c785a7964fb73cbff9d96b95a44f0dac5c298528ed0",
+      "timestamp": "2026-08-31T11:29:38.720634",
+      "tenderId": "TND-2026-005",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x589393cc57071920c71a17c2ae67a68504eae615963f58e05f6d963913fcc229",
+      "signature": "MEQCID6BA40A71...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 111,
+      "blockHash": "0xc6079bddd8271949274f3a7af09e98d536c7d85d966cd35ead9c34da19ba4b9d",
+      "previousHash": "0x9a4532674ad47917a84a651d005b3f08c9c2f2c5078ed00852c9200167021e3e",
+      "timestamp": "2026-08-31T11:29:38.764538",
+      "tenderId": "TND-2026-005",
+      "maskedVendorId": "VEN-ANON-16BF",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-16BF",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0xbce512941d392c576c3d66819c9586ade16414cfbbc24664ef64724e6227ea62",
+      "signature": "MEQCIDEF16A159...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 112,
+      "blockHash": "0x255046a475ac99c0df69db268a8bde50d179046f60e363371e9084792a896ccf",
+      "previousHash": "0xc6079bddd8271949274f3a7af09e98d536c7d85d966cd35ead9c34da19ba4b9d",
+      "timestamp": "2026-08-31T11:29:38.800239",
+      "tenderId": "TND-2026-005",
+      "maskedVendorId": "VEN-ANON-16BF",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0x1ff8a1fedafce6b9d4b6e5bc06b99177e15ebb78dd373c4c46acd32bc5d1088e",
+      "signature": "MEQCIDAF63534C...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 113,
+      "blockHash": "0xa95e1a8fa017838dbc92c4f8769017c64c3db7c46f4816bdab3e9afb41cac535",
+      "previousHash": "0x255046a475ac99c0df69db268a8bde50d179046f60e363371e9084792a896ccf",
+      "timestamp": "2026-08-31T12:25:15.070844",
+      "tenderId": "TND-2026-006",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x698e1ca3a8bfca3053cdd9749658885d01f3ce322cc7646dc094df7a8985cd7b",
+      "signature": "MEQCID1ED15BBA...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 114,
+      "blockHash": "0x97ea41077bf4ef48048681b1723f6c14976f88f35e10c4b25a24591c89aa2452",
+      "previousHash": "0xa95e1a8fa017838dbc92c4f8769017c64c3db7c46f4816bdab3e9afb41cac535",
+      "timestamp": "2026-08-31T12:25:15.113973",
+      "tenderId": "TND-2026-006",
+      "maskedVendorId": "VEN-ANON-C15F",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-C15F",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0x2b9658b36694d92a594d3eb0462b33273bd23818842763b31ff4ae81312555ae",
+      "signature": "MEQCID0EB5DBD8...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 115,
+      "blockHash": "0x9190ef9edcd7ee53122d0dab12f898dd5e10c16feb7542501b714e61d1ae450a",
+      "previousHash": "0x97ea41077bf4ef48048681b1723f6c14976f88f35e10c4b25a24591c89aa2452",
+      "timestamp": "2026-08-31T12:25:15.169261",
+      "tenderId": "TND-2026-006",
+      "maskedVendorId": "VEN-ANON-C15F",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0x70b4f73a39af9fd6d730bebefad22b6930aa4e5b08b371ee88a19378dd9bcc8a",
+      "signature": "MEQCID4DFE6712...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 116,
+      "blockHash": "0x95a507215e2d5c5d7867c20b6b6582bc3977885e34a88d365b145cbc51ed4a3e",
+      "previousHash": "0x9190ef9edcd7ee53122d0dab12f898dd5e10c16feb7542501b714e61d1ae450a",
+      "timestamp": "2026-08-31T12:53:28.122390",
+      "tenderId": "TND-2026-007",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x234368872663260b061e2307ffd2a983daa01fb7d41c5aeec73d4779d5d91575",
+      "signature": "MEQCID3FCDD9BC...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 117,
+      "blockHash": "0xda2b7434e67c6c4fcbe3840bad4d29f40fb74603bbf6b1f9ddaf64f49fd44398",
+      "previousHash": "0x95a507215e2d5c5d7867c20b6b6582bc3977885e34a88d365b145cbc51ed4a3e",
+      "timestamp": "2026-08-31T12:53:28.168133",
+      "tenderId": "TND-2026-007",
+      "maskedVendorId": "VEN-ANON-9991",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-9991",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0x1b5fc175582a80e2af87d1df71e0a9ebfe0f451745fce4af0c8aa217d41a847f",
+      "signature": "MEQCID2E201E29...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 118,
+      "blockHash": "0x2974222b57c4d28d81c68b750d5809c062e43cae464817a7d3173161f10a6bb6",
+      "previousHash": "0xda2b7434e67c6c4fcbe3840bad4d29f40fb74603bbf6b1f9ddaf64f49fd44398",
+      "timestamp": "2026-08-31T12:53:28.292121",
+      "tenderId": "TND-2026-007",
+      "maskedVendorId": "VEN-ANON-9991",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0xc5b0f3a4818cd27c2402fdf480c152384e7cf9dd9f1cd9042fa8d907f125c989",
+      "signature": "MEQCIDC5873919...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 119,
+      "blockHash": "0x86a17bbc68172010479ee7ca1bdd9f987b852a6cbc190c29f7172f3e65ef7640",
+      "previousHash": "0x2974222b57c4d28d81c68b750d5809c062e43cae464817a7d3173161f10a6bb6",
+      "timestamp": "2026-08-31T13:05:37.443593",
+      "tenderId": "TND-2026-008",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x9f6922bbbd720fb67eacc20a239b99336dd41ae36adade3b1cab32924f2b6495",
+      "signature": "MEQCID5C67BC89...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 120,
+      "blockHash": "0xc9c110abf641f07e0bf03384738ffd1b06f76875af3bd3e1298976b1d48f4a13",
+      "previousHash": "0x86a17bbc68172010479ee7ca1bdd9f987b852a6cbc190c29f7172f3e65ef7640",
+      "timestamp": "2026-08-31T13:05:37.486674",
+      "tenderId": "TND-2026-008",
+      "maskedVendorId": "VEN-ANON-4E4A",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-4E4A",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0x9873aa4fd5112078cb214a369d314a96db815098f19801a558fdb1dba6c2d268",
+      "signature": "MEQCID27F890B9...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 121,
+      "blockHash": "0xdb5257d88a97619801865dc91ae5cbafe8d792003a418bb6ac9169cd5badc9aa",
+      "previousHash": "0xc9c110abf641f07e0bf03384738ffd1b06f76875af3bd3e1298976b1d48f4a13",
+      "timestamp": "2026-08-31T13:05:37.540363",
+      "tenderId": "TND-2026-008",
+      "maskedVendorId": "VEN-ANON-4E4A",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0x5f3f6e28caefe827fa13c0b4f10c4053a588209b8f9465dba9f1881e90c413e9",
+      "signature": "MEQCID3EF2F30F...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 122,
+      "blockHash": "0x9fe6969363b703272b2348d117d46434712e15ad3f0a33fa96aa547d31f378ac",
+      "previousHash": "0xdb5257d88a97619801865dc91ae5cbafe8d792003a418bb6ac9169cd5badc9aa",
+      "timestamp": "2026-08-31T13:45:53.064969",
+      "tenderId": "TND-2026-009",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x5b598dfb406bfb6e0174cd8b8815d304ef7744a57a688c73b8e7d8eb846294b1",
+      "signature": "MEQCIDECCAEECA...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 123,
+      "blockHash": "0x5a73a4a942d1d87a5aaa43f6155117c9d9881dfcffd6bb8281842bee1c0be503",
+      "previousHash": "0x9fe6969363b703272b2348d117d46434712e15ad3f0a33fa96aa547d31f378ac",
+      "timestamp": "2026-08-31T13:45:53.140552",
+      "tenderId": "TND-2026-009",
+      "maskedVendorId": "VEN-ANON-5F2E",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-5F2E",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0x4c80c3524966953256300f362146e10765f18ff392e99b7c440a0cb696549c99",
+      "signature": "MEQCID26D9CE79...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 124,
+      "blockHash": "0xb5da53cfec2b84f116ad1ee15d36ae717922c2399920951638d9a7ce58b783da",
+      "previousHash": "0x5a73a4a942d1d87a5aaa43f6155117c9d9881dfcffd6bb8281842bee1c0be503",
+      "timestamp": "2026-08-31T13:45:53.241112",
+      "tenderId": "TND-2026-009",
+      "maskedVendorId": "VEN-ANON-5F2E",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0xc9e5dae4b811bf4e729eaadb77fe484e3acd43e034b9d56183f7d4e3ea907240",
+      "signature": "MEQCIDEC30E3A5...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 125,
+      "blockHash": "0xc0654c5502f4ef01b4774e64d0106f62fee3a9dc87d537ce130ee65fd4274653",
+      "previousHash": "0xb5da53cfec2b84f116ad1ee15d36ae717922c2399920951638d9a7ce58b783da",
+      "timestamp": "2026-09-01T03:45:25.747768",
+      "tenderId": "TND-2026-010",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x494bc40600e4fefcc9f2ec8e8b0112f5093af72ddd1b6bf65dd6d1ef101954a5",
+      "signature": "MEQCID01EF93FE...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 126,
+      "blockHash": "0x2e448152a54fc7d8f18ddaac0941512be9ef2b8b7f340acc442c77401c201360",
+      "previousHash": "0xc0654c5502f4ef01b4774e64d0106f62fee3a9dc87d537ce130ee65fd4274653",
+      "timestamp": "2026-09-01T03:45:25.953433",
+      "tenderId": "TND-2026-010",
+      "maskedVendorId": "VEN-ANON-5382",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-5382",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0x430bfd67967c7df9ab46c6ffb581f4184e8e5ddf8e10348cdafb65b0dc3d3376",
+      "signature": "MEQCID39A91FCC...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 127,
+      "blockHash": "0x672b04ddc485a5495f663bfa0930f476224571ae2540aec70e6dca283202cec4",
+      "previousHash": "0x2e448152a54fc7d8f18ddaac0941512be9ef2b8b7f340acc442c77401c201360",
+      "timestamp": "2026-09-01T03:45:26.166600",
+      "tenderId": "TND-2026-010",
+      "maskedVendorId": "VEN-ANON-5382",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0xc14e6a800daf2cd071a4b5f8e62b3af432d0e4e9e25ae07c0842712aa29664c2",
+      "signature": "MEQCIDA7F49DD9...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 128,
+      "blockHash": "0x33f84f83193d8708a272d627a80b25f837d9c7c9d4dad0961740dbae37a418a7",
+      "previousHash": "0x672b04ddc485a5495f663bfa0930f476224571ae2540aec70e6dca283202cec4",
+      "timestamp": "2026-09-01T05:51:17.248057",
+      "tenderId": "TND-2026-011",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x67ea71a764829f5db3994537dd11fe99d2658c2468face92f6e12c1a6ad2bbbb",
+      "signature": "MEQCID314F919E...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 129,
+      "blockHash": "0x75113a88f3635d9dd9f70fab11b1254f879cd7553ec610ccc90479839899f4d5",
+      "previousHash": "0x33f84f83193d8708a272d627a80b25f837d9c7c9d4dad0961740dbae37a418a7",
+      "timestamp": "2026-09-01T05:51:17.298362",
+      "tenderId": "TND-2026-011",
+      "maskedVendorId": "VEN-ANON-FEC5",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-FEC5",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0x5c9e810f10318a22971d8b06ad45825e10815700abc29837485405dcd6193463",
+      "signature": "MEQCIDC627B322...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 130,
+      "blockHash": "0xc533856e6485b6c56c20fcf6cf1a98d55c069e0e3740f548ae4482afa843dc57",
+      "previousHash": "0x75113a88f3635d9dd9f70fab11b1254f879cd7553ec610ccc90479839899f4d5",
+      "timestamp": "2026-09-01T05:51:17.365555",
+      "tenderId": "TND-2026-011",
+      "maskedVendorId": "VEN-ANON-FEC5",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0xb3a90e4b6d64b1900043a165dd6310f621796bf9e08bdf5b8ab9fe74d1ccc97d",
+      "signature": "MEQCIDD56A7005...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 131,
+      "blockHash": "0xb8f89bc99e6d7955f97ff90b778b79b97a71fc77e491abfcada77c387b81c2b1",
+      "previousHash": "0xc533856e6485b6c56c20fcf6cf1a98d55c069e0e3740f548ae4482afa843dc57",
+      "timestamp": "2026-09-01T07:34:41.303358",
+      "tenderId": "TND-2026-012",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x3e67aa7db11ba8b932b057ef986dc7ebe29a190ac1afbacaf719d200f77a6188",
+      "signature": "MEQCID77BBE19A...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 132,
+      "blockHash": "0x01a0f26b78f1f06e4008f55def0c9fcb65064d3857ecc37e235ded10be8e32f2",
+      "previousHash": "0xb8f89bc99e6d7955f97ff90b778b79b97a71fc77e491abfcada77c387b81c2b1",
+      "timestamp": "2026-09-01T07:34:41.367362",
+      "tenderId": "TND-2026-012",
+      "maskedVendorId": "VEN-ANON-D025",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-D025",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0xfa27e54651538afa104dedacbb82c3f10eed0b49ecac0a5dbafb62c1fe2ef661",
+      "signature": "MEQCIDB16E78B6...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 133,
+      "blockHash": "0x140c7f438fe035c8cf10ee0f3b61a004e3be1d358986ed57aea5f416ec617139",
+      "previousHash": "0x01a0f26b78f1f06e4008f55def0c9fcb65064d3857ecc37e235ded10be8e32f2",
+      "timestamp": "2026-09-01T07:34:41.441780",
+      "tenderId": "TND-2026-012",
+      "maskedVendorId": "VEN-ANON-D025",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0x6eb151a4d101719f4c592844dd68ec630a7c1850b296cf55c629b4bde99b84fc",
+      "signature": "MEQCIDCCD6F1CE...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 134,
+      "blockHash": "0xbdcac47d4bec528451e12d62e3d645fbbaa6d35532e3c6d76dd55205cf1ae1a2",
+      "previousHash": "0x140c7f438fe035c8cf10ee0f3b61a004e3be1d358986ed57aea5f416ec617139",
+      "timestamp": "2026-09-01T08:18:31.228922",
+      "tenderId": "TND-2026-013",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0xdd39e0e2b839f1b12c4412fc29e65856b60bf081170f9885c239f88fe23782a6",
+      "signature": "MEQCID2E08CA69...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 135,
+      "blockHash": "0x537218532c1432fee3f83dfb49878cb3f07cd935c5f392fb7670fa4934037560",
+      "previousHash": "0xbdcac47d4bec528451e12d62e3d645fbbaa6d35532e3c6d76dd55205cf1ae1a2",
+      "timestamp": "2026-09-01T08:18:31.306117",
+      "tenderId": "TND-2026-013",
+      "maskedVendorId": "VEN-ANON-DC0B",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-DC0B",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0xf978196f9a21cefa1c202b5d9ea98f15e22211fd5d3e7a57f950e04c81e3b146",
+      "signature": "MEQCIDCF4D9E08...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 136,
+      "blockHash": "0x9c06ea40f75cd532f9a6ca3724939568b0b3cd8f565db9718a2da2044f8d5dd0",
+      "previousHash": "0x537218532c1432fee3f83dfb49878cb3f07cd935c5f392fb7670fa4934037560",
+      "timestamp": "2026-09-01T08:18:31.429527",
+      "tenderId": "TND-2026-013",
+      "maskedVendorId": "VEN-ANON-DC0B",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0xdd9469e2df181923ff7162727dfa63472db04502110d24c8905c6fa15afb00c4",
+      "signature": "MEQCID5822B5FE...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 137,
+      "blockHash": "0x53091f5870f0b86bf1ef839f1a515f992101bc3fd5b0c019d9ba0dfe83a450df",
+      "previousHash": "0x9c06ea40f75cd532f9a6ca3724939568b0b3cd8f565db9718a2da2044f8d5dd0",
+      "timestamp": "2026-09-01T11:20:09.782574",
+      "tenderId": "TND-2026-014",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0xb6e99d2b4efdcb74cf1a6e124aeb938b6373a3dfecae874d3b71167e1881450c",
+      "signature": "MEQCID80F424B7...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 138,
+      "blockHash": "0x44f2458a025ef2422987c5f186dbff89ba20e47393e98fad47e3f6bdb689da15",
+      "previousHash": "0x53091f5870f0b86bf1ef839f1a515f992101bc3fd5b0c019d9ba0dfe83a450df",
+      "timestamp": "2026-09-01T11:20:10.069157",
+      "tenderId": "TND-2026-014",
+      "maskedVendorId": "VEN-ANON-608B",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-608B",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0xc0c4d1942ec86b8cda23a343dc401d0d91e36f8b83635700250887499916fb52",
+      "signature": "MEQCIDEAD603CB...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 139,
+      "blockHash": "0x5323764eec2f96742b51bc060bc5ffdfee533ab1ca08d5b960beba02f01e511c",
+      "previousHash": "0x44f2458a025ef2422987c5f186dbff89ba20e47393e98fad47e3f6bdb689da15",
+      "timestamp": "2026-09-01T11:20:10.550343",
+      "tenderId": "TND-2026-014",
+      "maskedVendorId": "VEN-ANON-608B",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0x0cc1336cadbbca6cbd776a52413c0bd5dc263213e2ee7c8a95f1ccdee170b676",
+      "signature": "MEQCID62BAFE64...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 140,
+      "blockHash": "0x07ed3393f90feec70f1559d77313505ebf49392db50688d667a9c9839831f0e0",
+      "previousHash": "0x5323764eec2f96742b51bc060bc5ffdfee533ab1ca08d5b960beba02f01e511c",
+      "timestamp": "2026-09-01T16:12:57.724709",
+      "tenderId": "TND-2026-015",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x405e9377ccf69fd44069f3ab2b78aaa5b367fb3a9635c6add99b62e33cf75838",
+      "signature": "MEQCIDDD100CEF...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 141,
+      "blockHash": "0xd16fbce8b3d2c36961165755de955be6b0e26a816ba36702236a616132205980",
+      "previousHash": "0x07ed3393f90feec70f1559d77313505ebf49392db50688d667a9c9839831f0e0",
+      "timestamp": "2026-09-01T16:12:57.837333",
+      "tenderId": "TND-2026-015",
+      "maskedVendorId": "VEN-ANON-1D49",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-1D49",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0x7e1672c0970102cf5d153e7c86b9a9df2fba4aaca64c96cb1af4d87afaec0466",
+      "signature": "MEQCIDB3ECC322...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 142,
+      "blockHash": "0xe8576330210e3596fccb154daa640cd1f417eaf69a0b30cbfa803a2327d973f0",
+      "previousHash": "0xd16fbce8b3d2c36961165755de955be6b0e26a816ba36702236a616132205980",
+      "timestamp": "2026-09-01T16:12:58.060826",
+      "tenderId": "TND-2026-015",
+      "maskedVendorId": "VEN-ANON-1D49",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0x81b390e809561407dd37e8722397c58a12f1912ea660d352b6cbfd3e121e09d5",
+      "signature": "MEQCID9E565C13...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 143,
+      "blockHash": "0xe6ab84c21032f075ef5c02846b846aed2cc6c1e9dfe77c227e11cd577eb1f137",
+      "previousHash": "0xe8576330210e3596fccb154daa640cd1f417eaf69a0b30cbfa803a2327d973f0",
+      "timestamp": "2026-09-01T17:03:43.769774",
+      "tenderId": "TND-2026-016",
+      "maskedVendorId": "SYSTEM_GENESIS",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "BUYER_AUTHORITY",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "PUBLISH_NEW_TENDER",
+      "evaluationPayload": {
+        "tenderNumber": null,
+        "title": "Autonomous Drone Highway Surveillance & Telemetry Grid",
+        "budgetCr": 35.0,
+        "pqcCount": 1
+      },
+      "merkleRoot": "0x6ef3acf8084eaff97299595b74b6c3d80fddd2272be5175495317c9d5359f874",
+      "signature": "MEQCID6D1ED90A...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 144,
+      "blockHash": "0xc8d258f89b6888abfc39a04b17c1f8c0d95141d291be41e624635a6cb38437c3",
+      "previousHash": "0xe6ab84c21032f075ef5c02846b846aed2cc6c1e9dfe77c227e11cd577eb1f137",
+      "timestamp": "2026-09-01T17:03:43.808439",
+      "tenderId": "TND-2026-016",
+      "maskedVendorId": "VEN-ANON-DA07",
+      "officerContext": {
+        "officerId": "SYSTEM_ZK_GATEWAY",
+        "officerRole": "INGESTION_CONTROLLER",
+        "dscFingerprint": "SHA256:GATEWAY_HARDWARE_FINGERPRINT"
+      },
+      "action": "DOUBLE_BLIND_TOKEN_GENERATION",
+      "evaluationPayload": {
+        "pseudonymAssigned": "VEN-ANON-DA07",
+        "kmsVaultEnvelope": "AES256-GCM-CIPHER-0xD3CBEF0B7957-KMS",
+        "turnoverDeclaredCr": 14.5,
+        "miiPercentage": 88.0
+      },
+      "merkleRoot": "0x97d81d54645f5d9aa75407c2f1c7501d184244b9759c550cac717f19e3444009",
+      "signature": "MEQCID67F30154...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    },
+    {
+      "blockHeight": 145,
+      "blockHash": "0xeb3ff082f42c8420213093d02bb4a5076f6a5b5a5b9bcc4bd5e0d79780b51b4b",
+      "previousHash": "0xc8d258f89b6888abfc39a04b17c1f8c0d95141d291be41e624635a6cb38437c3",
+      "timestamp": "2026-09-01T17:03:43.863431",
+      "tenderId": "TND-2026-016",
+      "maskedVendorId": "VEN-ANON-DA07",
+      "officerContext": {
+        "officerId": "GEM-OFF-9041",
+        "officerRole": "TEC_MEMBER",
+        "dscFingerprint": "SHA256:7B8F9A01C2945DF8812456AE3290FE19823467AB"
+      },
+      "action": "RECORD_BLIND_EVALUATION_SCORE",
+      "evaluationPayload": {
+        "technicalMarks": 94,
+        "flagType": "NONE",
+        "remarks": "High domestic value addition (88% Class-I) and robust architecture."
+      },
+      "merkleRoot": "0xe65e91618e90ea2cf0675d281a84dc4840cc8352851d34c3c8f7a06c84cefcdc",
+      "signature": "MEQCID9FDA5EAB...NIC_CLASS3_SOVEREIGN",
+      "verified": true
+    }
+  ],
+  "vendor_documents": {},
+  "vendor_boq": {},
+  "vendor_milestones": {},
+  "transactions": {}
+}
