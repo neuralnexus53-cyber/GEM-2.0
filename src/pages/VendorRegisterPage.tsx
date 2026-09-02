@@ -211,7 +211,7 @@ function VendorRegisterForm() {
               <div className="w-8 h-8 border-3 border-amber-500 border-t-transparent rounded-full animate-spin mx-auto" />
             </div>
           ) : (
-            <form onSubmit={handleRegisterSubmit}>
+            <form onSubmit={handleRegisterSubmit} autoComplete="off">
               
               {step === 1 && (
                 <div className="space-y-6">

@@ -222,7 +222,7 @@ export default function GovRegisterPage() {
               <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mt-4" />
             </div>
           ) : (
-            <form onSubmit={handleGovRegister} className="space-y-6">
+            <form onSubmit={handleGovRegister} className="space-y-6" autoComplete="off">
               
               <div className="bg-slate-950/80 p-4 rounded-xl border border-slate-800 space-y-3">
                 <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">

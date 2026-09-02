@@ -293,7 +293,7 @@ export const VendorAuthGateway: React.FC = () => {
             {authMode === 'LOGIN' && (
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                <form onSubmit={handleLoginSubmit} className="lg:col-span-7 space-y-4">
+                <form onSubmit={handleLoginSubmit} className="lg:col-span-7 space-y-4" autoComplete="off">
                   
                   <div>
                     <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
@@ -305,6 +305,7 @@ export const VendorAuthGateway: React.FC = () => {
                       </div>
                       <input
                         type="text"
+                        autoComplete="off"
                         value={identifier}
                         onChange={(e) => setIdentifier(e.target.value)}
                         placeholder="e.g. VEND-OEM-8902 or oem@apexpower.com"
@@ -333,6 +334,7 @@ export const VendorAuthGateway: React.FC = () => {
                       </div>
                       <input
                         type={showPassword ? 'text' : 'password'}
+                        autoComplete="new-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Enter password"
@@ -565,13 +567,11 @@ export const VendorAuthGateway: React.FC = () => {
                       <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
                         Enter 6-Digit OTP Code
                       </label>
-                      <span className="text-[10px] text-emerald-400 font-semibold cursor-pointer" onClick={() => setOtpValue('202688')}>
-                        ⚡ Click to Auto-fill Demo Code (202688)
-                      </span>
                     </div>
                     <input
                       type="text"
                       maxLength={6}
+                      autoComplete="off"
                       value={otpValue}
                       onChange={(e) => setOtpValue(e.target.value)}
                       placeholder="• • • • • •"
@@ -1001,7 +1001,7 @@ export const VendorAuthGateway: React.FC = () => {
               </p>
             </div>
 
-            <form onSubmit={handleOtpSubmit} className="space-y-5">
+            <form onSubmit={handleOtpSubmit} className="space-y-5" autoComplete="off">
               <div className="flex justify-center gap-2 sm:gap-3">
                 {otpInput.map((digit, idx) => (
                   <input
@@ -1009,23 +1009,13 @@ export const VendorAuthGateway: React.FC = () => {
                     ref={(el) => { otpInputRefs.current[idx] = el; }}
                     type="text"
                     maxLength={1}
+                    autoComplete="off"
                     value={digit}
                     onChange={(e) => handleOtpChange(idx, e.target.value)}
                     onKeyDown={(e) => handleOtpKeyDown(idx, e)}
                     className="w-11 h-12 text-center text-lg font-bold font-mono bg-[#08101E] border-2 border-[#1E3A8A] focus:border-[#FF9933] rounded-xl text-white focus:outline-none transition-all"
                   />
                 ))}
-              </div>
-
-              <div className="text-center text-xs text-slate-400">
-                <span>Demo Security Code: </span>
-                <button
-                  type="button"
-                  onClick={() => setOtpInput(['2', '0', '2', '6', '8', '8'])}
-                  className="font-mono font-bold text-amber-400 hover:underline"
-                >
-                  202688 (Click to Autofill)
-                </button>
               </div>
 
               <div className="flex items-center gap-3">

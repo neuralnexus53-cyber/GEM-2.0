@@ -127,7 +127,7 @@ export default function GovLoginPage() {
             </p>
           </div>
 
-          <form onSubmit={handleOfficerLogin} className="space-y-5">
+          <form onSubmit={handleOfficerLogin} className="space-y-5" autoComplete="off">
             <div>
               <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
                 Government Officer Employee ID / Email
@@ -136,6 +136,7 @@ export default function GovLoginPage() {
                 <input 
                   type="text"
                   required
+                  autoComplete="off"
                   value={officerId}
                   onChange={(e) => setOfficerId(e.target.value)}
                   placeholder="PO-DEPT-YEAR-XXXX"
@@ -151,6 +152,7 @@ export default function GovLoginPage() {
               <input 
                 type="password"
                 required
+                autoComplete="new-password"
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
                 placeholder="Enter authorized password"
@@ -164,17 +166,12 @@ export default function GovLoginPage() {
                   <Smartphone size={14} className="text-emerald-400" />
                   <span>Aadhaar / Official Mobile OTP</span>
                 </label>
-                <span 
-                  className="text-[10px] text-emerald-400 hover:text-emerald-300 font-semibold cursor-pointer"
-                  onClick={() => setOtpCode('202688')}
-                >
-                  ⚡ Auto-Fill Code (202688)
-                </span>
               </div>
               <div className="flex gap-2">
                 <input 
                   type="text"
                   maxLength={6}
+                  autoComplete="off"
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value)}
                   placeholder="• • • • • •"
@@ -182,7 +179,7 @@ export default function GovLoginPage() {
                 />
                 <button
                   type="button"
-                  onClick={() => setOtpCode('202688')}
+                  onClick={() => alert("OTP sent to your registered official mobile number.")}
                   className="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs text-slate-200 font-bold rounded-lg cursor-pointer"
                 >
                   Resend OTP
