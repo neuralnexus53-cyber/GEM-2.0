@@ -91,21 +91,19 @@ export default function GovLoginPage() {
 
       localStorage.setItem('gem_gov_auth_session', JSON.stringify(newOfficerSession));
 
-      // Attempt background backend sync if available
+      // Fire non-blocking background sync if backend available
       try {
         const apiBase = window.location.origin.includes('vercel.app') ? '/api' : 'http://127.0.0.1:8000/api';
-        await fetch(`${apiBase}/auth/login-officer`, {
+        fetch(`${apiBase}/auth/login-officer`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ identifier: activeBadgeId, password: passcode || 'SecurePass@2026' })
-        });
+        }).catch(() => {});
       } catch (err) {}
     }
 
-    setTimeout(() => {
-      setIsLoading(false);
-      navigate('/gov');
-    }, 400);
+    setIsLoading(false);
+    navigate('/gov');
   };
 
   return (

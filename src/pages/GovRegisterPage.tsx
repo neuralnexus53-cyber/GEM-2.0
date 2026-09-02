@@ -108,10 +108,10 @@ export default function GovRegisterPage() {
       }
     };
 
-    // 1. Sync with FastAPI backend & Supabase
+    // 1. Fire non-blocking backend sync
     try {
       const apiBase = window.location.origin.includes('vercel.app') ? '/api' : 'http://127.0.0.1:8000/api';
-      await fetch(`${apiBase}/auth/register-officer`, {
+      fetch(`${apiBase}/auth/register-officer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -128,10 +128,8 @@ export default function GovRegisterPage() {
           office_location: formData.officeLocation,
           cag_pin: formData.cagPin
         })
-      });
-    } catch (e) {
-      console.warn('[Gov Registration] Backend offline, saving to sovereign local store:', e);
-    }
+      }).catch(() => {});
+    } catch (e) {}
 
     // 2. Persist active officer session in localStorage
     localStorage.setItem('gem_gov_auth_session', JSON.stringify(officerData));
