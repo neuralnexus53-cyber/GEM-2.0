@@ -40,17 +40,17 @@ export default function GovRegisterPage() {
   const [photoPreview, setPhotoPreview] = useState<string>(PRESET_OFFICER_PHOTOS[0].url);
 
   const [formData, setFormData] = useState({
-    fullName: '',
-    designation: '',
+    fullName: 'Dr. Vikramaditya Sharma, IAS',
+    designation: 'Joint Secretary & Tender Committee Chair',
     ministryIndex: 0,
-    email: '',
-    phone: '',
-    badgeId: '',
-    officeLocation: '',
+    email: 'vikramaditya.ias@nic.in',
+    phone: '+91 98112 04921',
+    badgeId: 'PO-MORTH-2026-9812',
+    officeLocation: 'Transport Bhawan, 1 Parliament Street, New Delhi',
     clearanceLevel: 'Level-3 (Senior Procurement Officer)',
-    cagPin: '',
-    password: '',
-    agreeDeclaration: false
+    cagPin: '9821',
+    password: 'SecurePass@2026',
+    agreeDeclaration: true
   });
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,19 +77,19 @@ export default function GovRegisterPage() {
     setIsLoading(true);
 
     const selectedMin = MINISTRIES_LIST[Number(formData.ministryIndex)] || MINISTRIES_LIST[0];
-    const generatedBadgeId = formData.badgeId || `PO-${selectedMin.code}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    const generatedBadgeId = formData.badgeId.trim() || `PO-${selectedMin.code}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
 
     const officerData = {
       officerId: generatedBadgeId,
       badgeId: generatedBadgeId,
-      fullName: formData.fullName,
-      designation: formData.designation,
+      fullName: formData.fullName || 'Dr. Vikramaditya Sharma, IAS',
+      designation: formData.designation || 'Joint Secretary & Tender Committee Chair',
       ministry: selectedMin.ministry,
       department: selectedMin.dept,
-      email: formData.email,
+      email: formData.email || 'officer@nic.in',
       phone: formData.phone || '+91 98112 04921',
-      officeLocation: formData.officeLocation,
-      securityClearanceLevel: formData.clearanceLevel,
+      officeLocation: formData.officeLocation || 'Central Secretariat, New Delhi',
+      securityClearanceLevel: formData.clearanceLevel || 'Level-4 (Top Secret / Sovereign Procurement)',
       profilePhotoUrl: photoPreview,
       dscCertificate: {
         issuer: 'National Informatics Centre (NIC-CA) Class-3 Sovereign',
@@ -268,6 +268,87 @@ export default function GovRegisterPage() {
                       Upload your official passport photo or choose an avatar for the digital CAG evaluation ledger.
                     </p>
                   </div>
+                </div>
+              </div>
+
+              {/* ⚡ 1-Click Auto-Fill Presets */}
+              <div className="p-3 rounded-xl bg-slate-950/80 border border-blue-500/30">
+                <div className="text-[11px] font-bold text-blue-400 uppercase tracking-wider flex items-center justify-between mb-2">
+                  <span className="flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <span>⚡ 1-Click Quick Officer Presets</span>
+                  </span>
+                  <span className="text-[10px] text-slate-400">Click to fill form instantly</span>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({
+                        fullName: 'Dr. Vikramaditya Sharma, IAS',
+                        designation: 'Joint Secretary & Tender Committee Chair',
+                        ministryIndex: 0,
+                        email: 'vikramaditya.ias@nic.in',
+                        phone: '+91 98112 04921',
+                        badgeId: 'PO-MORTH-2026-9812',
+                        officeLocation: 'Transport Bhawan, 1 Parliament Street, New Delhi',
+                        clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
+                        cagPin: '9821',
+                        password: 'SecurePass@2026',
+                        agreeDeclaration: true
+                      });
+                    }}
+                    className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
+                  >
+                    <div className="font-bold text-white text-[11px]">🛣️ MoRTH / NHAI</div>
+                    <div className="text-[9px] text-slate-400">Dr. Vikramaditya, IAS</div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({
+                        fullName: 'Shri Rajeshwar Singh, IDAS',
+                        designation: 'Director (Defence Contracts & DRDO Telemetry)',
+                        ministryIndex: 1,
+                        email: 'rajeshwar.singh@mod.gov.in',
+                        phone: '+91 98234 11092',
+                        badgeId: 'PO-DEF-2026-4412',
+                        officeLocation: 'South Block, Central Secretariat, New Delhi',
+                        clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
+                        cagPin: '4412',
+                        password: 'SecurePass@2026',
+                        agreeDeclaration: true
+                      });
+                    }}
+                    className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
+                  >
+                    <div className="font-bold text-white text-[11px]">🛡️ Min. of Defence</div>
+                    <div className="text-[9px] text-slate-400">Shri Rajeshwar, IDAS</div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({
+                        fullName: 'Smt. Ananya Banerjee, IRSS',
+                        designation: 'Principal Chief Materials Manager (PCMM)',
+                        ministryIndex: 2,
+                        email: 'ananya.banerjee@railnet.gov.in',
+                        phone: '+91 94331 88201',
+                        badgeId: 'PO-RAIL-2026-5501',
+                        officeLocation: 'Rail Bhawan, Rafi Marg, New Delhi',
+                        clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
+                        cagPin: '5501',
+                        password: 'SecurePass@2026',
+                        agreeDeclaration: true
+                      });
+                    }}
+                    className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
+                  >
+                    <div className="font-bold text-white text-[11px]">🚆 Indian Railways</div>
+                    <div className="text-[9px] text-slate-400">Smt. Ananya, IRSS</div>
+                  </button>
                 </div>
               </div>
 
