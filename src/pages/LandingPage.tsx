@@ -102,12 +102,12 @@ export default function LandingPage() {
           
           <div className="text-amber-400 text-xs font-bold uppercase tracking-widest mb-2">Government of India • Ministry of Commerce & Industry</div>
           <h3 className="text-xl font-bold text-white mb-6">GeM 2.0 Compliance Portal Navigation</h3>
-
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 px-6 text-center max-w-4xl">
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 px-6 text-center max-w-4xl">
             <Link to="/" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">Home</Link>
+            <Link to="/gov/login" onClick={() => setDrawerOpen(false)} className="hover:text-blue-400 transition-colors text-sm font-bold text-blue-400">Officer Login</Link>
+            <Link to="/gov/register" onClick={() => setDrawerOpen(false)} className="hover:text-blue-400 transition-colors text-sm font-bold text-blue-400">Officer Registration</Link>
             <Link to="/vendor/login" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold text-amber-400">Vendor Login</Link>
             <Link to="/vendor/register" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold text-amber-400">Vendor Registration</Link>
-            <Link to="/gov/login" onClick={() => setDrawerOpen(false)} className="hover:text-blue-400 transition-colors text-sm font-bold text-blue-400">Procurement Officer Portal</Link>
             <a href="#about" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">About Us</a>
             <a href="#gem2" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">GeM 2.0 Compliance Engine</a>
             <a href="#initiatives" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">Our Initiatives</a>
@@ -125,7 +125,7 @@ export default function LandingPage() {
           
           <div className="flex items-center gap-3 shrink-0 z-10">
             <button 
-              onClick={() => setDrawerOpen(true)}
+              onClick={() => setDrawerOpen(true)} 
               className="p-1.5 text-white hover:text-amber-400 focus:outline-none cursor-pointer border-none bg-transparent flex items-center gap-2" 
               aria-label="Toggle Menu"
             >
@@ -143,7 +143,6 @@ export default function LandingPage() {
                 alt="GeM Logo" 
                 className="h-8 sm:h-10 w-auto object-contain"
                 onError={(e) => {
-                  // Fallback text if image loading fails
                   (e.target as HTMLElement).style.display = 'none';
                 }}
               />
@@ -152,7 +151,7 @@ export default function LandingPage() {
                   GEM 2.0 COMPLIANCE PORTAL
                 </span>
                 <span className="text-[10px] text-amber-400 font-medium tracking-wider">
-                  Automated Bidder Compliance & Verification Suite
+                  Automated Bidder Compliance &amp; Verification Suite
                 </span>
               </div>
             </Link>
@@ -183,18 +182,6 @@ export default function LandingPage() {
           <div className="flex items-center gap-3 z-10">
             <nav className="hidden md:flex items-center space-x-2 text-xs font-semibold text-slate-200">
               <Link 
-                to="/vendor/login" 
-                className="hover:text-amber-400 transition-colors px-2 py-1 rounded"
-              >
-                Vendor Login
-              </Link>
-              <Link 
-                to="/vendor/register" 
-                className="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-3 py-1.5 rounded-full transition-colors"
-              >
-                Vendor Registration
-              </Link>
-              <Link 
                 to="/gov/login" 
                 className="hover:text-blue-400 transition-colors px-2 py-1 rounded"
               >
@@ -207,11 +194,23 @@ export default function LandingPage() {
                 <i className="fa-solid fa-building-columns text-[10px]" />
                 Officer Registration
               </Link>
+              <Link 
+                to="/vendor/login" 
+                className="hover:text-amber-400 transition-colors px-2 py-1 rounded"
+              >
+                Vendor Login
+              </Link>
+              <Link 
+                to="/vendor/register" 
+                className="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-3 py-1.5 rounded-full transition-colors"
+              >
+                Vendor Registration
+              </Link>
             </nav>
 
-            <div className="md:hidden flex items-center gap-2">
-              <Link to="/vendor/register" className="bg-amber-500 text-slate-900 font-bold px-2.5 py-1 rounded-full text-xs">Vendor</Link>
-              <Link to="/gov/register" className="bg-blue-600 text-white font-bold px-2.5 py-1 rounded-full text-xs">Officer</Link>
+            <div className="md:hidden flex items-center gap-1.5">
+              <Link to="/gov/login" className="bg-blue-600 text-white font-bold px-2.5 py-1 rounded-full text-xs">Officer</Link>
+              <Link to="/vendor/login" className="bg-amber-500 text-slate-900 font-bold px-2.5 py-1 rounded-full text-xs">Vendor</Link>
             </div>
           </div>
 
@@ -282,18 +281,30 @@ export default function LandingPage() {
                     <p className="text-slate-200 text-xs sm:text-sm md:text-base leading-relaxed mb-6 drop-shadow">
                       Automated 14-point AI verification across 7+ Government Portals, GSTN, CBDT, MSME Udyam, MII Local Content, and CAG Cryptographic Merkle Ledger.
                     </p>
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2.5 sm:gap-3">
                       <Link 
-                        to="/vendor/register" 
-                        className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
+                        to="/gov/login" 
+                        className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
                       >
-                        <i className="fa-solid fa-user-plus" /> Vendor Registration
+                        <i className="fa-solid fa-lock" /> Officer Login
                       </Link>
                       <Link 
                         to="/gov/register" 
-                        className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-6 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
+                        className="bg-slate-900/90 hover:bg-slate-800 text-blue-300 border border-blue-500/40 font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
                       >
                         <i className="fa-solid fa-building-columns" /> Officer Registration
+                      </Link>
+                      <Link 
+                        to="/vendor/login" 
+                        className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
+                      >
+                        <i className="fa-solid fa-right-to-bracket" /> Vendor Login
+                      </Link>
+                      <Link 
+                        to="/vendor/register" 
+                        className="bg-slate-900/90 hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
+                      >
+                        <i className="fa-solid fa-user-plus" /> Vendor Registration
                       </Link>
                     </div>
                   </div>
