@@ -1,0 +1,44 @@
+{
+  "name": "sih2026-govvendor-ai",
+  "private": true,
+  "version": "5.0.0",
+  "type": "module",
+  "description": "GovVendor AI Sovereign Procurement Suite - SIH 2026",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc -b",
+    "preview": "vite preview",
+    "backend": "cd backend && python -m uvicorn app.main:app --port 8000 --reload",
+    "backend:install": "pip install -r backend/requirements.txt"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.3.3",
+    "canvas-confetti": "^1.9.4",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.37.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.6.3",
+    "recharts": "^3.10.1",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.1.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.2.2"
+  },
+  "keywords": [
+    "sih-project",
+    "govvendor-ai",
+    "government-procurement",
+    "double-blind-vault",
+    "fastapi",
+    "react",
+    "typescript"
+  ]
+}
