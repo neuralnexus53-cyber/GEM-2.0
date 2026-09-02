@@ -252,51 +252,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
-    // Fallback: If identifier contains valid format, create active vendor session
-    if (cleanId.includes('@') || cleanId.startsWith('vend-')) {
-      const rolePrefix: UserRole = cleanId.includes('msme') ? 'MSME_STARTUP' : cleanId.includes('work') ? 'WORKS_CONTRACTOR' : 'OEM_SELLER';
-      const fallbackSession: UserSession = {
-        id: `usr-${Date.now()}`,
-        email: cleanId.includes('@') ? cleanId : `${cleanId}@gov-vendor.in`,
-        fullName: cleanId.split('@')[0].toUpperCase() + ' (Authorized Signatory)',
-        companyName: `${cleanId.split('@')[0].toUpperCase()} Enterprises Pvt Ltd`,
-        role: rolePrefix,
-        vendorId: cleanId.startsWith('vend-') ? cleanId.toUpperCase() : `VEND-${rolePrefix.substring(0, 3)}-${Math.floor(1000 + Math.random() * 9000)}`,
-        gstin: '07AAAC' + Math.floor(1000 + Math.random() * 9000) + 'A1Z1',
-        pan: 'AAAC' + Math.floor(1000 + Math.random() * 9000) + 'A',
-        token: `gem_jwt_${Date.now()}`,
-        isMfaVerified: true,
-        loginTimestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) + ' IST',
-        sessionId: `GEM-SSO-${Math.floor(100000 + Math.random() * 900000)}`,
-        ipAddress: '103.48.192.11 (Secured Gateway)',
-        planId: 'FREE'
-      };
+    // Universal Fallback: Accept any entered username/email/ID and authenticate smoothly
+    const rolePrefix: UserRole = cleanId.includes('msme') || cleanId.includes('start') 
+      ? 'MSME_STARTUP' 
+      : cleanId.includes('work') || cleanId.includes('infra') || cleanId.includes('contract')
+      ? 'WORKS_CONTRACTOR' 
+      : 'OEM_SELLER';
 
-      const fallbackProfile: VendorProfile = {
-        ...mockProfiles[rolePrefix],
-        id: fallbackSession.vendorId,
-        name: fallbackSession.companyName,
-        gstin: fallbackSession.gstin,
-        pan: fallbackSession.pan
-      };
+    const cleanName = cleanId.includes('@') ? cleanId.split('@')[0] : cleanId;
+    const fallbackSession: UserSession = {
+      id: `usr-${Date.now()}`,
+      email: cleanId.includes('@') ? cleanId : `${cleanName}@gov-vendor.in`,
+      fullName: cleanName.toUpperCase() + ' (Authorized Signatory)',
+      companyName: `${cleanName.toUpperCase()} Solutions Pvt Ltd`,
+      role: rolePrefix,
+      vendorId: cleanId.startsWith('vend-') ? cleanId.toUpperCase() : `VEND-${rolePrefix.substring(0, 3)}-${Math.floor(1000 + Math.random() * 9000)}`,
+      gstin: '07AAAC' + Math.floor(1000 + Math.random() * 9000) + 'A1Z1',
+      pan: 'AAAC' + Math.floor(1000 + Math.random() * 9000) + 'A',
+      token: `gem_jwt_${Date.now()}`,
+      isMfaVerified: true,
+      loginTimestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' IST',
+      sessionId: `GEM-SSO-${Math.floor(100000 + Math.random() * 900000)}`,
+      ipAddress: '103.48.192.11 (Secured Gateway)',
+      planId: 'FREE'
+    };
 
-      if (enableMfa) {
-        setPendingMfa({
-          session: fallbackSession,
-          profile: fallbackProfile,
-          otp: '202688',
-          mobileLast4: '7731',
-          email: fallbackSession.email
-        });
-        return { success: true, requiresMfa: true };
-      }
+    const fallbackProfile: VendorProfile = {
+      ...mockProfiles[rolePrefix],
+      id: fallbackSession.vendorId,
+      name: fallbackSession.companyName,
+      gstin: fallbackSession.gstin,
+      pan: fallbackSession.pan
+    };
 
-      setUser(fallbackSession);
-      setProfile(fallbackProfile);
-      return { success: true, requiresMfa: false };
+    if (enableMfa) {
+      setPendingMfa({
+        session: fallbackSession,
+        profile: fallbackProfile,
+        otp: '202688',
+        mobileLast4: '7731',
+        email: fallbackSession.email
+      });
+      return { success: true, requiresMfa: true };
     }
 
-    return { success: false, error: 'User ID / Email not recognized. Use quick access or registered email.' };
+    setUser(fallbackSession);
+    setProfile(fallbackProfile);
+    return { success: true, requiresMfa: false };
   };
 
   const verifyMfa = (otp: string) => {
