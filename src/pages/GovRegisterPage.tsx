@@ -110,7 +110,8 @@ export default function GovRegisterPage() {
 
     // 1. Sync with FastAPI backend & Supabase
     try {
-      await fetch('http://localhost:8000/api/auth/register-officer', {
+      const apiBase = window.location.origin.includes('vercel.app') ? '/api' : 'http://127.0.0.1:8000/api';
+      await fetch(`${apiBase}/auth/register-officer`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
