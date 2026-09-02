@@ -40,8 +40,8 @@ export const VendorAuthGateway: React.FC = () => {
   const [authMode, setAuthMode] = useState<'LOGIN' | 'OTP_LOGIN' | 'DEMO_SELECT' | 'REGISTER' | 'DSC_LOGIN'>('LOGIN');
 
   // Form states
-  const [identifier, setIdentifier] = useState('');
-  const [password, setPassword] = useState('');
+  const [identifier, setIdentifier] = useState('oem@apexpower.com');
+  const [password, setPassword] = useState('VendorPass@2026');
   const [showPassword, setShowPassword] = useState(false);
   const [enableMfa, setEnableMfa] = useState(false);
   const [rememberDevice, setRememberDevice] = useState(true);
@@ -295,6 +295,69 @@ export const VendorAuthGateway: React.FC = () => {
                 
                 <form onSubmit={handleLoginSubmit} className="lg:col-span-7 space-y-4" autoComplete="off">
                   
+                  {/* ⚡ Quick 1-Click Demo Persona Picker */}
+                  <div className="p-3 rounded-xl bg-[#08101E] border border-[#1E3A8A]/80 mb-2">
+                    <div className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider flex items-center justify-between mb-2">
+                      <span className="flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                        <span>⚡ 1-Click Quick Demo Accounts</span>
+                      </span>
+                      <span className="text-[10px] text-slate-400">Click to auto-fill</span>
+                    </div>
+                    <div className="grid grid-cols-3 gap-1.5 text-xs">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIdentifier('oem@apexpower.com');
+                          setPassword('VendorPass@2026');
+                          if (captchaCode) setCaptchaInput(captchaCode);
+                        }}
+                        className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
+                          identifier === 'oem@apexpower.com'
+                            ? 'bg-cyan-500/20 border-cyan-400 text-cyan-200'
+                            : 'bg-[#0F1D36] border-slate-700/60 text-slate-300 hover:border-cyan-500/50'
+                        }`}
+                      >
+                        <div className="font-bold text-[11px] truncate">🏭 OEM Solar</div>
+                        <div className="text-[9px] text-slate-400 truncate">Apex Dynamics</div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIdentifier('startup@qubitsensors.in');
+                          setPassword('VendorPass@2026');
+                          if (captchaCode) setCaptchaInput(captchaCode);
+                        }}
+                        className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
+                          identifier === 'startup@qubitsensors.in'
+                            ? 'bg-amber-500/20 border-amber-400 text-amber-200'
+                            : 'bg-[#0F1D36] border-slate-700/60 text-slate-300 hover:border-amber-500/50'
+                        }`}
+                      >
+                        <div className="font-bold text-[11px] truncate">🚀 MSME Tech</div>
+                        <div className="text-[9px] text-slate-400 truncate">Novavolt Labs</div>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIdentifier('contractor@bharatcivil.com');
+                          setPassword('VendorPass@2026');
+                          if (captchaCode) setCaptchaInput(captchaCode);
+                        }}
+                        className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
+                          identifier === 'contractor@bharatcivil.com'
+                            ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200'
+                            : 'bg-[#0F1D36] border-slate-700/60 text-slate-300 hover:border-emerald-500/50'
+                        }`}
+                      >
+                        <div className="font-bold text-[11px] truncate">🏗️ Works / BoQ</div>
+                        <div className="text-[9px] text-slate-400 truncate">Bharat Infra</div>
+                      </button>
+                    </div>
+                  </div>
+
                   <div>
                     <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
                       GeM Seller ID / Udyam No. / Registered Email <span className="text-[#FF9933]">*</span>
