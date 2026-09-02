@@ -26,7 +26,11 @@ import {
 import { useAuth, DEMO_ACCOUNTS_MAP, RegisterVendorPayload } from '../../context/AuthContext';
 import { UserRole } from '../../types';
 
-export const VendorAuthGateway: React.FC = () => {
+interface VendorAuthGatewayProps {
+  onClose?: () => void;
+}
+
+export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose }) => {
   const { 
     login, 
     loginAsDemoVendor, 
@@ -114,7 +118,10 @@ export const VendorAuthGateway: React.FC = () => {
     setIsLoading(true);
     try {
       const res = await login(identifier, password, enableMfa);
-      if (!res.success) {
+      if (res.success) {
+        if (onClose) onClose();
+        else window.location.hash = '#/vendor';
+      } else {
         setErrorMsg(res.error || 'Authentication failed. Please check credentials.');
       }
     } catch (err: any) {
@@ -128,7 +135,11 @@ export const VendorAuthGateway: React.FC = () => {
     setErrorMsg(null);
     setIsLoading(true);
     try {
-      await loginAsDemoVendor(role, enableMfa);
+      const res = await loginAsDemoVendor(role, enableMfa);
+      if (res.success) {
+        if (onClose) onClose();
+        else window.location.hash = '#/vendor';
+      }
     } catch (err) {
       setErrorMsg('Demo sign in failed.');
     } finally {

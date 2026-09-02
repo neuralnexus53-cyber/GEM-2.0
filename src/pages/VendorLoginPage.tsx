@@ -1,11 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthProvider } from '../vendor/context/AuthContext';
+import { AuthProvider, useAuth } from '../vendor/context/AuthContext';
 import { VendorAuthGateway } from '../vendor/components/auth/VendorAuthGateway';
 
-export default function VendorLoginPage() {
+function VendorLoginBody() {
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/vendor');
+    }
+  }, [isAuthenticated, navigate]);
+
+  return (
+    <VendorAuthGateway 
+      onClose={() => navigate('/vendor')} 
+    />
+  );
+}
+
+export default function VendorLoginPage() {
   return (
     <AuthProvider>
       <div className="min-h-screen bg-slate-950 text-white flex flex-col font-sans">
@@ -48,7 +63,7 @@ export default function VendorLoginPage() {
 
         <main className="flex-1 flex items-center justify-center p-4 sm:p-8">
           <div className="w-full max-w-4xl">
-            <VendorAuthGateway />
+            <VendorLoginBody />
           </div>
         </main>
 
