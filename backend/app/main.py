@@ -54,25 +54,7 @@ def health_check_root():
 def health_check_api():
     return get_health_response()
 
-            "shared_database": "Active (Local JSON / Supabase Relational Bridge)"
-        },
-        "endpoints": [
-            "/api/gov/tenders",
-            "/api/gov/submissions",
-            "/api/gov/statutory/vendors",
-            "/api/gov/cag-ledger",
-            "/api/vendors",
-            "/api/documents",
-            "/api/tenders",
-            "/api/evaluation",
-            "/api/rag",
-            "/api/contractor",
-            "/api/marketplace",
-            "/api/auth",
-            "/api/billing"
-        ]
-    }
-
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("backend.app.main:app", host="0.0.0.0", port=8000, reload=True)
+
