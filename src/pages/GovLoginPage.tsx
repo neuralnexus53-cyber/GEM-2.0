@@ -10,7 +10,8 @@ import {
   FileCheck, 
   ShieldAlert, 
   Cpu, 
-  Sparkles 
+  Sparkles,
+  Smartphone
 } from 'lucide-react';
 
 export default function GovLoginPage() {
