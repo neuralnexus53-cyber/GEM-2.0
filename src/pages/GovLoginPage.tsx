@@ -15,10 +15,11 @@ import {
 
 export default function GovLoginPage() {
   const navigate = useNavigate();
-  const [officerId, setOfficerId] = useState('PO-MORTH-2026-9812');
-  const [passcode, setPasscode] = useState('••••••••••••');
-  const [otpCode, setOtpCode] = useState('202688');
+  const [officerId, setOfficerId] = useState('');
+  const [passcode, setPasscode] = useState('');
+  const [otpCode, setOtpCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
 
   const handleOfficerLogin = async (e: React.FormEvent) => {
     e.preventDefault();

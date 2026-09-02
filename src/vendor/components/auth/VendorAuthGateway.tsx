@@ -40,8 +40,8 @@ export const VendorAuthGateway: React.FC = () => {
   const [authMode, setAuthMode] = useState<'LOGIN' | 'OTP_LOGIN' | 'DEMO_SELECT' | 'REGISTER' | 'DSC_LOGIN'>('LOGIN');
 
   // Form states
-  const [identifier, setIdentifier] = useState('oem@apexpower.com');
-  const [password, setPassword] = useState('••••••••');
+  const [identifier, setIdentifier] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [enableMfa, setEnableMfa] = useState(false);
   const [rememberDevice, setRememberDevice] = useState(true);
@@ -49,18 +49,18 @@ export const VendorAuthGateway: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // OTP Direct Login state
-  const [otpTarget, setOtpTarget] = useState('+91 98112 04921');
+  const [otpTarget, setOtpTarget] = useState('');
   const [otpSent, setOtpSent] = useState(false);
-  const [otpValue, setOtpValue] = useState('202688');
+  const [otpValue, setOtpValue] = useState('');
   const [otpTimer, setOtpTimer] = useState(30);
 
   // Captcha
   const [captchaCode, setCaptchaCode] = useState('');
   const [captchaInput, setCaptchaInput] = useState('');
-  const [captchaValid, setCaptchaValid] = useState<boolean | null>(true);
+  const [captchaValid, setCaptchaValid] = useState<boolean | null>(null);
 
   // OTP 2FA state
-  const [otpInput, setOtpInput] = useState(['2', '0', '2', '6', '8', '8']);
+  const [otpInput, setOtpInput] = useState(['', '', '', '', '', '']);
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Registration form
@@ -72,14 +72,14 @@ export const VendorAuthGateway: React.FC = () => {
     role: 'OEM_SELLER',
     gstin: '',
     pan: '',
-    turnoverCr: 5.0,
-    experienceYears: 3,
+    turnoverCr: 0,
+    experienceYears: 0,
     udyamNumber: '',
     contractorClass: '',
     brandName: ''
   });
 
-  // Generate random captcha and auto-fill for frictionless UX
+  // Generate random captcha
   const generateCaptcha = () => {
     const chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
     let code = '';
@@ -87,9 +87,10 @@ export const VendorAuthGateway: React.FC = () => {
       code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     setCaptchaCode(code);
-    setCaptchaInput(code); // Pre-fill for instant seamless login
-    setCaptchaValid(true);
+    setCaptchaInput('');
+    setCaptchaValid(null);
   };
+
 
   useEffect(() => {
     generateCaptcha();

@@ -47,19 +47,19 @@ function VendorRegisterForm() {
     dpiitRegistered: false,
     contractorClass: '',
     brandName: '',
-    turnoverCr: '15.5',
-    experienceYears: '5',
-    miiPercentage: '75',
+    turnoverCr: '',
+    experienceYears: '',
+    miiPercentage: '',
     contactEmail: '',
     contactPhone: '',
-    address: 'Plot 42, Okhla Industrial Area Phase-III',
-    state: 'Delhi',
-    pincode: '110020',
-    bankName: 'State Bank of India',
-    bankAccount: '00003891024589',
-    ifscCode: 'SBIN0001824',
+    address: '',
+    state: '',
+    pincode: '',
+    bankName: '',
+    bankAccount: '',
+    ifscCode: '',
     password: '',
-    agreeTerms: true
+    agreeTerms: false
   });
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {

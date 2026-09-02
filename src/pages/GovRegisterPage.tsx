@@ -41,16 +41,16 @@ export default function GovRegisterPage() {
 
   const [formData, setFormData] = useState({
     fullName: '',
-    designation: 'Chief Procurement Officer & Technical Committee Chair',
+    designation: '',
     ministryIndex: 0,
     email: '',
     phone: '',
     badgeId: '',
-    officeLocation: 'Transport Bhawan, 1 Parliament Street, New Delhi',
-    clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
-    cagPin: '2026',
+    officeLocation: '',
+    clearanceLevel: 'Level-3 (Senior Procurement Officer)',
+    cagPin: '',
     password: '',
-    agreeDeclaration: true
+    agreeDeclaration: false
   });
 
   const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
