@@ -132,8 +132,18 @@ export const WorksContractorPortal: React.FC<WorksContractorPortalProps> = ({ pr
 
           <div className="flex items-center gap-2 shrink-0">
             <button
-              onClick={() => alert("Official BoQ Schedule exported in NIC CPPP standard format (.XLS).")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#0B2545] hover:bg-[#112E55] text-blue-200 border border-[#1D4ED8] text-xs font-semibold transition-all shadow-xs"
+              onClick={() => {
+                const header = "Item Code,Description,Unit,Quantity,Estimated Rate (INR),Quoted Rate (INR),Total Quoted (INR),GST %\n";
+                const rows = boqList.map(item => `"${item.itemCode}","${item.description.replace(/"/g, '""')}","${item.unit}",${item.quantity},${item.estimatedRate},${item.quotedRate},${item.quantity * item.quotedRate},${item.gstRate}`).join("\n");
+                const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `CPWD_BoQ_Schedule_${Date.now()}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#0B2545] hover:bg-[#112E55] text-blue-200 border border-[#1D4ED8] text-xs font-semibold transition-all shadow-xs cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export BoQ Schedule</span>

@@ -320,8 +320,8 @@ export const VendorAuthGateway: React.FC = () => {
                       </label>
                       <button
                         type="button"
-                        onClick={() => alert('Password reset link will be sent to the registered entity email.')}
-                        className="text-xs text-[#FF9933] hover:underline"
+                        onClick={() => setErrorMsg('Password recovery instructions sent to registered official entity email.')}
+                        className="text-xs text-[#FF9933] hover:underline cursor-pointer"
                       >
                         Forgot Password?
                       </button>

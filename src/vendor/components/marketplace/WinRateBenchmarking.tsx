@@ -90,8 +90,18 @@ export const WinRateBenchmarking: React.FC = () => {
 
           <div className="flex items-center gap-2 shrink-0">
             <button
-              onClick={() => alert("Historical L1 GeM award dataset exported.")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#0B2545] hover:bg-[#112E55] text-blue-200 border border-[#1D4ED8] text-xs font-semibold transition-all shadow-xs"
+              onClick={() => {
+                const header = "Competitor Entity,Tender Ref No,Department / PSU,Awarded Price (Cr),L1 Winning Margin %,Status,Award Date\n";
+                const rows = competitorBids.map(b => `"${b.bidderName.replace(/"/g, '""')}","${b.tenderRefNumber}","${b.department}",${b.quotedPriceCr},${b.deviationFromL1Pct || 0},"${b.status}","${b.submissionDate}"`).join("\n");
+                const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `GeM_Historical_L1_Awards_${Date.now()}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#0B2545] hover:bg-[#112E55] text-blue-200 border border-[#1D4ED8] text-xs font-semibold transition-all shadow-xs cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export Award Benchmarks</span>

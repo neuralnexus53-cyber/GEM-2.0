@@ -98,8 +98,29 @@ export const OptimalPricingAdvisor: React.FC = () => {
 
           <div className="flex items-center gap-2 shrink-0">
             <button
-              onClick={() => alert("Statutory Cost Justification Analysis Sheet generated.")}
-              className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#0B2545] hover:bg-[#112E55] text-blue-200 border border-[#1D4ED8] text-xs font-semibold transition-all shadow-xs"
+              onClick={() => {
+                const header = "Parameter,Value\n";
+                const rows = [
+                  `"Tender ID","${selectedTenderId || 'TND-2026-001'}"`,
+                  `"Estimated Tender Value (Cr)","₹ ${baseTenderValueCr} Cr"`,
+                  `"Selected Geographic Region","${selectedRegion}"`,
+                  `"Regional Multiplier","${regionInfo.indexMultiplier}"`,
+                  `"Bidding Strategy Tier","${selectedTier}"`,
+                  `"Recommended Discount %","${currentDiscount}%"`,
+                  `"Optimal Recommended Bid (INR)","₹ ${recommendedBidINR.toLocaleString('en-IN')}"`,
+                  `"Estimated Base Execution Cost","₹ ${estimatedCostINR.toLocaleString('en-IN')}"`,
+                  `"Projected Net Margin (INR)","₹ ${estimatedMarginINR.toLocaleString('en-IN')}"`,
+                  `"Projected Gross Margin %","${marginPercentage}%"`
+                ].join("\n");
+                const blob = new Blob([header + rows], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `GeM_Cost_Justification_Rate_Analysis_${selectedTenderId || 'Tender'}.csv`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#0B2545] hover:bg-[#112E55] text-blue-200 border border-[#1D4ED8] text-xs font-semibold transition-all shadow-xs cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export Rate Analysis (SoR)</span>

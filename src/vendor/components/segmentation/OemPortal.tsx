@@ -568,8 +568,40 @@ Designation: Head of Public Procurement & GeM Affairs`;
           <div className="pt-2 flex items-center justify-between text-xs text-slate-400 border-t border-[#1E3A68]">
             <span>Classification: <strong className="text-emerald-400">{Number(calculatedLocalContent) >= 50 ? 'Class-I Local Supplier (>= 50%)' : 'Class-II Local Supplier (20% - 49%)'}</strong></span>
             <button
-              onClick={() => alert(`Statutory MII Self-Declaration certificate generated for ${calculatedLocalContent}% Local Content.`)}
-              className="text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1"
+              onClick={() => {
+                const docText = `STATUTORY MAKE IN INDIA (PPP-MII) SELF-DECLARATION CERTIFICATE
+(In accordance with Department for Promotion of Industry and Internal Trade (DPIIT) Public Procurement Order 2017)
+Date: ${new Date().toLocaleDateString('en-IN')}
+
+We, ${profile.name} (GSTIN: ${profile.gstin}), hereby declare and certify under Rule 5 of the Public Procurement (Preference to Make in India) Order 2017:
+
+1. Category of Supplier: ${Number(calculatedLocalContent) >= 50 ? 'Class-I Local Supplier (>= 50% Local Content)' : 'Class-II Local Supplier (20% - 49% Local Content)'}
+2. Calculated Domestic Local Content: ${calculatedLocalContent}%
+3. Cost Breakdown (INR):
+   - Domestic Material Cost: ₹${miiCalculator.domesticMaterialCost.toLocaleString('en-IN')}
+   - Domestic Labor Cost: ₹${miiCalculator.domesticLaborCost.toLocaleString('en-IN')}
+   - Domestic Overhead Cost: ₹${miiCalculator.domesticOverheadCost.toLocaleString('en-IN')}
+   - Total Domestic Value Addition: ₹${totalDomestic.toLocaleString('en-IN')}
+   - Imported Component Value: ₹${miiCalculator.importedComponentsCost.toLocaleString('en-IN')}
+   - Total Production Cost: ₹${totalCost.toLocaleString('en-IN')}
+
+4. Location of Domestic Manufacturing / Value Addition:
+   Manufacturing Facility: Industrial Area, Phase-II, New Delhi-110020
+
+We understand that any false declaration will be in breach of the Code of Integrity under Rule 175(1)(i)(h) of the General Financial Rules (GFR) 2017.
+
+Authorized Signatory:
+For ${profile.name}
+(Official Digital Seal & Signature)`;
+                const blob = new Blob([docText], { type: 'text/plain;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `MII_Self_Declaration_${profile.gstin}.txt`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Generate Statutory MII Self-Declaration</span>

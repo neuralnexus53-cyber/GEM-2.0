@@ -176,8 +176,30 @@ export const MsmeStartupPortal: React.FC<MsmeStartupPortalProps> = ({ profile })
               Statutory Bid Security Declaration (In Lieu of EMD under GFR Rule 170)
             </span>
             <button
-              onClick={() => alert("Official Bid Security Declaration (BSD) downloaded in printable format.")}
-              className="text-amber-400 hover:text-amber-300 text-xs font-semibold flex items-center gap-1"
+              onClick={() => {
+                const bsdText = `FORM OF BID SECURITY DECLARATION (IN LIEU OF EMD)
+(Under Ministry of Finance OM No. F.9/4/2020-PPD and GFR 2017 Rule 170)
+Date: ${new Date().toLocaleDateString('en-IN')}
+
+To:
+The Tender Inviting Authority (TIA),
+Government of India / GeM SPV
+
+1. We, ${profile.name} (GSTIN: ${profile.gstin}), declare that we are registered as a Micro/Small Enterprise under Udyam Registration No. ${profile.udyamNumber || 'UDYAM-MH-03-0098412'} and are therefore exempted from payment of Earnest Money Deposit (EMD).
+2. We understand that if we withdraw or modify our bid during the period of validity, or fail to sign the contract when called upon, we will be debarred from participating in any government procurement tenders for a period of two (2) years.
+
+Authorized Signatory:
+For ${profile.name}
+(Official Digital Seal & Sign)`;
+                const blob = new Blob([bsdText], { type: 'text/plain;charset=utf-8;' });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = `Bid_Security_Declaration_${profile.udyamNumber || 'MSME'}.txt`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }}
+              className="text-amber-400 hover:text-amber-300 text-xs font-semibold flex items-center gap-1 cursor-pointer"
             >
               <Download className="w-3 h-3" />
               <span>Download Signed BSD Form</span>

@@ -257,8 +257,16 @@ export const OcrScannerView: React.FC<OcrScannerViewProps> = ({ profile }) => {
               <div className="pt-2 flex items-center justify-between text-xs text-slate-400 border-t border-[#1E3A68]">
                 <span>Integrity Hash: <code className="text-slate-300 font-mono">SHA256:7f8a92b...</code></span>
                 <button
-                  onClick={() => alert(`Full OCR extracted text for ${selectedDoc.id} downloaded.`)}
-                  className="text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1"
+                  onClick={() => {
+                    const blob = new Blob([JSON.stringify(selectedDoc, null, 2)], { type: 'application/json;charset=utf-8;' });
+                    const link = document.createElement("a");
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `${selectedDoc.id}_OCR_Extracted.json`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
+                  className="text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1 cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download Parsed Text (.JSON)</span>
