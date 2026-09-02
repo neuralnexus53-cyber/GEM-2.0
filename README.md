@@ -117,5 +117,5 @@ python test_integration.py
 
 - **Project**: Smart India Hackathon (SIH 2026)
 - **Problem Category**: AI in Governance & Public Procurement Compliance
-- **Repository**: [`neuralnexus53-cyber/SIH2026`](https://github.com/neuralnexus53/SIH2026)
+- **Repository**: [`neuralnexus53-cyber/GEM-2.0`](https://github.com/neuralnexus53-cyber/GEM-2.0)
 - **License**: MIT

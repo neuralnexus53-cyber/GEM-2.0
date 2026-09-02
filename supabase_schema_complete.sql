@@ -1,10 +1,12 @@
--- GovVendor AI: Enterprise Supabase / PostgreSQL Database Schema
--- Synchronized with Supabase Cloud Architecture
+-- GovVendor AI: Sovereign Procurement Suite (SIH 2026)
+-- Complete Enterprise Supabase PostgreSQL Schema with 14 Synchronized Tables
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
--- 1. Subscription Plans Reference Table
+-- ============================================================================
+-- 1. SUBSCRIPTION PLANS REFERENCE TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.subscription_plans (
   id character varying NOT NULL PRIMARY KEY,
   name character varying NOT NULL,
@@ -22,9 +24,17 @@ VALUES
     ('FREE', 'Free Tier', 0, 'monthly', 5, FALSE, FALSE, FALSE, NULL),
     ('STARTER', 'Starter Plan', 9900, 'monthly', 50, FALSE, TRUE, TRUE, 'plan_starter_99_mo'),
     ('PRO', 'Enterprise Pro Plan', 49900, 'monthly', -1, TRUE, TRUE, TRUE, 'plan_pro_499_mo')
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE SET 
+    name = EXCLUDED.name,
+    price_inr = EXCLUDED.price_inr,
+    monthly_evaluation_quota = EXCLUDED.monthly_evaluation_quota,
+    has_vector_rag = EXCLUDED.has_vector_rag,
+    has_pricing_advisor = EXCLUDED.has_pricing_advisor,
+    has_pdf_dossier_export = EXCLUDED.has_pdf_dossier_export;
 
--- 2. Vendors Profile Table
+-- ============================================================================
+-- 2. VENDORS PROFILE TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.vendors (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   name character varying NOT NULL,
@@ -43,7 +53,9 @@ CREATE TABLE IF NOT EXISTS public.vendors (
   updated_at timestamp with time zone DEFAULT now()
 );
 
--- 3. User Authentication Table
+-- ============================================================================
+-- 3. USER AUTHENTICATION TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.user_auth (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   vendor_id uuid REFERENCES public.vendors(id) ON DELETE CASCADE,
@@ -57,7 +69,9 @@ CREATE TABLE IF NOT EXISTS public.user_auth (
   last_login timestamp with time zone
 );
 
--- 4. Government Procurement Officers Table
+-- ============================================================================
+-- 4. GOVERNMENT PROCUREMENT OFFICERS TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.officers (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   badge_id character varying NOT NULL UNIQUE,
@@ -76,7 +90,9 @@ CREATE TABLE IF NOT EXISTS public.officers (
   updated_at timestamp with time zone DEFAULT now()
 );
 
--- 5. Government Officer Authentication Table
+-- ============================================================================
+-- 5. GOVERNMENT OFFICER AUTHENTICATION TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.gov_auth (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   officer_id uuid REFERENCES public.officers(id) ON DELETE CASCADE,
@@ -87,7 +103,9 @@ CREATE TABLE IF NOT EXISTS public.gov_auth (
   last_login timestamp with time zone
 );
 
--- 6. Feature Quotas Table
+-- ============================================================================
+-- 6. FEATURE QUOTAS TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.feature_quotas (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id uuid REFERENCES public.user_auth(id) ON DELETE CASCADE,
@@ -100,7 +118,9 @@ CREATE TABLE IF NOT EXISTS public.feature_quotas (
   updated_at timestamp with time zone DEFAULT now()
 );
 
--- 7. Subscriptions Table
+-- ============================================================================
+-- 7. SUBSCRIPTIONS TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.subscriptions (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id uuid REFERENCES public.user_auth(id) ON DELETE CASCADE,
@@ -113,7 +133,9 @@ CREATE TABLE IF NOT EXISTS public.subscriptions (
   updated_at timestamp with time zone DEFAULT now()
 );
 
--- 8. Transactions Table
+-- ============================================================================
+-- 8. TRANSACTIONS TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.transactions (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id uuid REFERENCES public.user_auth(id) ON DELETE SET NULL,
@@ -129,7 +151,9 @@ CREATE TABLE IF NOT EXISTS public.transactions (
   created_at timestamp with time zone DEFAULT now()
 );
 
--- 9. Evaluation Logs Table
+-- ============================================================================
+-- 9. EVALUATION LOGS TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.evaluation_logs (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   vendor_id uuid REFERENCES public.vendors(id) ON DELETE SET NULL,
@@ -143,7 +167,9 @@ CREATE TABLE IF NOT EXISTS public.evaluation_logs (
   created_at timestamp with time zone DEFAULT now()
 );
 
--- 10. Tenders Table
+-- ============================================================================
+-- 10. TENDERS TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.tenders (
   id character varying NOT NULL PRIMARY KEY,
   tender_number character varying,
@@ -171,7 +197,9 @@ CREATE TABLE IF NOT EXISTS public.tenders (
   updated_at timestamp with time zone DEFAULT now()
 );
 
--- 11. Submissions Table (Double-Blind Vault)
+-- ============================================================================
+-- 11. SUBMISSIONS TABLE (Double-Blind Vault)
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.submissions (
   id character varying NOT NULL PRIMARY KEY,
   tender_id character varying REFERENCES public.tenders(id) ON DELETE CASCADE,
@@ -190,7 +218,9 @@ CREATE TABLE IF NOT EXISTS public.submissions (
   updated_at timestamp with time zone DEFAULT now()
 );
 
--- 12. CAG Audit Ledger Table (Cryptographic Merkle Blockchain)
+-- ============================================================================
+-- 12. CAG AUDIT LEDGER TABLE (Cryptographic Merkle Blockchain)
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.cag_ledger (
   id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
   block_height integer NOT NULL UNIQUE,
@@ -208,7 +238,9 @@ CREATE TABLE IF NOT EXISTS public.cag_ledger (
   created_at timestamp with time zone DEFAULT now()
 );
 
--- 13. Vendor Statutory Documents Table
+-- ============================================================================
+-- 13. VENDOR STATUTORY DOCUMENTS TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.documents (
   id character varying NOT NULL PRIMARY KEY,
   vendor_id character varying,
@@ -224,7 +256,9 @@ CREATE TABLE IF NOT EXISTS public.documents (
   created_at timestamp with time zone DEFAULT now()
 );
 
--- 14. BOQ Items Table
+-- ============================================================================
+-- 14. BOQ ITEMS & PRICING BENCHMARKS TABLE
+-- ============================================================================
 CREATE TABLE IF NOT EXISTS public.boq_items (
   id character varying NOT NULL PRIMARY KEY,
   item_code character varying NOT NULL,
@@ -240,7 +274,9 @@ CREATE TABLE IF NOT EXISTS public.boq_items (
   created_at timestamp with time zone DEFAULT now()
 );
 
--- Performance Indexes
+-- ============================================================================
+-- INDEXES FOR ULTRA-FAST QUERY PERFORMANCE
+-- ============================================================================
 CREATE INDEX IF NOT EXISTS idx_user_auth_email ON public.user_auth(email);
 CREATE INDEX IF NOT EXISTS idx_user_auth_vendor_id ON public.user_auth(vendor_id);
 CREATE INDEX IF NOT EXISTS idx_gov_auth_email ON public.gov_auth(email);
