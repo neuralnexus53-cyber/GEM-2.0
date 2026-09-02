@@ -44,10 +44,26 @@ export const GovOfficialFooter: React.FC<GovOfficialFooterProps> = ({ profile })
               Statutory Procurement Orders
             </span>
             <ul className="space-y-1 text-[11px] text-slate-400">
-              <li><span className="hover:text-amber-300 cursor-pointer">General Financial Rules (GFR), 2017</span></li>
-              <li><span className="hover:text-amber-300 cursor-pointer">Public Procurement Policy for MSEs, 2012</span></li>
-              <li><span className="hover:text-amber-300 cursor-pointer">PPP-MII (Make in India) Order, 2017</span></li>
-              <li><span className="hover:text-amber-300 cursor-pointer">Right to Information (RTI Act 2005)</span></li>
+              <li>
+                <a href="https://doe.gov.in/files/gfr-2017" target="_blank" rel="noreferrer" className="hover:text-amber-300 flex items-center gap-1 text-slate-400 hover:underline">
+                  General Financial Rules (GFR), 2017 <ExternalLink className="w-2.5 h-2.5" />
+                </a>
+              </li>
+              <li>
+                <a href="http://dcmsme.gov.in/publications/circulars/PPP2012.pdf" target="_blank" rel="noreferrer" className="hover:text-amber-300 flex items-center gap-1 text-slate-400 hover:underline">
+                  Public Procurement Policy for MSEs, 2012 <ExternalLink className="w-2.5 h-2.5" />
+                </a>
+              </li>
+              <li>
+                <a href="https://dpiit.gov.in/public-procurements" target="_blank" rel="noreferrer" className="hover:text-amber-300 flex items-center gap-1 text-slate-400 hover:underline">
+                  PPP-MII (Make in India) Order, 2017 <ExternalLink className="w-2.5 h-2.5" />
+                </a>
+              </li>
+              <li>
+                <a href="https://rti.gov.in" target="_blank" rel="noreferrer" className="hover:text-amber-300 flex items-center gap-1 text-slate-400 hover:underline">
+                  Right to Information (RTI Act 2005) <ExternalLink className="w-2.5 h-2.5" />
+                </a>
+              </li>
             </ul>
           </div>
 
