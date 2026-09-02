@@ -638,8 +638,15 @@ export default function LandingPage() {
             <div className="bg-slate-950/60 p-6 rounded-xl border border-slate-800 flex flex-col text-center">
               <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-wider">GeM 2.0 Compliance</h3>
               <ul className="space-y-2.5 text-xs text-slate-300">
-                <li><Link to="/gov" className="hover:text-amber-400 transition-colors">Procurement Officer Suite</Link></li>
                 <li><Link to="/vendor" className="hover:text-amber-400 transition-colors">Vendor Compliance Vault</Link></li>
+                <li>
+                  <button 
+                    onClick={() => { setAboutModalTab('mse_mii'); setAboutModalOpen(true); }}
+                    className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
+                  >
+                    MSE &amp; Make in India Policy
+                  </button>
+                </li>
                 <li><a href={docsUrl} target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">Swagger API Documentation</a></li>
               </ul>
             </div>
@@ -656,14 +663,20 @@ export default function LandingPage() {
                   </button>
                 </li>
                 <li>
-                  <Link to="/vendor" className="hover:text-amber-400 transition-colors">
+                  <button 
+                    onClick={() => { setAboutModalTab('overview'); setAboutModalOpen(true); }}
+                    className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
+                  >
                     Raise a Compliance Clarification Ticket
-                  </Link>
+                  </button>
                 </li>
                 <li>
-                  <Link to="/gov" className="hover:text-amber-400 transition-colors">
-                    CAG Audit Record Verification
-                  </Link>
+                  <button 
+                    onClick={() => { setAboutModalTab('gem2_engine'); setAboutModalOpen(true); }}
+                    className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
+                  >
+                    CAG Cryptographic Audit Verification
+                  </button>
                 </li>
               </ul>
             </div>
