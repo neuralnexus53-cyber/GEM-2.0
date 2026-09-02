@@ -1,17 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from '../vendor/context/AuthContext';
+import { AuthProvider } from '../vendor/context/AuthContext';
 import { VendorAuthGateway } from '../vendor/components/auth/VendorAuthGateway';
 
 function VendorLoginBody() {
-  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/vendor');
-    }
-  }, [isAuthenticated, navigate]);
 
   return (
     <VendorAuthGateway 
