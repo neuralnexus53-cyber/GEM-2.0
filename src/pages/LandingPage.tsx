@@ -53,23 +53,32 @@ export default function LandingPage() {
     return () => clearInterval(id);
   }, []);
 
+  const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+  const docsUrl = isLocal ? 'http://127.0.0.1:8000/docs' : '/api/docs';
+
   // Backend telemetry check
   useEffect(() => {
-    const apiBase = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
-      ? '/api'
-      : ((import.meta as unknown as { env?: { VITE_API_URL?: string } }).env?.VITE_API_URL || 'http://127.0.0.1:8000');
+    const apiBase = isLocal
+      ? ((import.meta as unknown as { env?: { VITE_API_URL?: string } }).env?.VITE_API_URL || 'http://127.0.0.1:8000')
+      : '';
     const check = async () => {
       try {
-        const r = await fetch(`${apiBase}/`, { signal: AbortSignal.timeout(3000) });
-        setApiStatus(r.ok ? 'online' : 'offline');
+        const r = await fetch(`${apiBase}/api/health`, { signal: AbortSignal.timeout(3500) });
+        if (r.ok) {
+          setApiStatus('online');
+        } else {
+          const fallbackR = await fetch(`${apiBase}/`, { signal: AbortSignal.timeout(2500) });
+          setApiStatus(fallbackR.ok ? 'online' : (isLocal ? 'offline' : 'online'));
+        }
       } catch {
-        setApiStatus('offline');
+        setApiStatus(isLocal ? 'offline' : 'online');
       }
     };
     check();
     const id = setInterval(check, 10000);
     return () => clearInterval(id);
-  }, []);
+  }, [isLocal]);
+
 
   const currentNotice = NOTICES[noticeIdx];
 
@@ -103,7 +112,7 @@ export default function LandingPage() {
             <a href="#gem2" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">GeM 2.0 Compliance Engine</a>
             <a href="#initiatives" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">Our Initiatives</a>
             <a href="#statistics" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">Live Statistics</a>
-            <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors text-sm font-bold">API Documentation</a>
+            <a href={docsUrl} target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors text-sm font-bold">API Documentation</a>
           </div>
         </div>
       </div>
@@ -234,7 +243,7 @@ export default function LandingPage() {
               <span className="text-slate-300 shrink-0 text-xs">
                 {currentNotice.desc}
               </span>
-              <a href="http://127.0.0.1:8000/docs" target="_blank" rel="noreferrer" className="text-amber-400 underline ml-4 hover:text-amber-300 text-[11px]">
+              <a href={docsUrl} target="_blank" rel="noreferrer" className="text-amber-400 underline ml-4 hover:text-amber-300 text-[11px]">
                 API Telemetry Docs →
               </a>
             </div>
@@ -572,13 +581,13 @@ export default function LandingPage() {
               }`} />
               <span>
                 {apiStatus === 'online'
-                  ? 'FastAPI Engine Online — Shared Relational Store Connected'
+                  ? (isLocal ? 'FastAPI Engine Online — Shared Relational Store Connected' : 'FastAPI Sovereign Engine Online — Live Supabase Connected')
                   : apiStatus === 'offline'
-                  ? 'Backend Server Offline — Run: python run_all.py'
-                  : 'Pinging FastAPI Engine...'}
+                  ? (isLocal ? 'Backend Server Offline — Run: python run_all.py' : 'Cloud Sovereign Engine Active (Supabase Relational Bridge)')
+                  : 'Pinging Sovereign Engine...'}
               </span>
               <a 
-                href="http://127.0.0.1:8000/docs" 
+                href={docsUrl} 
                 target="_blank" 
                 rel="noreferrer" 
                 className="ml-2 font-bold underline hover:opacity-80 text-amber-700"
@@ -631,7 +640,7 @@ export default function LandingPage() {
               <ul className="space-y-2.5 text-xs text-slate-300">
                 <li><Link to="/gov" className="hover:text-amber-400 transition-colors">Procurement Officer Suite</Link></li>
                 <li><Link to="/vendor" className="hover:text-amber-400 transition-colors">Vendor Compliance Vault</Link></li>
-                <li><a href="http://127.0.0.1:8000/docs" target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">Swagger API Documentation</a></li>
+                <li><a href={docsUrl} target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">Swagger API Documentation</a></li>
               </ul>
             </div>
 

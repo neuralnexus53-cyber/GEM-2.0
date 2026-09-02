@@ -8,29 +8,11 @@ app = FastAPI(
     version="5.0.0"
 )
 
-# Explicit CORS configuration for all deployment targets
-origins = [
-    # Local development
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:5174",
-    "http://127.0.0.1:5174",
-    "http://localhost:8000",
-    "http://127.0.0.1:8000",
-    "http://localhost:4000",
-    # GitHub Pages (production frontend)
-    "https://neuralnexus53.github.io",
-    "https://neuralnexus53.github.io/SIH2026",
-    # Vercel (if frontend is also on Vercel)
-    "https://sih2026.vercel.app",
-]
-
+# Explicit CORS configuration for all deployment targets (Local, Vercel, GitHub Pages)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
-    allow_origin_regex=r"http://(localhost|127\.0\.0\.1)(:\d+)?",
+    allow_origins=["*"],
+    allow_origin_regex=r".*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -49,15 +31,29 @@ app.include_router(rag.router)
 app.include_router(contractor.router)
 app.include_router(marketplace.router)
 
-@app.get("/")
-def health_check():
+def get_health_response():
     return {
         "status": "online",
         "service": "GovVendor AI Unified Sovereign Backend",
         "version": "5.0.0",
         "portals": {
-            "government_portal": "Connected via /api/gov/* (Port 3000)",
-            "vendor_portal": "Connected via /api/* (Port 5173)",
+            "government_portal": "Connected via /api/gov/*",
+            "vendor_portal": "Connected via /api/*",
+            "docs": "/docs or /api/docs"
+        }
+    }
+
+@app.get("/")
+def health_check_root():
+    return get_health_response()
+
+@app.get("/api")
+@app.get("/api/")
+@app.get("/api/health")
+@app.get("/health")
+def health_check_api():
+    return get_health_response()
+
             "shared_database": "Active (Local JSON / Supabase Relational Bridge)"
         },
         "endpoints": [
