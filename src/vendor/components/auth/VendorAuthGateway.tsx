@@ -437,40 +437,9 @@ export const VendorAuthGateway: React.FC = () => {
                     ) : (
                       <>
                         <span>Direct Login & Enter Dashboard</span>
-                        <ArrowRight className="w-4 h-4 text-cyan-300" />
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                       </>
                     )}
-                  </button>
-
-                  <div className="relative flex items-center justify-center py-2">
-                    <div className="border-t border-slate-700 w-full" />
-                    <span className="bg-[#0B1528] px-3 text-[11px] text-slate-400 font-medium uppercase tracking-wider">OR</span>
-                    <div className="border-t border-slate-700 w-full" />
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsLoading(true);
-                      setTimeout(() => {
-                        setIsLoading(false);
-                        loginAsDemoVendor('OEM_SELLER');
-                      }, 900);
-                    }}
-                    disabled={isLoading}
-                    className="w-full py-3 px-4 rounded-xl bg-[#1f293d] hover:bg-[#27354f] border border-slate-700 hover:border-blue-400 text-white font-bold text-xs flex items-center justify-center gap-3 transition-all cursor-pointer shadow-md group"
-                  >
-                    
-                    <div className="grid grid-cols-2 gap-0.5 w-4 h-4">
-                      <div className="bg-[#f25022] w-1.5 h-1.5 rounded-[0.5px]" />
-                      <div className="bg-[#7fba00] w-1.5 h-1.5 rounded-[0.5px]" />
-                      <div className="bg-[#00a4ef] w-1.5 h-1.5 rounded-[0.5px]" />
-                      <div className="bg-[#ffb900] w-1.5 h-1.5 rounded-[0.5px]" />
-                    </div>
-                    <span>Sign in with Microsoft Authenticator</span>
-                    <span className="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-400/30 ml-auto font-normal">
-                      Passwordless
-                    </span>
                   </button>
 
                 </form>

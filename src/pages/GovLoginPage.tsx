@@ -252,37 +252,6 @@ export default function GovLoginPage() {
                 </>
               )}
             </button>
-
-            <div className="relative flex items-center justify-center py-1">
-              <div className="border-t border-slate-800 w-full" />
-              <span className="bg-slate-900 px-3 text-[10px] text-slate-500 font-medium uppercase tracking-wider">OR</span>
-              <div className="border-t border-slate-800 w-full" />
-            </div>
-
-            <button
-              type="button"
-              onClick={() => {
-                setIsLoading(true);
-                setTimeout(() => {
-                  setIsLoading(false);
-                  navigate('/gov');
-                }, 800);
-              }}
-              disabled={isLoading}
-              className="w-full py-3 px-4 rounded-xl bg-slate-950 hover:bg-slate-800 border border-slate-700 hover:border-blue-400 text-white font-bold text-xs flex items-center justify-center gap-3 transition-all cursor-pointer shadow-md"
-            >
-              
-              <div className="grid grid-cols-2 gap-0.5 w-4 h-4">
-                <div className="bg-[#f25022] w-1.5 h-1.5 rounded-[0.5px]" />
-                <div className="bg-[#7fba00] w-1.5 h-1.5 rounded-[0.5px]" />
-                <div className="bg-[#00a4ef] w-1.5 h-1.5 rounded-[0.5px]" />
-                <div className="bg-[#ffb900] w-1.5 h-1.5 rounded-[0.5px]" />
-              </div>
-              <span>Sign in with Microsoft Authenticator / Entra ID</span>
-              <span className="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-400/30 ml-auto font-normal">
-                Sovereign SSO
-              </span>
-            </button>
           </form>
 
           <div className="mt-6 pt-6 border-t border-slate-800/80">
