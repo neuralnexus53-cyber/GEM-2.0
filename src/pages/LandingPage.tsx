@@ -55,7 +55,9 @@ export default function LandingPage() {
 
   // Backend telemetry check
   useEffect(() => {
-    const apiBase = (import.meta as unknown as { env?: { VITE_API_URL?: string } }).env?.VITE_API_URL || 'http://127.0.0.1:8000';
+    const apiBase = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+      ? '/api'
+      : ((import.meta as unknown as { env?: { VITE_API_URL?: string } }).env?.VITE_API_URL || 'http://127.0.0.1:8000');
     const check = async () => {
       try {
         const r = await fetch(`${apiBase}/`, { signal: AbortSignal.timeout(3000) });

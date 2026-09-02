@@ -20,7 +20,9 @@ import {
   mockRegionalDemandIndices 
 } from '../data/mockData';
 
-const API_BASE_URL = 'http://127.0.0.1:8000';
+const API_BASE_URL = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1'
+  ? ''
+  : ((import.meta as unknown as { env?: { VITE_API_URL?: string } }).env?.VITE_API_URL || 'http://127.0.0.1:8000');
 
 async function fetchWithFallback<T>(endpoint: string, options?: RequestInit, fallbackData?: T): Promise<T> {
   try {
