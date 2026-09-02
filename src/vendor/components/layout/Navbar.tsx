@@ -163,13 +163,13 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>OCR Ingestion</span>
             </button>
 
-            <button
-              onClick={onOpenReportModal}
-              className="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-medium transition-all"
+            <a
+              href="#/gov/login"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 text-xs font-bold transition-all shadow-sm no-underline"
             >
-              <FileText className="w-4 h-4 text-slate-400" />
-              <span>Export Audit</span>
-            </button>
+              <Building2 className="w-3.5 h-3.5 text-blue-400" />
+              <span className="hidden sm:inline">Officer Portal</span>
+            </a>
 
             <button
               onClick={onOpenAuthModal}
