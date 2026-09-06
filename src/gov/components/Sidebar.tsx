@@ -151,7 +151,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     <aside className="w-64 min-w-[16rem] bg-[#08172D] text-slate-200 border-r border-[#1E3A68] flex flex-col justify-between p-3.5 h-[calc(100vh-80px)] overflow-y-auto shrink-0 shadow-lg">
       <div className="flex flex-col gap-3.5">
         
-        <div className="bg-[#051124] p-2.5 rounded-lg border border-[#1E3A68] space-y-1">
+        <div className="bg-[#051124] p-2.5 rounded-lg border border-[#1E3A68] space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
               Authorized Jurisdiction
@@ -165,6 +165,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
           <div className="text-[10px] text-amber-400 font-mono truncate">
             {officerProfile.department || 'Central Procurement Division'}
+          </div>
+
+          <div className="pt-1 border-t border-[#1E3A68]/60">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[9px] font-bold text-sky-400 uppercase tracking-wider">
+                GFR 2017 Role Authority
+              </span>
+              <span className="text-[8px] text-slate-400 font-mono">Rule 164/189</span>
+            </div>
+            <select
+              value={currentRole}
+              onChange={(e) => setCurrentRole(e.target.value as UserRole)}
+              className="w-full bg-[#001D3D] text-slate-100 border border-[#1E3A68] hover:border-[#0284C7] rounded px-2 py-1 text-[11px] font-bold cursor-pointer focus:outline-none focus:ring-1 focus:ring-sky-500"
+            >
+              <option value="TEC_MEMBER">Technical Committee (TEC_MEMBER)</option>
+              <option value="SCRUTINY_OFFICER">Scrutiny Officer (SCRUTINY_OFFICER)</option>
+              <option value="BUYER_AUTHORITY">GeM Buyer Authority (BUYER_AUTHORITY)</option>
+              <option value="CAG_AUDITOR">Statutory Vigilance (CAG_AUDITOR)</option>
+            </select>
           </div>
         </div>
 

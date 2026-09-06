@@ -41,7 +41,7 @@ export const GovHeaderStats: React.FC<GovHeaderStatsProps> = ({
           <span>{officerProfile.designation || 'Procurement Officer'}</span>
         </div>
         <div className="text-[11px] text-cyan-300 font-mono">
-          {officerProfile.badgeId} &bull; {officerProfile.clearanceLevel}
+          {officerProfile.badgeId} &bull; <span className="text-amber-400 font-bold">{currentRole}</span>
         </div>
       </div>
 
