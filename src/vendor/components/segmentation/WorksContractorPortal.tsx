@@ -152,13 +152,13 @@ export const WorksContractorPortal: React.FC<WorksContractorPortalProps> = ({ pr
         </div>
       </div>
 
-      <div className="flex items-center gap-1.5 border-b border-[#1E3A68] pb-2">
+      <div className="flex items-center gap-2 border-b border-[#23436E] pb-2 overflow-x-auto">
         <button
           onClick={() => setActiveSubTab('BOQ')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all border ${
+          className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
             activeSubTab === 'BOQ'
-              ? 'bg-[#002855] text-white border-[#0284C7]'
-              : 'bg-[#08172D] text-slate-400 border-[#1E3A68] hover:bg-[#0E203B] hover:text-slate-200'
+              ? 'bg-[#002855] text-white border-[#0284C7] shadow-xs'
+              : 'bg-[#132540] text-slate-300 border-[#23436E] hover:bg-[#1A3459] hover:text-white'
           }`}
         >
           1. BoQ & Schedule of Rates ({boqList.length} Items)
@@ -166,10 +166,10 @@ export const WorksContractorPortal: React.FC<WorksContractorPortalProps> = ({ pr
 
         <button
           onClick={() => setActiveSubTab('MILESTONES')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all border ${
+          className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
             activeSubTab === 'MILESTONES'
-              ? 'bg-[#002855] text-white border-[#0284C7]'
-              : 'bg-[#08172D] text-slate-400 border-[#1E3A68] hover:bg-[#0E203B] hover:text-slate-200'
+              ? 'bg-[#002855] text-white border-[#0284C7] shadow-xs'
+              : 'bg-[#132540] text-slate-300 border-[#23436E] hover:bg-[#1A3459] hover:text-white'
           }`}
         >
           2. Milestone & Payment Retention Schedule
@@ -177,10 +177,10 @@ export const WorksContractorPortal: React.FC<WorksContractorPortalProps> = ({ pr
 
         <button
           onClick={() => setActiveSubTab('BID_CAPACITY')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all border ${
+          className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
             activeSubTab === 'BID_CAPACITY'
-              ? 'bg-[#002855] text-white border-[#0284C7]'
-              : 'bg-[#08172D] text-slate-400 border-[#1E3A68] hover:bg-[#0E203B] hover:text-slate-200'
+              ? 'bg-[#002855] text-white border-[#0284C7] shadow-xs'
+              : 'bg-[#132540] text-slate-300 border-[#23436E] hover:bg-[#1A3459] hover:text-white'
           }`}
         >
           3. CPWD Bidding Capacity Evaluation

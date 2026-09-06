@@ -1,4 +1,4 @@
-export type UserRole = 'OEM_SELLER' | 'MSME_STARTUP' | 'WORKS_CONTRACTOR';
+export type UserRole = 'OEM_SELLER' | 'AUTHORIZED_RESELLER' | 'SERVICE_PROVIDER';
 
 export interface VendorProfile {
   id: string;
@@ -6,6 +6,10 @@ export interface VendorProfile {
   role: UserRole;
   gstin: string;
   pan: string;
+  cin?: string;
+  gemSellerId?: string;
+  registeredAddress?: string;
+  gemStarRating?: number; // e.g. 4.8
   turnoverCr: number; // in Crores INR
   experienceYears: number;
   udyamNumber?: string;
@@ -15,6 +19,7 @@ export interface VendorProfile {
   contractorClass?: string; // Class-1, Class-2
   miiPercentage: number; // Make in India local content %
   complianceScore: number; // 0-100
+  riskAlertsCount?: number; // e.g. 3 Alerts
   verifiedDocsCount: number;
   totalDocsCount: number;
   profilePhotoUrl?: string;
@@ -134,4 +139,23 @@ export interface CompetitorBid {
   variancePercentage: number;
   rank: 'L1' | 'L2' | 'L3' | 'L4' | 'L5';
   marketShare: number;
+}
+
+export interface DigiLockerDocument {
+  id: string;
+  docType: 'GST_CERT' | 'UDYAM_MSME' | 'PAN_CARD' | 'CORP_INC' | 'ITR_V' | 'CA_NETWORTH' | 'CPWD_ENLIST' | 'ISO_9001' | 'AADHAAR_KYC' | 'BIS_LICENSE';
+  title: string;
+  issuer: string;
+  issuerOrgId: string;
+  docNumber: string;
+  issueDate: string;
+  validUntil?: string;
+  uri: string;
+  sha256Hash: string;
+  xmlSignatureStatus: 'VERIFIED' | 'PENDING' | 'INVALID';
+  digitalSigner: string;
+  fileSize: string;
+  isPulled: boolean;
+  category: 'TAX_CORP' | 'MSME_QUALITY' | 'FINANCIAL_WORKS' | 'IDENTITY';
+  extractedData: Record<string, string | number>;
 }

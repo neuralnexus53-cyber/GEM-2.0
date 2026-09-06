@@ -20,6 +20,7 @@ import {
   CreditCard
 } from 'lucide-react';
 import { AuthProvider, useAuth } from '../vendor/context/AuthContext';
+import { api } from '../vendor/services/api';
 
 const PRESET_AVATARS = [
   { label: 'Industrial Tech', url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&auto=format&fit=crop&q=80' },
@@ -33,8 +34,9 @@ function VendorRegisterForm() {
   const { registerVendor } = useAuth();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [photoPreview, setPhotoPreview] = useState<string>('https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&auto=format&fit=crop&q=80');
+  const [photoPreview, setPhotoPreview] = useState<string>(PRESET_AVATARS[0].url);
 
   // Form data
   const [formData, setFormData] = useState({
@@ -62,14 +64,30 @@ function VendorRegisterForm() {
     agreeTerms: false
   });
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setIsUploadingPhoto(true);
       const reader = new FileReader();
       reader.onloadend = () => {
         setPhotoPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+
+      try {
+        const uploadRes = await api.uploadImageAsset(
+          file, 
+          formData.gstin || `REG-VEND-${Date.now()}`, 
+          'VENDOR', 
+          'PROFILE_PHOTO'
+        );
+        const remoteUrl = uploadRes.public_url || uploadRes.file_url;
+        setPhotoPreview(remoteUrl);
+      } catch (err) {
+        console.warn('[Supabase Storage] Vendor registration photo upload fallback:', err);
+      } finally {
+        setIsUploadingPhoto(false);
+      }
     }
   };
 

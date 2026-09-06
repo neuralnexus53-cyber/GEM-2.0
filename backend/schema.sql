@@ -208,23 +208,51 @@ CREATE TABLE IF NOT EXISTS public.cag_ledger (
   created_at timestamp with time zone DEFAULT now()
 );
 
--- 13. Vendor Statutory Documents Table
+-- 13. Vendor Statutory Documents Table (Supabase Document Vault)
 CREATE TABLE IF NOT EXISTS public.documents (
   id character varying NOT NULL PRIMARY KEY,
   vendor_id character varying,
   name text NOT NULL,
   type character varying NOT NULL,
+  file_name text,
+  file_url text,
+  storage_bucket character varying DEFAULT 'documents',
+  storage_path text,
+  mime_type character varying DEFAULT 'application/pdf',
   size character varying DEFAULT '2.4 MB',
+  file_size_bytes bigint DEFAULT 0,
   upload_date timestamp with time zone DEFAULT now(),
   status character varying DEFAULT 'VERIFIED',
   docket_hash character varying,
+  sha256_hash character varying,
   udin_number character varying,
   digilocker_verified boolean DEFAULT true,
+  pki_signature_valid boolean DEFAULT true,
+  extracted_fields jsonb DEFAULT '[]'::jsonb,
   parsed_summary text,
+  metadata jsonb DEFAULT '{}'::jsonb,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now()
+);
+
+-- 14. Media & Image Assets Table (Supabase Image & File Storage Registry)
+CREATE TABLE IF NOT EXISTS public.media_assets (
+  id uuid NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
+  owner_id character varying NOT NULL,
+  owner_type character varying NOT NULL DEFAULT 'VENDOR', -- 'VENDOR', 'OFFICER', 'TENDER', 'DOCUMENT'
+  asset_type character varying NOT NULL DEFAULT 'PROFILE_PHOTO', -- 'PROFILE_PHOTO', 'CERTIFICATE_SCAN', 'LOGO', 'TENDER_SPEC', 'DIGILOCKER_XML'
+  file_name text NOT NULL,
+  file_url text NOT NULL,
+  storage_bucket character varying NOT NULL DEFAULT 'vendor-assets',
+  storage_path text NOT NULL,
+  mime_type character varying NOT NULL DEFAULT 'image/jpeg',
+  file_size_bytes bigint DEFAULT 0,
+  sha256_hash character varying,
+  metadata jsonb DEFAULT '{}'::jsonb,
   created_at timestamp with time zone DEFAULT now()
 );
 
--- 14. BOQ Items Table
+-- 15. BOQ Items Table
 CREATE TABLE IF NOT EXISTS public.boq_items (
   id character varying NOT NULL PRIMARY KEY,
   item_code character varying NOT NULL,
@@ -252,3 +280,33 @@ CREATE INDEX IF NOT EXISTS idx_submissions_tender_id ON public.submissions(tende
 CREATE INDEX IF NOT EXISTS idx_submissions_masked_id ON public.submissions(masked_vendor_id);
 CREATE INDEX IF NOT EXISTS idx_cag_ledger_block_height ON public.cag_ledger(block_height);
 CREATE INDEX IF NOT EXISTS idx_documents_vendor_id ON public.documents(vendor_id);
+CREATE INDEX IF NOT EXISTS idx_media_assets_owner ON public.media_assets(owner_id, owner_type);
+
+-- -------------------------------------------------------------
+-- SUPABASE STORAGE BUCKETS SETUP (Execute in Supabase SQL Editor)
+-- -------------------------------------------------------------
+-- Enable Storage Buckets for Documents and Media
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES 
+  ('documents', 'documents', true, 52428800, ARRAY['application/pdf', 'application/json', 'text/xml', 'application/xml', 'image/jpeg', 'image/png']),
+  ('vendor-assets', 'vendor-assets', true, 10485760, ARRAY['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml']),
+  ('certificates', 'certificates', true, 26214400, ARRAY['application/pdf', 'image/jpeg', 'image/png', 'text/xml']),
+  ('tender-dockets', 'tender-dockets', true, 52428800, ARRAY['application/pdf', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/zip'])
+ON CONFLICT (id) DO UPDATE SET 
+  public = true,
+  file_size_limit = EXCLUDED.file_size_limit,
+  allowed_mime_types = EXCLUDED.allowed_mime_types;
+
+-- Storage Security & Public Access Policies
+CREATE POLICY "Public Read Access for Documents" 
+  ON storage.objects FOR SELECT 
+  USING (bucket_id IN ('documents', 'vendor-assets', 'certificates', 'tender-dockets'));
+
+CREATE POLICY "Authenticated Upload Access for Documents" 
+  ON storage.objects FOR INSERT 
+  WITH CHECK (bucket_id IN ('documents', 'vendor-assets', 'certificates', 'tender-dockets'));
+
+CREATE POLICY "Authenticated Update Access for Documents" 
+  ON storage.objects FOR UPDATE 
+  USING (bucket_id IN ('documents', 'vendor-assets', 'certificates', 'tender-dockets'));
+

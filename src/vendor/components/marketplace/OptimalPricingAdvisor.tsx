@@ -10,13 +10,23 @@ import {
   TrendingUp,
   AlertTriangle,
   FileSpreadsheet,
-  Download
+  Download,
+  Lock,
+  Sparkles,
+  ArrowRight
 } from 'lucide-react';
 import { api } from '../../services/api';
 import { TenderItem } from '../../types';
 import { formatCurrency, formatINR } from '../../lib/utils';
+import { useSubscription } from '../../hooks/useSubscription';
 
-export const OptimalPricingAdvisor: React.FC = () => {
+interface OptimalPricingAdvisorProps {
+  onOpenPricingModal?: () => void;
+}
+
+export const OptimalPricingAdvisor: React.FC<OptimalPricingAdvisorProps> = ({ onOpenPricingModal }) => {
+  const { subscription } = useSubscription();
+  const isFreePlan = subscription.planId === 'FREE';
   const [tenders, setTenders] = useState<TenderItem[]>([]);
   const [selectedTenderId, setSelectedTenderId] = useState<string>('');
   const [baseTenderValueCr, setBaseTenderValueCr] = useState<number>(14.5);
@@ -74,8 +84,43 @@ export const OptimalPricingAdvisor: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      
-      <div className="gov-card gov-card-saffron p-4">
+      {isFreePlan && (
+        <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/80 via-[#1E170A] to-[#132540] border-2 border-amber-500/60 shadow-lg space-y-3">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <div className="p-2.5 rounded-lg bg-amber-500/20 border border-amber-500/40 text-amber-400 mt-0.5">
+                <Lock className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-extrabold uppercase tracking-wide">
+                    PRO / ENTERPRISE FEATURE
+                  </span>
+                  <h3 className="text-sm font-extrabold text-white">
+                    Rate Intelligence &amp; L1 Predictive Advisor is Locked
+                  </h3>
+                </div>
+                <p className="text-xs text-slate-300 mt-1 max-w-2xl leading-relaxed">
+                  Your current <strong className="text-white">Free Trial Tier</strong> allows document OCR and GFR compliance scrutiny. Upgrade to <strong className="text-amber-400">Pro Plan (₹2,999/mo)</strong> or <strong className="text-cyan-400">Enterprise</strong> to unlock live GeM historical SoR pricing, CVC Abnormally Low Bid (ALB) threshold defense, and custom rate exports.
+                </p>
+              </div>
+            </div>
+
+            {onOpenPricingModal && (
+              <button
+                onClick={onOpenPricingModal}
+                className="px-4 py-2.5 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs flex items-center gap-2 shadow-md transition-all cursor-pointer shrink-0"
+              >
+                <Sparkles className="w-4 h-4" />
+                <span>Upgrade to Pro Plan</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      <div className={`gov-card gov-card-saffron p-4 ${isFreePlan ? 'opacity-90' : ''}`}>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
             <div className="p-2 rounded bg-[#2D1A05] border border-[#9A3412] text-amber-400 mt-0.5">
@@ -153,103 +198,103 @@ export const OptimalPricingAdvisor: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs text-slate-400 mb-1">
+            <label className="block text-xs text-slate-300 font-medium mb-1">
               Procurement Region & Cost Index Factor
             </label>
             <select
               value={selectedRegion}
               onChange={e => setSelectedRegion(e.target.value)}
-              className="w-full px-3 py-2 bg-[#051124] border border-[#1E3A68] rounded text-slate-200 text-xs focus:border-[#0284C7] focus:outline-none"
+              className="w-full px-3 py-2 bg-[#0B192C] border border-[#23436E] rounded text-white text-xs focus:border-[#38BDF8] focus:outline-none"
             >
-              {mockRegionalDemandIndices.map((r, i) => (
+              {regionalIndices.map((r, i) => (
                 <option key={i} value={r.region}>
-                  {r.region} (Index: {r.demandIndex}x &bull; {r.logisticsCostFactor})
+                  {r.region} (Index: {r.indexMultiplier}x • Avg L1 Discount: {r.avgL1Discount}%)
                 </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-xs text-slate-400 mb-1">
+            <label className="block text-xs text-slate-300 font-medium mb-1">
               Bidding Strategy & Price Position
             </label>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => setSelectedTier('AGGRESSIVE')}
-                className={`p-2 rounded text-center border text-xs font-semibold transition-all ${
+                className={`p-2 rounded text-center border text-xs font-semibold transition-all cursor-pointer ${
                   selectedTier === 'AGGRESSIVE'
-                    ? 'bg-[#002855] text-cyan-300 border-[#0284C7]'
-                    : 'bg-[#08172D] text-slate-400 border-[#1E3A68]'
+                    ? 'bg-[#002855] text-cyan-300 border-[#38BDF8] shadow-xs'
+                    : 'bg-[#0B192C] text-slate-300 border-[#23436E] hover:bg-[#132540]'
                 }`}
               >
-                <div className="font-bold">Aggressive L1</div>
-                <div className="text-[10px] text-slate-400 font-mono mt-0.5">-12.5%</div>
+                <div className="font-bold text-white">Aggressive L1</div>
+                <div className="text-[10px] text-cyan-300 font-mono mt-0.5">-12.5%</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => setSelectedTier('BALANCED')}
-                className={`p-2 rounded text-center border text-xs font-semibold transition-all ${
+                className={`p-2 rounded text-center border text-xs font-semibold transition-all cursor-pointer ${
                   selectedTier === 'BALANCED'
-                    ? 'bg-[#002855] text-amber-300 border-[#FF9933]'
-                    : 'bg-[#08172D] text-slate-400 border-[#1E3A68]'
+                    ? 'bg-[#002855] text-amber-300 border-[#F59E0B] shadow-xs'
+                    : 'bg-[#0B192C] text-slate-300 border-[#23436E] hover:bg-[#132540]'
                 }`}
               >
-                <div className="font-bold">Balanced</div>
-                <div className="text-[10px] text-slate-400 font-mono mt-0.5">-8.5%</div>
+                <div className="font-bold text-white">Balanced</div>
+                <div className="text-[10px] text-amber-300 font-mono mt-0.5">-8.5%</div>
               </button>
 
               <button
                 type="button"
                 onClick={() => setSelectedTier('SAFE')}
-                className={`p-2 rounded text-center border text-xs font-semibold transition-all ${
+                className={`p-2 rounded text-center border text-xs font-semibold transition-all cursor-pointer ${
                   selectedTier === 'SAFE'
-                    ? 'bg-[#002855] text-emerald-300 border-[#15803D]'
-                    : 'bg-[#08172D] text-slate-400 border-[#1E3A68]'
+                    ? 'bg-[#002855] text-emerald-300 border-[#10B981] shadow-xs'
+                    : 'bg-[#0B192C] text-slate-300 border-[#23436E] hover:bg-[#132540]'
                 }`}
               >
-                <div className="font-bold">Conservative</div>
-                <div className="text-[10px] text-slate-400 font-mono mt-0.5">-4.0%</div>
+                <div className="font-bold text-white">Conservative</div>
+                <div className="text-[10px] text-emerald-300 font-mono mt-0.5">-4.0%</div>
               </button>
             </div>
           </div>
         </div>
 
         <div className="gov-card p-4 space-y-3">
-          <div className="text-xs font-bold text-slate-200 uppercase tracking-wide pb-1 border-b border-[#1E3A68] flex items-center justify-between">
+          <div className="text-xs font-bold text-white uppercase tracking-wide pb-1 border-b border-[#23436E] flex items-center justify-between">
             <span>Recommended Bid Quotation</span>
-            <span className="text-[10px] text-emerald-400 font-mono">VIABLE BID</span>
+            <span className="text-[10px] text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-600 font-mono">VIABLE BID</span>
           </div>
 
-          <div className="p-3 bg-[#001D3D] rounded border border-[#1E3A68]">
-            <div className="text-[10px] text-slate-400 uppercase font-semibold">Recommended Total Bid Price (Excl. GST)</div>
-            <div className="text-lg font-bold text-cyan-300 font-mono mt-0.5">
+          <div className="p-3.5 bg-[#0B1E38] rounded-lg border border-[#23436E]">
+            <div className="text-[10px] text-slate-300 uppercase font-bold tracking-wider">Recommended Total Bid Price (Excl. GST)</div>
+            <div className="text-xl sm:text-2xl font-extrabold text-cyan-300 font-mono mt-0.5">
               {formatCurrency(recommendedBidINR)}
             </div>
-            <div className="text-[11px] text-slate-300 mt-1 flex items-center gap-2">
-              <span>Variation: <strong className="text-amber-400 font-mono">-{currentDiscount}%</strong> below Dept Rate</span>
-              <span>&bull;</span>
-              <span>Net Margin: <strong className="text-emerald-400 font-mono">{marginPercentage}%</strong></span>
+            <div className="text-xs text-slate-200 mt-1.5 flex items-center gap-2 flex-wrap">
+              <span>Variation: <strong className="text-amber-400 font-mono font-bold">-{currentDiscount}%</strong> below Dept Rate</span>
+              <span>•</span>
+              <span>Net Margin: <strong className="text-emerald-400 font-mono font-bold">{marginPercentage}%</strong></span>
             </div>
           </div>
 
           <div className="space-y-2 text-xs">
-            <div className="flex items-center justify-between p-2 bg-[#08172D] rounded border border-[#1E3A68]">
-              <span className="text-slate-400">Estimated Direct Execution Cost:</span>
-              <span className="font-mono text-slate-200">{formatCurrency(estimatedCostINR)}</span>
+            <div className="flex items-center justify-between p-2.5 bg-[#0B192C] rounded-lg border border-[#23436E]">
+              <span className="text-slate-300 font-medium">Estimated Direct Execution Cost:</span>
+              <span className="font-mono text-white font-bold">{formatCurrency(estimatedCostINR)}</span>
             </div>
 
-            <div className="flex items-center justify-between p-2 bg-[#08172D] rounded border border-[#1E3A68]">
-              <span className="text-slate-400">Projected Pre-Tax Profit:</span>
-              <span className="font-mono text-emerald-400 font-bold">{formatCurrency(estimatedMarginINR)}</span>
+            <div className="flex items-center justify-between p-2.5 bg-[#0B192C] rounded-lg border border-[#23436E]">
+              <span className="text-slate-300 font-medium">Projected Pre-Tax Profit:</span>
+              <span className="font-mono text-emerald-400 font-extrabold text-sm">{formatCurrency(estimatedMarginINR)}</span>
             </div>
           </div>
 
-          <div className="p-2.5 bg-[#051124] rounded border border-[#1E3A68] text-[11px] text-slate-400 leading-relaxed flex items-start gap-2">
+          <div className="p-2.5 bg-[#0B192C] rounded-lg border border-[#23436E] text-xs text-slate-300 leading-relaxed flex items-start gap-2">
             <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
             <span>
-              <strong>CVC Compliance Check:</strong> Quotation is within safe variance limits and does not trigger Additional Performance Security (APS) requirements under GFR Rule 170.
+              <strong className="text-white">CVC Compliance Check:</strong> Quotation is within safe variance limits and does not trigger Additional Performance Security (APS) requirements under GFR Rule 170.
             </span>
           </div>
         </div>

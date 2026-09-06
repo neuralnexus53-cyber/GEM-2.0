@@ -752,12 +752,12 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
                     </div>
 
                     <button
-                      onClick={() => handleDemoLogin('MSME_STARTUP')}
+                      onClick={() => handleDemoLogin('AUTHORIZED_RESELLER')}
                       disabled={isLoading}
                       className="mt-5 w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md"
                     >
                       <Rocket className="w-3.5 h-3.5" />
-                      <span>Log In to MSME Dashboard</span>
+                      <span>Log In to Reseller Dashboard</span>
                     </button>
                   </div>
 
@@ -765,7 +765,7 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
                         <span className="px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-300 text-[10px] font-bold border border-emerald-700/50">
-                          WORKS & CIVIL CONTRACTOR
+                          SERVICE PROVIDER (SLAs)
                         </span>
                         <span className="text-[10px] px-2 py-0.5 rounded bg-cyan-950 text-cyan-200 font-bold border border-cyan-500/40">
                           STARTER
@@ -774,25 +774,25 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
 
                       <div>
                         <h4 className="font-extrabold text-white text-sm group-hover:text-emerald-300 transition-colors">
-                          Bharat Infra-Tech & EPC Solutions
+                          Bharat Infra-Tech & Integrated Facility Services
                         </h4>
                         <p className="text-[11px] text-slate-400">
-                          GeM ID: <strong className="text-slate-200">VEND-WORKS-7105</strong>
+                          GeM ID: <strong className="text-slate-200">VEND-SRV-7105</strong>
                         </p>
                       </div>
 
                       <div className="space-y-1.5 text-xs text-slate-300 pt-2 border-t border-[#1E3A8A]">
                         <div className="flex justify-between">
                           <span className="text-slate-400">Enlistment:</span>
-                          <span className="font-mono text-white text-[11px]">Class-1 Super (CPWD)</span>
+                          <span className="font-mono text-white text-[11px]">Class-1 Super (CPWD & SLA)</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-slate-400">Turnover:</span>
                           <span className="font-bold text-emerald-400">₹ 32.80 Crores</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-slate-400">JV Matching:</span>
-                          <span className="text-emerald-300 font-bold">Consortium Ready</span>
+                          <span className="text-slate-400">Services:</span>
+                          <span className="text-emerald-300 font-bold">Manpower & Cloud Ready</span>
                         </div>
                         <div className="text-[11px] text-slate-400 pt-1">
                           &bull; NHAI & PWD Qualified &bull; 12 Yrs Exp
@@ -801,12 +801,12 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
                     </div>
 
                     <button
-                      onClick={() => handleDemoLogin('WORKS_CONTRACTOR')}
+                      onClick={() => handleDemoLogin('SERVICE_PROVIDER')}
                       disabled={isLoading}
                       className="mt-5 w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
                     >
                       <HardHat className="w-3.5 h-3.5" />
-                      <span>Log In to Works Dashboard</span>
+                      <span>Log In to Services Dashboard</span>
                     </button>
                   </div>
 

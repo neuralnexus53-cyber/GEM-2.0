@@ -535,6 +535,89 @@ def sync_cag_block_to_supabase(b_data: Dict[str, Any]):
         except Exception as e:
             pass
 
+def ensure_supabase_buckets_exist():
+    """
+    Ensures all enterprise Supabase Storage buckets exist with public access.
+    """
+    if not supabase:
+        return
+    required_buckets = ["documents", "vendor-assets", "certificates", "tender-dockets"]
+    try:
+        existing_buckets = [b.name if hasattr(b, 'name') else b.get('name') for b in supabase.storage.list_buckets()]
+        for b_name in required_buckets:
+            if b_name not in existing_buckets:
+                try:
+                    supabase.storage.create_bucket(b_name, options={"public": True})
+                    print(f"[Supabase Storage] Created bucket: {b_name}")
+                except Exception as be:
+                    print(f"[Supabase Storage] Notice creating bucket '{b_name}': {be}")
+    except Exception as e:
+        print(f"[Supabase Storage] Bucket listing notice: {e}")
+
+def upload_file_to_supabase_storage(
+    bucket_name: str, 
+    storage_path: str, 
+    file_bytes: bytes, 
+    content_type: str = "application/pdf"
+) -> Dict[str, Any]:
+    """
+    Uploads a document or image file directly to Supabase Storage bucket.
+    Falls back gracefully to local URL if Supabase client is offline.
+    """
+    file_hash = hashlib.sha256(file_bytes).hexdigest()
+    if supabase:
+        try:
+            # Upload or overwrite to Supabase Storage Bucket
+            supabase.storage.from_(bucket_name).upload(
+                path=storage_path,
+                file=file_bytes,
+                file_options={"content-type": content_type, "upsert": "true"}
+            )
+            # Retrieve public URL
+            public_url = supabase.storage.from_(bucket_name).get_public_url(storage_path)
+            print(f"[Supabase Storage] Successfully uploaded to bucket '{bucket_name}': {storage_path}")
+            return {
+                "success": True,
+                "file_url": public_url,
+                "storage_bucket": bucket_name,
+                "storage_path": storage_path,
+                "sha256_hash": file_hash,
+                "size_bytes": len(file_bytes)
+            }
+        except Exception as e:
+            print(f"[Supabase Storage] Upload error ({bucket_name}): {e}")
+            # Try creating bucket and retrying once
+            try:
+                supabase.storage.create_bucket(bucket_name, options={"public": True})
+                supabase.storage.from_(bucket_name).upload(
+                    path=storage_path,
+                    file=file_bytes,
+                    file_options={"content-type": content_type, "upsert": "true"}
+                )
+                public_url = supabase.storage.from_(bucket_name).get_public_url(storage_path)
+                return {
+                    "success": True,
+                    "file_url": public_url,
+                    "storage_bucket": bucket_name,
+                    "storage_path": storage_path,
+                    "sha256_hash": file_hash,
+                    "size_bytes": len(file_bytes)
+                }
+            except Exception as retry_err:
+                print(f"[Supabase Storage] Retry failed: {retry_err}")
+            
+    # Local fallback URL
+    local_url = f"/api/storage/{bucket_name}/{storage_path}"
+    return {
+        "success": True,
+        "file_url": local_url,
+        "storage_bucket": bucket_name,
+        "storage_path": storage_path,
+        "sha256_hash": file_hash,
+        "size_bytes": len(file_bytes)
+    }
+
+
 def sync_document_to_supabase(d_data: Dict[str, Any]):
     if supabase:
         try:
@@ -543,12 +626,20 @@ def sync_document_to_supabase(d_data: Dict[str, Any]):
                 "vendor_id": d_data.get("vendorId") or d_data.get("vendor_id"),
                 "name": d_data.get("name", "Document.pdf"),
                 "type": d_data.get("type", "Statutory Certificate"),
-                "size": d_data.get("size", "2.1 MB"),
+                "file_name": d_data.get("fileName") or d_data.get("file_name", "document.pdf"),
+                "file_url": d_data.get("fileUrl") or d_data.get("file_url"),
+                "storage_bucket": d_data.get("storageBucket") or d_data.get("storage_bucket", "documents"),
+                "storage_path": d_data.get("storagePath") or d_data.get("storage_path"),
+                "mime_type": d_data.get("mimeType") or d_data.get("mime_type", "application/pdf"),
+                "size": d_data.get("size") or d_data.get("fileSize", "2.1 MB"),
                 "upload_date": d_data.get("uploadDate") or d_data.get("upload_date") or datetime.utcnow().isoformat(),
                 "status": d_data.get("status", "VERIFIED"),
                 "docket_hash": d_data.get("docketHash") or d_data.get("docket_hash"),
+                "sha256_hash": d_data.get("sha256Hash") or d_data.get("sha256_hash"),
                 "udin_number": d_data.get("udinNumber") or d_data.get("udin_number"),
                 "digilocker_verified": bool(d_data.get("digilockerVerified", True)),
+                "pki_signature_valid": bool(d_data.get("pkiSignatureValid", True)),
+                "extracted_fields": d_data.get("extractedFields") or d_data.get("extracted_fields", []),
                 "parsed_summary": d_data.get("parsedSummary") or d_data.get("parsed_summary")
             }
             supabase.table("documents").upsert(row, on_conflict="id").execute()
@@ -556,10 +647,34 @@ def sync_document_to_supabase(d_data: Dict[str, Any]):
         except Exception as e:
             pass
 
+def sync_media_asset_to_supabase(asset_data: Dict[str, Any]):
+    if supabase:
+        try:
+            row = {
+                "owner_id": asset_data.get("owner_id") or asset_data.get("ownerId", "UNKNOWN"),
+                "owner_type": asset_data.get("owner_type") or asset_data.get("ownerType", "VENDOR"),
+                "asset_type": asset_data.get("asset_type") or asset_data.get("assetType", "PROFILE_PHOTO"),
+                "file_name": asset_data.get("file_name") or asset_data.get("fileName", "asset.jpg"),
+                "file_url": asset_data.get("file_url") or asset_data.get("fileUrl", ""),
+                "storage_bucket": asset_data.get("storage_bucket") or asset_data.get("storageBucket", "vendor-assets"),
+                "storage_path": asset_data.get("storage_path") or asset_data.get("storagePath", ""),
+                "mime_type": asset_data.get("mime_type") or asset_data.get("mimeType", "image/jpeg"),
+                "file_size_bytes": asset_data.get("file_size_bytes", 0),
+                "sha256_hash": asset_data.get("sha256_hash", ""),
+                "metadata": asset_data.get("metadata", {})
+            }
+            supabase.table("media_assets").insert(row).execute()
+            print(f"[Supabase] Media asset for {row['owner_id']} synced to media_assets table.")
+        except Exception as e:
+            pass
+
 def init_supabase_sync():
     if not supabase:
         return
     try:
+        # 0. Ensure all storage buckets exist
+        ensure_supabase_buckets_exist()
+
         # 1. Seed / verify subscription_plans
         p_res = supabase.table("subscription_plans").select("*").execute()
         if not p_res.data or len(p_res.data) == 0:

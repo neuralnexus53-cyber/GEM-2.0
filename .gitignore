@@ -60,3 +60,4 @@ env/
 # IDE files
 .gemini/
 .system_generated/
+.agents/

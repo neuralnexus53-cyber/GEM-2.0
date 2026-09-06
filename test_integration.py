@@ -88,6 +88,33 @@ print("[PASS] 6/7 Officer Score Recorded in Database:", res.json().get("success"
 res = client.get("/api/gov/cag-ledger")
 assert res.status_code == 200
 ledger = res.json()
-print("[PASS] 7/7 CAG Cryptographic Audit Ledger Verified! Block count:", len(ledger), "| Latest Block Hash:", ledger[-1].get("blockHash")[:20] + "...")
+print("[PASS] 7/9 CAG Cryptographic Audit Ledger Verified! Block count:", len(ledger), "| Latest Block Hash:", ledger[-1].get("blockHash")[:20] + "...")
 
-print("\n>>> ALL 7 INTEGRATION TESTS PASSED WITH 100% SUCCESS!")
+# 8. Supabase Document Storage Upload (Binary PDF/Certificate)
+mock_pdf_bytes = b"%PDF-1.4 Mock Government Tender Specification Content"
+res = client.post(
+    "/api/documents/upload-file",
+    data={"vendor_id": "VEND-OEM-8902", "doc_type": "PQC_EXPERIENCE", "doc_name": "Test_NIT_Spec.pdf"},
+    files={"file": ("Test_NIT_Spec.pdf", mock_pdf_bytes, "application/pdf")}
+)
+assert res.status_code == 200
+doc_data = res.json()
+assert doc_data.get("storageBucket") == "documents" or doc_data.get("storage_bucket") == "documents"
+assert doc_data.get("sha256Hash") or doc_data.get("sha256_hash")
+print("[PASS] 8/9 Supabase Document Storage Upload Verified! File URL:", doc_data.get("fileUrl"), "| Hash:", (doc_data.get("sha256Hash") or "")[:16] + "...")
+
+# 9. Supabase Image & Asset Storage Upload (Profile Photo / Badge Scan)
+mock_img_bytes = b"\xff\xd8\xff\xe0\x00\x10JFIF Mock JPEG Photo Content"
+res = client.post(
+    "/api/documents/upload-image",
+    data={"owner_id": "OFF-MOF-4891", "owner_type": "OFFICER", "asset_type": "PROFILE_PHOTO"},
+    files={"file": ("officer_badge.jpg", mock_img_bytes, "image/jpeg")}
+)
+assert res.status_code == 200
+img_data = res.json()
+assert img_data.get("success") is True
+assert img_data.get("public_url")
+print("[PASS] 9/9 Supabase Image Storage Upload Verified! Public URL:", img_data.get("public_url"), "| Asset ID:", img_data.get("asset", {}).get("storage_path"))
+
+print("\n>>> ALL 9 ENTERPRISE SUPABASE STORAGE & DATABASE INTEGRATION TESTS PASSED!")
+

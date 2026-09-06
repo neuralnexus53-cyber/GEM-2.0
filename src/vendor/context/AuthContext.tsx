@@ -60,7 +60,7 @@ export const DEMO_ACCOUNTS_MAP: Record<UserRole, { session: UserSession; profile
     session: {
       id: 'usr-oem-01',
       email: 'oem@apexpower.com',
-      fullName: 'Rajesh Sharma (Director)',
+      fullName: 'Rajesh Sharma (Director & OEM Head)',
       companyName: 'Apex Dynamics & Energy Systems Ltd.',
       role: 'OEM_SELLER',
       vendorId: 'VEND-OEM-8902',
@@ -76,14 +76,14 @@ export const DEMO_ACCOUNTS_MAP: Record<UserRole, { session: UserSession; profile
     profile: mockProfiles.OEM_SELLER,
     password: 'password123'
   },
-  MSME_STARTUP: {
+  AUTHORIZED_RESELLER: {
     session: {
-      id: 'usr-msme-02',
-      email: 'founder@novavolt.in',
-      fullName: 'Priya Deshmukh (Founder & MD)',
-      companyName: 'Novavolt Instruments & Automation Pvt Ltd',
-      role: 'MSME_STARTUP',
-      vendorId: 'VEND-MSME-3412',
+      id: 'usr-res-02',
+      email: 'reseller@novavolt.in',
+      fullName: 'Priya Deshmukh (Managing Partner)',
+      companyName: 'Novavolt Commercial & Reseller Solutions Pvt Ltd',
+      role: 'AUTHORIZED_RESELLER',
+      vendorId: 'VEND-RES-3412',
       gstin: '27AABCN8712P1ZL',
       pan: 'AABCN8712P',
       token: 'gem_jwt_sec_token_novavolt_2026_m34b',
@@ -93,17 +93,17 @@ export const DEMO_ACCOUNTS_MAP: Record<UserRole, { session: UserSession; profile
       ipAddress: '115.112.87.14 (Mumbai, MH)',
       planId: 'FREE'
     },
-    profile: mockProfiles.MSME_STARTUP,
+    profile: mockProfiles.AUTHORIZED_RESELLER,
     password: 'password123'
   },
-  WORKS_CONTRACTOR: {
+  SERVICE_PROVIDER: {
     session: {
-      id: 'usr-works-03',
-      email: 'director@bharatinfra.com',
-      fullName: 'Vikramaditya Rao (Chief Engineer)',
-      companyName: 'Bharat Infra-Tech & EPC Solutions',
-      role: 'WORKS_CONTRACTOR',
-      vendorId: 'VEND-WORKS-7105',
+      id: 'usr-srv-03',
+      email: 'operations@bharatinfra.com',
+      fullName: 'Vikramaditya Rao (Chief Service Officer)',
+      companyName: 'Bharat Infra-Tech & Integrated Facility Services',
+      role: 'SERVICE_PROVIDER',
+      vendorId: 'VEND-SRV-7105',
       gstin: '29AAGCB5541Q1ZP',
       pan: 'AAGCB5541Q',
       token: 'gem_jwt_sec_token_bharat_2026_w71c',
@@ -113,7 +113,7 @@ export const DEMO_ACCOUNTS_MAP: Record<UserRole, { session: UserSession; profile
       ipAddress: '122.179.33.208 (Bengaluru, KA)',
       planId: 'STARTER'
     },
-    profile: mockProfiles.WORKS_CONTRACTOR,
+    profile: mockProfiles.SERVICE_PROVIDER,
     password: 'password123'
   }
 };
@@ -253,10 +253,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     // Universal Fallback: Accept any entered username/email/ID and authenticate smoothly
-    const rolePrefix: UserRole = cleanId.includes('msme') || cleanId.includes('start') 
-      ? 'MSME_STARTUP' 
-      : cleanId.includes('work') || cleanId.includes('infra') || cleanId.includes('contract')
-      ? 'WORKS_CONTRACTOR' 
+    const rolePrefix: UserRole = cleanId.includes('resell') || cleanId.includes('auth') || cleanId.includes('msme') || cleanId.includes('start')
+      ? 'AUTHORIZED_RESELLER' 
+      : cleanId.includes('serv') || cleanId.includes('work') || cleanId.includes('infra') || cleanId.includes('contract')
+      ? 'SERVICE_PROVIDER' 
       : 'OEM_SELLER';
 
     const cleanName = cleanId.includes('@') ? cleanId.split('@')[0] : cleanId;

@@ -15,12 +15,17 @@ import {
 } from 'lucide-react';
 import { ContractClauseRisk } from '../../types';
 import { api } from '../../services/api';
+import { mockContractClauseRisks } from '../../data/mockData';
+import { AIFalseNegativeModal, ChallengeItem } from './AIFalseNegativeModal';
+import { Flag } from 'lucide-react';
 
 export const AtlasVectorClauseRisk: React.FC = () => {
-  const [clauses, setClauses] = useState<ContractClauseRisk[]>([]);
-  const [selectedClause, setSelectedClause] = useState<ContractClauseRisk | null>(null);
+  const [clauses, setClauses] = useState<ContractClauseRisk[]>(mockContractClauseRisks);
+  const [selectedClause, setSelectedClause] = useState<ContractClauseRisk | null>(mockContractClauseRisks[0] || null);
   const [riskFilter, setRiskFilter] = useState<'ALL' | 'CRITICAL' | 'HIGH' | 'MEDIUM'>('ALL');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [challengeTarget, setChallengeTarget] = useState<ChallengeItem | null>(null);
+  const [overriddenClauseIds, setOverriddenClauseIds] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const loadRisks = async () => {
@@ -28,7 +33,7 @@ export const AtlasVectorClauseRisk: React.FC = () => {
         const risks = await api.getClauseRisks('TNDR-2026-8819');
         if (risks && risks.length > 0) {
           setClauses(risks);
-          setSelectedClause(risks[0]);
+          setSelectedClause(prev => prev || risks[0]);
         }
       } catch (err) {}
     };
@@ -94,20 +99,20 @@ Authorized Signatory
       <div className="gov-card gov-card-red p-4">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
-            <div className="p-2 rounded bg-[#3B0D0D] border border-[#B91C1C] text-rose-400 mt-0.5">
-              <Scale className="w-6 h-6" />
+            <div className="p-2.5 rounded-lg bg-rose-950/80 border border-rose-600/60 text-rose-400 mt-0.5 shrink-0">
+              <Scale className="w-5 h-5" />
             </div>
             <div>
               <div className="flex items-center gap-2 flex-wrap">
-                <h2 className="text-base font-bold text-slate-100">
-                  Contractual Risk & Liquidated Damages (LD) Audit Docket
+                <h2 className="text-base sm:text-lg font-extrabold text-white">
+                  Contractual Risk &amp; Liquidated Damages (LD) Audit Docket
                 </h2>
-                <span className="text-[10px] px-2 py-0.5 rounded bg-[#3B0D0D] text-rose-300 font-semibold border border-[#B91C1C]">
-                  GFR Rule 173 Scrutiny Active
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-950 text-rose-300 font-bold border border-rose-600 font-mono">
+                  GFR Rule 173 Scrutiny
                 </span>
               </div>
               <p className="text-xs text-slate-300 mt-1">
-                Automated legal scrutiny of Special Terms & Conditions (STC), Liquidated Damages (LD) caps, payment retention, and warranty liabilities before bid submission.
+                Automated legal scrutiny of Special Terms &amp; Conditions (STC), Liquidated Damages (LD) caps, payment retention, and warranty liabilities before bid submission.
               </p>
             </div>
           </div>
@@ -115,26 +120,26 @@ Authorized Signatory
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={handleDownloadRepresentation}
-              className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#0B2545] hover:bg-[#112E55] text-blue-200 border border-[#1D4ED8] text-xs font-semibold transition-all shadow-xs"
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#002855] hover:bg-[#003A78] text-sky-300 hover:text-white border border-[#0284C7] text-xs font-bold transition-all shadow-xs cursor-pointer"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-3.5 h-3.5 text-sky-400" />
               <span>Export Pre-Bid Representation</span>
             </button>
           </div>
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-2 border-b border-[#1E3A68] pb-2">
+      <div className="flex items-center justify-between gap-2 border-b border-[#23436E] pb-3">
         <div className="flex items-center gap-1.5 overflow-x-auto">
-          <span className="text-[11px] font-bold text-slate-400 uppercase mr-2">Filter by Severity:</span>
+          <span className="text-[11px] font-bold text-slate-300 uppercase mr-2 tracking-wider">Filter Severity:</span>
           {(['ALL', 'CRITICAL', 'HIGH', 'MEDIUM'] as const).map(level => (
             <button
               key={level}
               onClick={() => setRiskFilter(level)}
-              className={`px-2.5 py-1 rounded text-xs font-semibold transition-all border ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
                 riskFilter === level
-                  ? 'bg-[#002855] text-white border-[#0284C7]'
-                  : 'bg-[#08172D] text-slate-400 border-[#1E3A68] hover:bg-[#0E2242] hover:text-slate-200'
+                  ? 'bg-[#0284C7] text-white border-[#38BDF8] shadow-xs'
+                  : 'bg-[#0E2038] text-slate-300 border-[#23436E] hover:bg-[#132540] hover:text-white'
               }`}
             >
               {level === 'ALL' && 'All Clauses (3)'}
@@ -145,15 +150,15 @@ Authorized Signatory
           ))}
         </div>
 
-        <div className="text-[11px] text-slate-400 font-mono hidden sm:block">
-          Dossier Ref: <strong className="text-slate-200">GEM/2026/B/8901</strong>
+        <div className="text-[11px] text-slate-300 font-mono hidden sm:block">
+          Dossier Ref: <strong className="text-sky-300">GEM/2026/B/8901</strong>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
         
         <div className="lg:col-span-5 space-y-2">
-          <div className="text-[11px] font-bold uppercase text-slate-400 px-1">
+          <div className="text-[11px] font-bold uppercase text-slate-300 px-1 tracking-wider">
             Audited Tender Clauses ({filteredClauses.length})
           </div>
 
@@ -164,14 +169,14 @@ Authorized Signatory
                 <div
                   key={clause.id}
                   onClick={() => setSelectedClause(clause)}
-                  className={`p-3 rounded border cursor-pointer transition-all ${
+                  className={`p-3.5 rounded-lg border cursor-pointer transition-all ${
                     isSelected
-                      ? 'bg-[#0F2548] border-[#0284C7] shadow-xs'
-                      : 'bg-[#0C1A30] border-[#1E3A68] hover:bg-[#0E203B]'
+                      ? 'bg-[#0E2748] border-[#0284C7] shadow-sm'
+                      : 'bg-[#0E2038] border-[#23436E] hover:bg-[#132540] hover:border-slate-500'
                   }`}
                 >
                   <div className="flex items-center justify-between gap-2 mb-1.5">
-                    <span className="text-[11px] font-mono font-bold text-amber-400 bg-[#001833] px-1.5 py-0.5 rounded border border-[#1E3A68]">
+                    <span className="text-[11px] font-mono font-bold text-amber-300 bg-[#0B192C] px-2 py-0.5 rounded border border-[#23436E]">
                       {clause.id} &bull; {clause.clauseNumber}
                     </span>
                     <span className={`text-[10px] px-2 py-0.5 rounded font-bold border ${
@@ -204,110 +209,154 @@ Authorized Signatory
         </div>
 
         <div className="lg:col-span-7 space-y-3">
-          <div className="gov-card p-4 space-y-4">
-            
-            <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#1E3A68]">
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[11px] font-mono bg-[#00244D] text-amber-300 px-2 py-0.5 rounded border border-[#1E3A68] font-bold">
-                    {selectedClause.id}
-                  </span>
-                  <span className="text-xs text-slate-400 font-medium">
-                    Category: {selectedClause.category} &bull; {selectedClause.clauseNumber}
+          {selectedClause ? (
+            <div className="gov-card p-4 space-y-4">
+              <div className="flex items-start justify-between gap-3 pb-3 border-b border-[#23436E]">
+                <div>
+                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                    <span className="text-[11px] font-mono bg-[#0A2240] text-amber-300 px-2.5 py-0.5 rounded border border-[#0284C7]/50 font-bold">
+                      {selectedClause.id}
+                    </span>
+                    <span className="text-xs text-slate-300 font-medium">
+                      Category: {selectedClause.category} &bull; {selectedClause.clauseNumber}
+                    </span>
+                  </div>
+                  <h3 className="text-sm sm:text-base font-extrabold text-white">
+                    {selectedClause.clauseTitle}
+                  </h3>
+                </div>
+
+                <div className="shrink-0 text-right">
+                  <span className={`text-[10px] px-2.5 py-1 rounded-full font-bold border block font-mono ${
+                    selectedClause.riskLevel === 'CRITICAL'
+                      ? 'bg-rose-950 text-rose-300 border-rose-600'
+                      : selectedClause.riskLevel === 'HIGH'
+                      ? 'bg-amber-950 text-amber-300 border-amber-600'
+                      : 'bg-sky-950 text-sky-300 border-sky-600'
+                  }`}>
+                    {selectedClause.riskLevel} RISK
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-slate-100">
-                  {selectedClause.clauseTitle}
-                </h3>
               </div>
-
-              <div className="shrink-0 text-right">
-                <span className={`text-[10px] px-2.5 py-1 rounded font-bold border block ${
-                  selectedClause.riskLevel === 'CRITICAL'
-                    ? 'bg-[#3B0D0D] text-rose-300 border-[#B91C1C]'
-                    : selectedClause.riskLevel === 'HIGH'
-                    ? 'bg-[#2D1A05] text-amber-300 border-[#9A3412]'
-                    : 'bg-[#0B2545] text-blue-300 border-[#1D4ED8]'
-                }`}>
-                  {selectedClause.riskLevel} RISK
-                </span>
-              </div>
-            </div>
 
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-300 block mb-1.5">
                 Exact Tender Text Excerpt (Verbatim):
               </span>
-              <div className="p-3 bg-[#051124] rounded border border-[#1E3A68] text-xs text-slate-300 font-mono leading-relaxed italic border-l-4 border-l-amber-500">
+              <div className="p-3.5 bg-[#0B192C] rounded-lg border border-[#23436E] text-xs text-slate-200 font-mono leading-relaxed italic border-l-4 border-l-amber-500 shadow-inner">
                 "{selectedClause.originalText}"
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="p-3 bg-[#091528] rounded border border-[#1E3A68]">
+              <div className="p-3 bg-[#0E2038] rounded-lg border border-[#23436E] space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-rose-400 block mb-1">
-                  Legal & Financial Risk Assessment:
+                  Legal &amp; Financial Risk Assessment:
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed">
+                <p className="text-xs text-slate-200 leading-relaxed">
                   {selectedClause.riskExplanation}
                 </p>
               </div>
 
-              <div className="p-3 bg-[#091528] rounded border border-[#1E3A68]">
+              <div className="p-3 bg-[#0E2038] rounded-lg border border-[#23436E] space-y-1">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 block mb-1">
                   Statutory Rule Reference:
                 </span>
-                <p className="text-xs text-slate-300 leading-relaxed">
-                  GFR 2017 Rule 173 & Public Procurement Guidelines. Liquidated damages should not exceed 10% of total contract value.
+                <p className="text-xs text-slate-200 leading-relaxed">
+                  GFR 2017 Rule 173 &amp; Public Procurement Guidelines. Liquidated damages should not exceed 10% of total contract value.
                 </p>
               </div>
             </div>
 
-            <div className="p-3 bg-[#001D3D] rounded border border-[#0284C7] space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-cyan-300 uppercase tracking-wide flex items-center gap-1.5">
-                  <FileText className="w-3.5 h-3.5" />
+            <div className="p-3.5 bg-[#0A2240] rounded-lg border border-[#0284C7] space-y-2.5 shadow-md">
+              <div className="flex items-center justify-between flex-wrap gap-2">
+                <span className="text-[11px] font-bold text-sky-300 uppercase tracking-wide flex items-center gap-1.5">
+                  <FileText className="w-3.5 h-3.5 text-sky-400" />
                   Official Pre-Bid Clarification Draft (GeM / CPPP Format)
                 </span>
                 <button
                   onClick={() => handleCopyMitigation(selectedClause.recommendedMitigation, selectedClause.id)}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded bg-[#002855] hover:bg-[#003875] text-cyan-300 text-[11px] font-semibold border border-[#0284C7] transition-all"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#002855] hover:bg-[#003875] text-sky-300 hover:text-white text-xs font-bold border border-[#0284C7] transition-all cursor-pointer shadow-xs"
                 >
                   {copiedId === selectedClause.id ? (
                     <>
-                      <Check className="w-3 h-3 text-emerald-400" />
-                      <span className="text-emerald-400">Copied to Clipboard</span>
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="text-emerald-300">Copied to Clipboard</span>
                     </>
                   ) : (
                     <>
-                      <Copy className="w-3 h-3" />
+                      <Copy className="w-3.5 h-3.5" />
                       <span>Copy Representation</span>
                     </>
                   )}
                 </button>
               </div>
 
-              <p className="text-xs text-slate-200 font-mono leading-relaxed bg-[#051124] p-3 rounded border border-[#1E3A68]">
+              <p className="text-xs text-slate-200 font-mono leading-relaxed bg-[#0B192C] p-3 rounded border border-[#23436E]">
                 {selectedClause.recommendedMitigation}
               </p>
             </div>
 
-            <div className="pt-2 flex items-center justify-between text-xs text-slate-400 border-t border-[#1E3A68]">
-              <span>Verified against GeM Standard Terms & Conditions (STC v4.0)</span>
-              <button
-                onClick={handleDownloadRepresentation}
-                className="text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1"
-              >
-                <Download className="w-3.5 h-3.5" />
-                <span>Download Representation (.TXT)</span>
-              </button>
+            <div className="pt-3 flex items-center justify-between text-xs text-slate-300 border-t border-[#23436E] flex-wrap gap-2">
+              <div className="flex items-center gap-2">
+                <span className="text-slate-400">Risk Model:</span>
+                <span className="font-mono text-cyan-300 font-bold">RAG Atlas Vector GCC/SCC</span>
+                {overriddenClauseIds[selectedClause.id] && (
+                  <span className="text-[9px] px-1.5 py-0.2 rounded bg-amber-950 text-amber-300 font-bold border border-amber-600 font-mono">
+                    HITL GROUND TRUTH ATTACHED
+                  </span>
+                )}
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setChallengeTarget({
+                    id: selectedClause.id,
+                    title: selectedClause.clauseTitle,
+                    clauseRef: `${selectedClause.id} (${selectedClause.clauseNumber})`,
+                    aiReportedIssue: selectedClause.riskExplanation,
+                    category: 'RAG_MISINTERPRETATION'
+                  })}
+                  className="px-2.5 py-1.5 rounded-lg bg-[#0B192C] hover:bg-[#19355B] text-amber-300 hover:text-amber-200 text-xs font-bold border border-[#23436E] transition-all cursor-pointer flex items-center gap-1.5"
+                >
+                  <Flag className="w-3.5 h-3.5" />
+                  <span>Flag AI Error</span>
+                </button>
+
+                <button
+                  onClick={handleDownloadRepresentation}
+                  className="px-2.5 py-1.5 rounded-lg bg-[#0E2038] hover:bg-[#132540] text-sky-300 hover:text-white text-xs font-semibold border border-[#23436E] flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download (.TXT)</span>
+                </button>
+              </div>
             </div>
 
           </div>
+          ) : (
+            <div className="gov-card p-8 text-center text-slate-400 space-y-2">
+              <ShieldAlert className="w-8 h-8 text-slate-500 mx-auto" />
+              <div className="text-sm font-bold text-slate-300">No Clause Selected</div>
+              <p className="text-xs text-slate-500">Select a contract clause from the list on the left to review legal and liquidated damages risks.</p>
+            </div>
+          )}
         </div>
 
       </div>
 
+      <AIFalseNegativeModal
+        isOpen={!!challengeTarget}
+        onClose={() => setChallengeTarget(null)}
+        targetItem={challengeTarget}
+        onChallengeSubmitted={(data) => {
+          setOverriddenClauseIds(prev => ({
+            ...prev,
+            [data.itemId]: data.groundTruthText
+          }));
+        }}
+      />
+
     </div>
   );
-};
+};

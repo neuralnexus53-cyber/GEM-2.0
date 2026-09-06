@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   FileCheck2, 
   UploadCloud, 
@@ -11,21 +11,27 @@ import {
   Download,
   FileCode,
   Hash,
-  Clock
+  Clock,
+  Upload
 } from 'lucide-react';
 import { OcrDocument, VendorProfile } from '../../types';
 import { api } from '../../services/api';
 
 interface OcrScannerViewProps {
   profile?: VendorProfile;
+  onOpenDigiLockerModal?: () => void;
 }
 
-export const OcrScannerView: React.FC<OcrScannerViewProps> = ({ profile }) => {
+export const OcrScannerView: React.FC<OcrScannerViewProps> = ({ 
+  profile,
+  onOpenDigiLockerModal 
+}) => {
   const [documents, setDocuments] = useState<OcrDocument[]>([]);
   const [selectedDoc, setSelectedDoc] = useState<OcrDocument | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [loading, setLoading] = useState(true);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const loadDocuments = async () => {
     setLoading(true);
@@ -48,52 +54,58 @@ export const OcrScannerView: React.FC<OcrScannerViewProps> = ({ profile }) => {
     loadDocuments();
   }, [profile?.id]);
 
-  const handleSimulateUpload = (docType: string) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
     setIsScanning(true);
-    setUploadProgress(25);
+    setUploadProgress(20);
 
     const interval = setInterval(() => {
-      setUploadProgress(prev => {
-        if (prev >= 85) {
-          clearInterval(interval);
-          return 85;
-        }
-        return prev + 25;
-      });
+      setUploadProgress(prev => (prev < 80 ? prev + 20 : 80));
     }, 200);
 
-    setTimeout(async () => {
+    try {
+      const uploadedDoc = await api.uploadDocumentFile(
+        file,
+        profile?.id || 'VEND-OEM-8902',
+        'PQC_EXPERIENCE',
+        file.name.replace(/\.[^/.]+$/, '')
+      );
       clearInterval(interval);
       setUploadProgress(100);
 
-      const newDoc: OcrDocument = {
-        id: `DOC-2026-${Math.floor(1000 + Math.random() * 9000)}`,
-        name: `${docType} Specification Docket`,
-        type: 'PQC_EXPERIENCE',
-        fileName: `${docType}_GeM_NIT_Specification.pdf`,
-        uploadDate: 'Just now',
-        fileSize: '4.8 MB',
-        status: 'VERIFIED',
-        confidence: 99.2,
-        extractedFields: [
-          { label: 'Tender Bid Number', value: `GEM/2026/B/${Math.floor(1000000 + Math.random() * 9000000)}`, confidence: 99.8, verified: true },
-          { label: 'Estimated Value', value: '₹ 12.50 Crores', confidence: 99.5, verified: true },
-          { label: 'EMD Amount', value: '₹ 2,50,000 (Exempt for MSE)', confidence: 99.2, verified: true },
-          { label: 'Make in India Local Content', value: '50% (Class-I Local)', confidence: 99.6, verified: true }
-        ],
-        parsedSummary: 'Verified public procurement tender specification. All GFR 2017 Pre-Qualification and MII parameters parsed successfully with zero discrepancies.'
-      };
+      setDocuments(prev => [uploadedDoc, ...prev]);
+      setSelectedDoc(uploadedDoc);
+    } catch (err) {
+      console.warn('[Supabase Storage] Document upload fallback:', err);
+    } finally {
+      clearInterval(interval);
+      setTimeout(() => {
+        setIsScanning(false);
+        setUploadProgress(0);
+      }, 500);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
-      setDocuments(prev => [newDoc, ...prev]);
-      setSelectedDoc(newDoc);
-      setIsScanning(false);
-      setUploadProgress(0);
-    }, 900);
+  const handleSimulateUpload = (docType: string) => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   return (
     <div className="space-y-4">
-      
+      {/* Hidden File Input for Real Supabase Storage Upload */}
+      <input 
+        type="file"
+        ref={fileInputRef}
+        accept="application/pdf,image/*,.doc,.docx,.xlsx,.xls,.zip"
+        onChange={handleFileUpload}
+        className="hidden"
+      />
+
       <div className="gov-card gov-card-navy p-4">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="flex items-start gap-3">
@@ -108,21 +120,33 @@ export const OcrScannerView: React.FC<OcrScannerViewProps> = ({ profile }) => {
                 <span className="text-[10px] px-2 py-0.5 rounded bg-[#052410] text-emerald-300 font-bold border border-[#15803D]">
                   NIC-OCR Engine v4.2
                 </span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-[#032B43] text-cyan-300 font-bold border border-[#0284C7]">
+                  Supabase Storage Enabled
+                </span>
               </div>
               <p className="text-xs text-slate-300 mt-1">
-                Automated optical character recognition (OCR) and parameter parsing for Notice Inviting Tenders (NIT), Schedule of Requirements, and Special Terms & Conditions (STC).
+                Automated optical character recognition (OCR) and parameter parsing for Notice Inviting Tenders (NIT), Schedule of Requirements, and Special Terms & Conditions (STC). All files are saved into encrypted Supabase storage.
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 shrink-0 flex-wrap">
+            {onOpenDigiLockerModal && (
+              <button
+                onClick={onOpenDigiLockerModal}
+                className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#0284C7] hover:bg-[#0369A1] text-white text-xs font-semibold transition-all shadow-xs cursor-pointer"
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Pull from DigiLocker</span>
+              </button>
+            )}
             <button
               onClick={() => handleSimulateUpload('Tender_NIT')}
               disabled={isScanning}
-              className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#E65100] hover:bg-[#C2410C] text-white text-xs font-semibold transition-all shadow-xs disabled:opacity-50"
+              className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#E65100] hover:bg-[#C2410C] text-white text-xs font-semibold transition-all shadow-xs disabled:opacity-50 cursor-pointer"
             >
               <UploadCloud className="w-3.5 h-3.5" />
-              <span>{isScanning ? `Scrutinizing... ${uploadProgress}%` : 'Ingest Tender PDF'}</span>
+              <span>{isScanning ? `Uploading to Supabase... ${uploadProgress}%` : 'Upload Tender PDF to Supabase'}</span>
             </button>
           </div>
         </div>

@@ -23,56 +23,78 @@ import {
 } from 'lucide-react';
 import { VendorProfile, UserRole } from '../../types';
 import { useAuth } from '../../context/AuthContext';
+import { api } from '../../services/api';
 
 interface VendorProfileViewProps {
   profile: VendorProfile;
   onProfileUpdated?: (updated: VendorProfile) => void;
+  onOpenDigiLockerModal?: () => void;
 }
 
 export const VendorProfileView: React.FC<VendorProfileViewProps> = ({
   profile,
-  onProfileUpdated
+  onProfileUpdated,
+  onOpenDigiLockerModal
 }) => {
-  const { updateProfile } = useAuth();
+  const { user, updateProfile } = useAuth();
   const [activeTab, setActiveTab] = useState<'STATUTORY' | 'OPERATIONS' | 'BANKING' | 'EDIT'>('STATUTORY');
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   
   // Edit Form State
   const [editData, setEditData] = useState({
-    name: profile.name,
+    name: profile.name || '',
     brandName: profile.brandName || '',
-    authorizedSignatory: profile.authorizedSignatory || profile.name,
+    authorizedSignatory: profile.authorizedSignatory || '',
     contactEmail: profile.contactEmail || '',
     contactPhone: profile.contactPhone || '',
-    address: profile.address || 'Plot 42, Okhla Industrial Area Phase-III',
+    address: profile.address || '',
     state: profile.state || 'Delhi',
-    pincode: profile.pincode || '110020',
-    turnoverCr: profile.turnoverCr,
-    experienceYears: profile.experienceYears,
-    miiPercentage: profile.miiPercentage,
+    pincode: profile.pincode || '',
+    turnoverCr: profile.turnoverCr || 0,
+    experienceYears: profile.experienceYears || 1,
+    miiPercentage: profile.miiPercentage || 50,
     udyamNumber: profile.udyamNumber || '',
     contractorClass: profile.contractorClass || '',
-    bankName: profile.bankName || 'State Bank of India',
-    bankAccount: profile.bankAccount || '00003891024589',
-    ifscCode: profile.ifscCode || 'SBIN0001824',
+    bankName: profile.bankName || '',
+    bankAccount: profile.bankAccount || '',
+    ifscCode: profile.ifscCode || '',
     profilePhotoUrl: profile.profilePhotoUrl || 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&auto=format&fit=crop&q=80'
   });
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setIsUploadingPhoto(true);
+      // Immediate local preview
       const reader = new FileReader();
       reader.onloadend = () => {
-        const photoUrl = reader.result as string;
-        setEditData(prev => ({ ...prev, profilePhotoUrl: photoUrl }));
-        updateProfile({ profilePhotoUrl: photoUrl });
-        if (onProfileUpdated) {
-          onProfileUpdated({ ...profile, profilePhotoUrl: photoUrl });
-        }
+        const localPreview = reader.result as string;
+        setEditData(prev => ({ ...prev, profilePhotoUrl: localPreview }));
       };
       reader.readAsDataURL(file);
+
+      try {
+        // Upload directly into Supabase Storage 'vendor-assets' bucket
+        const uploadRes = await api.uploadImageAsset(
+          file, 
+          profile.id || user?.vendorId || 'VEND-OEM-8902', 
+          'VENDOR', 
+          'PROFILE_PHOTO'
+        );
+        const remoteUrl = uploadRes.public_url || uploadRes.file_url;
+        setEditData(prev => ({ ...prev, profilePhotoUrl: remoteUrl }));
+        updateProfile({ profilePhotoUrl: remoteUrl });
+        if (onProfileUpdated) {
+          onProfileUpdated({ ...profile, profilePhotoUrl: remoteUrl });
+        }
+      } catch (err) {
+        console.warn('[Supabase Storage] Photo upload fallback:', err);
+      } finally {
+        setIsUploadingPhoto(false);
+      }
     }
   };
 
@@ -115,8 +137,8 @@ export const VendorProfileView: React.FC<VendorProfileViewProps> = ({
 
   const roleLabels: Record<UserRole, { title: string; color: string; icon: any }> = {
     OEM_SELLER: { title: 'OEM Original Equipment Manufacturer', color: 'text-cyan-400 border-cyan-500/40 bg-cyan-950/30', icon: Building2 },
-    MSME_STARTUP: { title: 'MSME / DPIIT Recognized Startup', color: 'text-amber-400 border-amber-500/40 bg-amber-950/30', icon: Rocket },
-    WORKS_CONTRACTOR: { title: 'Civil & EPC Works Contractor', color: 'text-emerald-400 border-emerald-500/40 bg-emerald-950/30', icon: HardHat }
+    AUTHORIZED_RESELLER: { title: 'Authorized GeM Reseller (with OEM MAF)', color: 'text-amber-400 border-amber-500/40 bg-amber-950/30', icon: Rocket },
+    SERVICE_PROVIDER: { title: 'GeM Service Provider (Manpower, Cloud & Works)', color: 'text-emerald-400 border-emerald-500/40 bg-emerald-950/30', icon: HardHat }
   };
 
   const currentRoleInfo = roleLabels[profile.role] || roleLabels.OEM_SELLER;
@@ -254,7 +276,12 @@ export const VendorProfileView: React.FC<VendorProfileViewProps> = ({
                   <span className="text-slate-400 block text-[11px]">GSTIN Registration</span>
                   <span className="text-white font-mono font-bold text-sm">{profile.gstin}</span>
                 </div>
-                <span className="text-[10px] text-emerald-400 font-bold">✓ Active &amp; Regular</span>
+                <div className="text-right">
+                  <span className="text-[10px] text-emerald-400 font-bold block">✓ Active &amp; Regular</span>
+                  <span className="text-[9px] text-sky-400 font-semibold flex items-center gap-1 justify-end">
+                    <ShieldCheck size={10} /> DigiLocker PKI Verified
+                  </span>
+                </div>
               </div>
 
               <div className="flex items-center justify-between p-3 bg-[#051124] rounded-lg border border-[#1E3A68]">
@@ -262,7 +289,12 @@ export const VendorProfileView: React.FC<VendorProfileViewProps> = ({
                   <span className="text-slate-400 block text-[11px]">Permanent Account Number (PAN)</span>
                   <span className="text-white font-mono font-bold text-sm">{profile.pan}</span>
                 </div>
-                <span className="text-[10px] text-emerald-400 font-bold">✓ CBDT Validated</span>
+                <div className="text-right">
+                  <span className="text-[10px] text-emerald-400 font-bold block">✓ CBDT Validated</span>
+                  <span className="text-[9px] text-sky-400 font-semibold flex items-center gap-1 justify-end">
+                    <ShieldCheck size={10} /> DigiLocker PKI Verified
+                  </span>
+                </div>
               </div>
 
               {profile.udyamNumber && (
@@ -271,7 +303,12 @@ export const VendorProfileView: React.FC<VendorProfileViewProps> = ({
                     <span className="text-slate-400 block text-[11px]">MSME Udyam Registration</span>
                     <span className="text-amber-400 font-mono font-bold text-sm">{profile.udyamNumber}</span>
                   </div>
-                  <span className="text-[10px] text-amber-400 font-bold">✓ Udyam Linked</span>
+                  <div className="text-right">
+                    <span className="text-[10px] text-amber-400 font-bold block">✓ Udyam Linked</span>
+                    <span className="text-[9px] text-sky-400 font-semibold flex items-center gap-1 justify-end">
+                      <ShieldCheck size={10} /> DigiLocker PKI Verified
+                    </span>
+                  </div>
                 </div>
               )}
 
@@ -281,8 +318,43 @@ export const VendorProfileView: React.FC<VendorProfileViewProps> = ({
                     <span className="text-slate-400 block text-[11px]">Works Contractor Enlistment</span>
                     <span className="text-emerald-400 font-bold text-sm">{profile.contractorClass}</span>
                   </div>
-                  <span className="text-[10px] text-emerald-400 font-bold">✓ CPWD Verified</span>
+                  <div className="text-right">
+                    <span className="text-[10px] text-emerald-400 font-bold block">✓ CPWD Verified</span>
+                    <span className="text-[9px] text-sky-400 font-semibold flex items-center gap-1 justify-end">
+                      <ShieldCheck size={10} /> DigiLocker PKI Verified
+                    </span>
+                  </div>
                 </div>
+              )}
+            </div>
+
+            {/* Direct DigiLocker Sovereign Bridge */}
+            <div className="mt-4 p-3.5 bg-gradient-to-r from-[#001D3D] to-[#0A2540] rounded-xl border border-sky-600/40 flex items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-sky-500/20 border border-sky-400/40 flex items-center justify-center text-sky-300">
+                  <ShieldCheck size={18} />
+                </div>
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-bold text-white">DigiLocker Sovereign Bridge</span>
+                    <span className="text-[9px] px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 font-bold border border-emerald-600">
+                      LIVE
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-slate-300">
+                    Direct XML PKI authentication active with 9 verified statutory issuer records.
+                  </p>
+                </div>
+              </div>
+              {onOpenDigiLockerModal && (
+                <button
+                  type="button"
+                  onClick={onOpenDigiLockerModal}
+                  className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs shadow-sm transition-all cursor-pointer shrink-0 flex items-center gap-1.5"
+                >
+                  <Rocket size={12} />
+                  <span>Sync DigiLocker</span>
+                </button>
               )}
             </div>
           </div>

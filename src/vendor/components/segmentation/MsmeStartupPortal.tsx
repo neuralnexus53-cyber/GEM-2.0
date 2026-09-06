@@ -19,10 +19,23 @@ interface MsmeStartupPortalProps {
 }
 
 export const MsmeStartupPortal: React.FC<MsmeStartupPortalProps> = ({ profile }) => {
-  const [activeSubTab, setActiveSubTab] = useState<'EXEMPTIONS' | 'BSD_GENERATOR'>('EXEMPTIONS');
+  const [activeSubTab, setActiveSubTab] = useState<'MAF_VALIDATION' | 'EXEMPTIONS' | 'BSD_GENERATOR'>('MAF_VALIDATION');
+  const [mafCode, setMafCode] = useState('MAF-APX-2026-8891');
+  const [oemBrand, setOemBrand] = useState('ApexPower™ (Apex Dynamics Ltd)');
+  const [mafValidUntil, setMafValidUntil] = useState('31-Dec-2026');
+  const [isVerifyingMaf, setIsVerifyingMaf] = useState(false);
+  const [mafStatus, setMafStatus] = useState<'VALID' | 'PENDING' | 'INVALID'>('VALID');
 
   const handleGenerateBsd = () => {
     setActiveSubTab('BSD_GENERATOR');
+  };
+
+  const handleVerifyMaf = () => {
+    setIsVerifyingMaf(true);
+    setTimeout(() => {
+      setIsVerifyingMaf(false);
+      setMafStatus('VALID');
+    }, 600);
   };
 
   return (
@@ -36,14 +49,14 @@ export const MsmeStartupPortal: React.FC<MsmeStartupPortalProps> = ({ profile })
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <h2 className="text-base font-bold text-slate-100">
-                MSME & DPIIT Startup Public Procurement Exemption Desk
+                Authorized GeM Reseller &amp; MSME Exemption Desk
               </h2>
               <span className="text-[10px] px-2 py-0.5 rounded bg-[#2D1A05] text-amber-300 font-bold border border-[#9A3412]">
-                Udyam: {profile.udyamNumber || 'UDYAM-MH-03-0098412'}
+                GeM Reseller Active &bull; Udyam: {profile.udyamNumber || 'UDYAM-MH-03-0098412'}
               </span>
             </div>
             <p className="text-xs text-slate-300 mt-1">
-              Statutory procurement exemptions under Public Procurement Policy for MSEs Order 2012 and Bid Security Declaration (BSD) generator.
+              Pair OEM Manufacturer Authorization Forms (MAF), validate back-to-back warranty, and enforce statutory procurement exemptions under MSE Policy Order 2012.
             </p>
           </div>
         </div>
@@ -51,7 +64,7 @@ export const MsmeStartupPortal: React.FC<MsmeStartupPortalProps> = ({ profile })
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={handleGenerateBsd}
-            className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#E65100] hover:bg-[#C2410C] text-white text-xs font-semibold transition-all shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-2 rounded bg-[#E65100] hover:bg-[#C2410C] text-white text-xs font-semibold transition-all shadow-xs cursor-pointer"
           >
             <FileText className="w-3.5 h-3.5" />
             <span>Generate EMD Waiver Form</span>
@@ -59,44 +72,123 @@ export const MsmeStartupPortal: React.FC<MsmeStartupPortalProps> = ({ profile })
         </div>
       </div>
 
-      <div className="bg-[#051124] border border-[#1E3A68] rounded p-2.5 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#1E3A68] text-xs">
-        <div className="px-3 py-1 flex items-center justify-between">
-          <span className="text-slate-400">Udyam No:</span>
+      <div className="bg-[#0E2038] border border-[#23436E] rounded-xl p-3 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#23436E] text-xs shadow-md">
+        <div className="px-3 py-1.5 flex items-center justify-between">
+          <span className="text-slate-300">Reseller Status:</span>
+          <span className="font-mono text-emerald-400 font-bold">Authorized (MAF Verified)</span>
+        </div>
+        <div className="px-3 py-1.5 flex items-center justify-between">
+          <span className="text-slate-300">Udyam No:</span>
           <span className="font-mono text-amber-300 font-bold">{profile.udyamNumber || 'UDYAM-MH-03-0098412'}</span>
         </div>
-        <div className="px-3 py-1 flex items-center justify-between">
-          <span className="text-slate-400">DPIIT Status:</span>
-          <span className="font-mono text-emerald-400 font-bold">DIPP-98214 (Recognized)</span>
-        </div>
-        <div className="px-3 py-1 flex items-center justify-between">
-          <span className="text-slate-400">MSE Quota:</span>
+        <div className="px-3 py-1.5 flex items-center justify-between">
+          <span className="text-slate-300">MSE Quota:</span>
           <span className="font-mono text-cyan-300 font-bold">25% Reserved Band (L1 + 15%)</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-1.5 border-b border-[#1E3A68] pb-2">
+      <div className="flex items-center gap-2 border-b border-[#23436E] pb-2 overflow-x-auto">
         <button
-          onClick={() => setActiveSubTab('EXEMPTIONS')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all border ${
-            activeSubTab === 'EXEMPTIONS'
-              ? 'bg-[#002855] text-white border-[#0284C7]'
-              : 'bg-[#08172D] text-slate-400 border-[#1E3A68] hover:bg-[#0E203B] hover:text-slate-200'
+          onClick={() => setActiveSubTab('MAF_VALIDATION')}
+          className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
+            activeSubTab === 'MAF_VALIDATION'
+              ? 'bg-[#002855] text-white border-[#0284C7] shadow-xs'
+              : 'bg-[#132540] text-slate-300 border-[#23436E] hover:bg-[#1A3459] hover:text-white'
           }`}
         >
-          1. Statutory Exemption Rights (5 Active)
+          1. OEM Brand Pairing &amp; MAF Ingestion
+        </button>
+
+        <button
+          onClick={() => setActiveSubTab('EXEMPTIONS')}
+          className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
+            activeSubTab === 'EXEMPTIONS'
+              ? 'bg-[#002855] text-white border-[#0284C7] shadow-xs'
+              : 'bg-[#132540] text-slate-300 border-[#23436E] hover:bg-[#1A3459] hover:text-white'
+          }`}
+        >
+          2. Statutory Exemption Rights (5 Active)
         </button>
 
         <button
           onClick={() => setActiveSubTab('BSD_GENERATOR')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all border ${
+          className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
             activeSubTab === 'BSD_GENERATOR'
-              ? 'bg-[#002855] text-white border-[#0284C7]'
-              : 'bg-[#08172D] text-slate-400 border-[#1E3A68] hover:bg-[#0E203B] hover:text-slate-200'
+              ? 'bg-[#002855] text-white border-[#0284C7] shadow-xs'
+              : 'bg-[#132540] text-slate-300 border-[#23436E] hover:bg-[#1A3459] hover:text-white'
           }`}
         >
-          2. Bid Security Declaration (EMD Waiver)
+          3. Bid Security Declaration (EMD Waiver)
         </button>
       </div>
+
+      {activeSubTab === 'MAF_VALIDATION' && (
+        <div className="gov-card p-5 space-y-4">
+          <div className="flex items-center justify-between pb-3 border-b border-[#23436E]">
+            <div>
+              <h3 className="text-xs font-bold text-slate-100 uppercase tracking-wide">
+                GeM Reseller OEM Authorization (MAF) Ingestion &amp; Verification
+              </h3>
+              <p className="text-[11px] text-slate-300 mt-0.5">
+                Authorized Resellers must hold a valid Manufacturer Authorization Form (MAF) from the OEM to bid on GeM product categories.
+              </p>
+            </div>
+            <span className="text-[10px] px-2.5 py-1 rounded bg-emerald-950 text-emerald-300 font-bold border border-emerald-600 font-mono">
+              MAF STATUS: {mafStatus}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+            <div>
+              <label className="block text-slate-300 mb-1 font-semibold">OEM Manufacturer Brand *</label>
+              <input 
+                type="text"
+                value={oemBrand}
+                onChange={e => setOemBrand(e.target.value)}
+                className="w-full px-3 py-2 bg-[#0B192C] border border-[#23436E] rounded-lg text-white font-mono focus:border-[#38BDF8] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-slate-300 mb-1 font-semibold">OEM MAF Reference Code *</label>
+              <input 
+                type="text"
+                value={mafCode}
+                onChange={e => setMafCode(e.target.value)}
+                className="w-full px-3 py-2 bg-[#0B192C] border border-[#23436E] rounded-lg text-white font-mono focus:border-[#38BDF8] focus:outline-none"
+              />
+            </div>
+
+            <div>
+              <label className="block text-slate-300 mb-1 font-semibold">MAF Authorization Validity *</label>
+              <input 
+                type="text"
+                value={mafValidUntil}
+                onChange={e => setMafValidUntil(e.target.value)}
+                className="w-full px-3 py-2 bg-[#0B192C] border border-[#23436E] rounded-lg text-white font-mono focus:border-[#38BDF8] focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="p-3.5 rounded-lg bg-[#09172A] border border-[#23436E] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2.5">
+              <ShieldCheck className="w-5 h-5 text-emerald-400 shrink-0" />
+              <div>
+                <span className="font-bold text-white">Back-to-Back OEM Warranty Guaranteed:</span>
+                <span className="text-slate-300 ml-1">Apex Dynamics guarantees 3-Year comprehensive on-site warranty for this Reseller.</span>
+              </div>
+            </div>
+
+            <button
+              onClick={handleVerifyMaf}
+              disabled={isVerifyingMaf}
+              className="px-3.5 py-1.5 rounded-lg bg-[#0284C7] hover:bg-[#0369A1] text-white font-bold text-xs shadow-xs cursor-pointer shrink-0 disabled:opacity-50"
+            >
+              {isVerifyingMaf ? 'Verifying with OEM...' : 'Re-verify with OEM Engine'}
+            </button>
+          </div>
+        </div>
+      )}
 
       {activeSubTab === 'EXEMPTIONS' && (
         <div className="gov-card p-4 space-y-3">

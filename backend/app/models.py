@@ -8,7 +8,7 @@ class UserRegisterRequest(BaseModel):
     password: str = Field(min_length=6)
     full_name: str
     vendor_name: str
-    role: Literal["OEM_SELLER", "MSME_STARTUP", "WORKS_CONTRACTOR"]
+    role: Literal["OEM_SELLER", "AUTHORIZED_RESELLER", "SERVICE_PROVIDER", "MSME_STARTUP", "WORKS_CONTRACTOR"]
     gstin: str
     pan: str
     turnover_cr: Optional[float] = 5.0

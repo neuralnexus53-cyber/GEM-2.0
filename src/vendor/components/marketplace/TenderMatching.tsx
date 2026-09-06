@@ -284,7 +284,7 @@ Downloaded via GeM 2.0 Vendor Facilitation Portal.`;
                   {tender.title}
                 </h3>
                 <div className="flex flex-wrap gap-1 mt-1.5">
-                  {tender.keyPqc.map((pqc, i) => (
+                  {(tender.keyPqc || []).map((pqc, i) => (
                     <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-[#08172D] text-slate-300 border border-[#1E3A68]">
                       {pqc}
                     </span>
@@ -294,21 +294,21 @@ Downloaded via GeM 2.0 Vendor Facilitation Portal.`;
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2 border-t border-[#1E3A68] text-xs">
                 <div>
-                  <span className="text-[10px] text-slate-400 block">Estimated Tender Value</span>
-                  <span className="font-bold text-slate-100 font-mono">
+                  <span className="text-[10px] text-slate-300 block font-medium">Estimated Tender Value</span>
+                  <span className="font-extrabold text-white font-mono text-sm">
                     ₹ {tender.estimatedValueCr} Crores
                   </span>
                 </div>
 
                 <div>
-                  <span className="text-[10px] text-slate-400 block">EMD Amount (धरोहर राशि)</span>
-                  <span className="font-bold text-slate-200 font-mono">
+                  <span className="text-[10px] text-slate-300 block font-medium">EMD Amount (धरोहर राशि)</span>
+                  <span className="font-extrabold text-amber-300 font-mono text-sm">
                     {tender.emdAmountLakhs === 0 ? '₹ 0 (Exempt)' : `₹ ${tender.emdAmountLakhs} Lakhs`}
                   </span>
                 </div>
 
                 <div>
-                  <span className="text-[10px] text-slate-400 block">Statutory Preferences</span>
+                  <span className="text-[10px] text-slate-300 block font-medium">Statutory Preferences</span>
                   <span className="font-bold text-emerald-400">
                     {tender.hasMiiPreference ? 'MII Class-I' : 'Standard'} {tender.hasMsmePreference ? '& MSE 25%' : ''}
                   </span>

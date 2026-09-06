@@ -1,10 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { 
   Menu, 
   ShieldCheck, 
   CreditCard, 
   HelpCircle,
-  Building2,
   Lock,
   LogOut,
   UserCheck,
@@ -121,21 +121,22 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
             className="bg-transparent text-slate-100 font-semibold text-[11px] focus:outline-none cursor-pointer pr-1"
           >
             <option value="OEM_SELLER" className="bg-[#002855] text-white">Apex Dynamics (OEM Manufacturer)</option>
-            <option value="MSME_STARTUP" className="bg-[#002855] text-white">Novavolt Instruments (MSME / Startup)</option>
-            <option value="WORKS_CONTRACTOR" className="bg-[#002855] text-white">Bharat Infra-Tech (Civil Contractor)</option>
+            <option value="AUTHORIZED_RESELLER" className="bg-[#002855] text-white">Novavolt Solutions (Authorized Reseller)</option>
+            <option value="SERVICE_PROVIDER" className="bg-[#002855] text-white">Bharat Infra-Tech (Service Provider)</option>
           </select>
         </div>
 
         <div className="hidden lg:flex items-center gap-2 text-xs bg-[#001833] px-2.5 py-1 rounded border border-[#1E3A68]">
           <div className="flex items-center gap-1 text-amber-400 font-bold text-[11px]">
             <Star className="w-3.5 h-3.5 fill-current" />
-            <span>4.8</span>
+            <span>{profile.gemStarRating ? profile.gemStarRating.toFixed(1) : '4.8'}</span>
           </div>
           <span className="text-slate-600">|</span>
           <span className="text-[10px] text-slate-300">
             GSTIN: <strong className="text-white font-mono">{profile.gstin}</strong>
           </span>
         </div>
+
 
         <button
           onClick={onOpenPricingModal}
@@ -152,7 +153,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         <button
           onClick={handleLogout}
           title="Sign Out & Lock Vendor Session"
-          className="hidden sm:flex items-center gap-1 px-2 py-1 rounded bg-[#3B0D0D] hover:bg-[#501212] border border-[#B91C1C] text-rose-200 text-xs font-medium transition-all"
+          className="hidden sm:flex items-center gap-1 px-2 py-1 rounded bg-[#3B0D0D] hover:bg-[#501212] border border-[#B91C1C] text-rose-200 text-xs font-medium transition-all cursor-pointer"
         >
           <LogOut className="w-3 h-3 text-rose-400" />
           <span className="text-[10px]">Exit</span>

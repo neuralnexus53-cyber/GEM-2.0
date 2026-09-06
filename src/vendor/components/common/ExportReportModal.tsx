@@ -55,7 +55,7 @@ export const ExportReportModal: React.FC<ExportReportModalProps> = ({ isOpen, on
       epfoEsi: 'VERIFIED (Zero Statutory Default)'
     },
     cryptographicSeal: {
-      algorithm: 'SHA-256 Merkle Blockchain',
+      algorithm: 'SHA-256 Immutable Merkle-Tree Audit Hash',
       signatureStandard: 'NIC Class-3 Digital Signature Certificate (DSC)',
       merkleHash: '0x8b573f93a9a072a84f59c11823abce1287eef9801'
     }

@@ -209,28 +209,28 @@ Designation: Head of Public Procurement & GeM Affairs`;
         </div>
       </div>
 
-      <div className="bg-[#051124] border border-[#1E3A68] rounded p-2.5 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#1E3A68] text-xs">
-        <div className="px-3 py-1 flex items-center justify-between">
-          <span className="text-slate-400">Registered Brand:</span>
-          <span className="font-bold text-slate-200">{profile.brandName || 'ApexPower™'} (TM Verified)</span>
+      <div className="bg-[#0E2038] border border-[#23436E] rounded-xl p-3 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#23436E] text-xs shadow-md">
+        <div className="px-3 py-1.5 flex items-center justify-between">
+          <span className="text-slate-300">Registered Brand:</span>
+          <span className="font-bold text-white">{profile.brandName || 'ApexPower™'} (TM Verified)</span>
         </div>
-        <div className="px-3 py-1 flex items-center justify-between">
-          <span className="text-slate-400">Accreditations:</span>
-          <span className="font-mono text-cyan-300">BIS IS-16221 &bull; ISO 9001:2015</span>
+        <div className="px-3 py-1.5 flex items-center justify-between">
+          <span className="text-slate-300">Accreditations:</span>
+          <span className="font-mono text-cyan-300 font-bold">BIS IS-16221 &bull; ISO 9001:2015</span>
         </div>
-        <div className="px-3 py-1 flex items-center justify-between">
-          <span className="text-slate-400">MII Status:</span>
+        <div className="px-3 py-1.5 flex items-center justify-between">
+          <span className="text-slate-300">MII Status:</span>
           <span className="font-mono text-amber-300 font-bold">{profile.miiPercentage}% (Class-I Local)</span>
         </div>
       </div>
 
-      <div className="flex items-center gap-1.5 border-b border-[#1E3A68] pb-2">
+      <div className="flex items-center gap-2 border-b border-[#23436E] pb-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab('CATALOG')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all border ${
+          className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
             activeTab === 'CATALOG'
-              ? 'bg-[#002855] text-white border-[#0284C7]'
-              : 'bg-[#08172D] text-slate-400 border-[#1E3A68] hover:bg-[#0E203B] hover:text-slate-200'
+              ? 'bg-[#002855] text-white border-[#0284C7] shadow-xs'
+              : 'bg-[#132540] text-slate-300 border-[#23436E] hover:bg-[#1A3459] hover:text-white'
           }`}
         >
           1. GeM Catalog & Product SKUs ({skus.length})
@@ -238,10 +238,10 @@ Designation: Head of Public Procurement & GeM Affairs`;
 
         <button
           onClick={() => setActiveTab('MAF')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all border ${
+          className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
             activeTab === 'MAF'
-              ? 'bg-[#002855] text-white border-[#0284C7]'
-              : 'bg-[#08172D] text-slate-400 border-[#1E3A68] hover:bg-[#0E203B] hover:text-slate-200'
+              ? 'bg-[#002855] text-white border-[#0284C7] shadow-xs'
+              : 'bg-[#132540] text-slate-300 border-[#23436E] hover:bg-[#1A3459] hover:text-white'
           }`}
         >
           2. Manufacturer Authorization (MAF) Generator
@@ -249,10 +249,10 @@ Designation: Head of Public Procurement & GeM Affairs`;
 
         <button
           onClick={() => setActiveTab('MII_WORKSHEET')}
-          className={`px-3 py-1.5 rounded text-xs font-semibold transition-all border ${
+          className={`px-3.5 py-2 rounded-lg text-xs font-bold transition-all border cursor-pointer ${
             activeTab === 'MII_WORKSHEET'
-              ? 'bg-[#002855] text-white border-[#0284C7]'
-              : 'bg-[#08172D] text-slate-400 border-[#1E3A68] hover:bg-[#0E203B] hover:text-slate-200'
+              ? 'bg-[#002855] text-white border-[#0284C7] shadow-xs'
+              : 'bg-[#132540] text-slate-300 border-[#23436E] hover:bg-[#1A3459] hover:text-white'
           }`}
         >
           3. PPP-MII Local Content Worksheet

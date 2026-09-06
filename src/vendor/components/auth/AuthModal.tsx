@@ -104,21 +104,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
               className="p-2 rounded-lg bg-cyan-950/40 hover:bg-cyan-900/60 border border-cyan-500/30 text-cyan-300 font-bold transition-all text-center"
             >
               Apex OEM
-              <span className="block text-[9px] text-cyan-400 font-mono font-normal">Pro Tier</span>
+              <span className="block text-[9px] text-cyan-400 font-mono font-normal">Manufacturer</span>
             </button>
             <button
-              onClick={() => handleQuickLogin('MSME_STARTUP')}
+              onClick={() => handleQuickLogin('AUTHORIZED_RESELLER')}
               className="p-2 rounded-lg bg-amber-950/40 hover:bg-amber-900/60 border border-amber-500/30 text-amber-300 font-bold transition-all text-center"
             >
-              Novavolt MSME
-              <span className="block text-[9px] text-amber-400 font-mono font-normal">Free Tier</span>
+              Novavolt Reseller
+              <span className="block text-[9px] text-amber-400 font-mono font-normal">Auth Reseller</span>
             </button>
             <button
-              onClick={() => handleQuickLogin('WORKS_CONTRACTOR')}
+              onClick={() => handleQuickLogin('SERVICE_PROVIDER')}
               className="p-2 rounded-lg bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-500/30 text-emerald-300 font-bold transition-all text-center"
             >
-              Bharat Works
-              <span className="block text-[9px] text-emerald-400 font-mono font-normal">Starter Tier</span>
+              Bharat Services
+              <span className="block text-[9px] text-emerald-400 font-mono font-normal">Service Provider</span>
             </button>
           </div>
         </div>

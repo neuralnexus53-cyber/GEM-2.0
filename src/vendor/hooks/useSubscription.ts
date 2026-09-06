@@ -51,7 +51,7 @@ export function useSubscription() {
           hasPricingAdvisor: true,
           hasPdfDossierExport: true
         });
-      } else if (user.role === 'MSME_STARTUP') {
+      } else if (user.role === 'AUTHORIZED_RESELLER') {
         setSubscription({
           planId: 'FREE',
           status: 'active',

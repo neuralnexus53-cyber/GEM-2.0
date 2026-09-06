@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { SectorWiseFaq } from '../components/SectorWiseFaq';
 
 const NOTICES = [
   { tag: 'NOTICE', desc: 'GeM 2.0 portal maintenance scheduled for this Sunday from 2:00 AM to 6:00 AM IST.' },
@@ -29,13 +30,10 @@ export default function LandingPage() {
 
   // About GeM Public Procurement Details Modal
   const [aboutModalOpen, setAboutModalOpen] = useState(false);
-  const [aboutModalTab, setAboutModalTab] = useState<'overview' | 'gfr_rules' | 'procurement_modes' | 'msme_mii' | 'gem2_engine'>('overview');
+  const [aboutModalTab, setAboutModalTab] = useState<'overview' | 'gfr_rules' | 'procurement_modes' | 'msme_mii' | 'gem2_engine' | 'audit_ledger' | 'security_cert' | 'sector_faq'>('overview');
 
   // Backend API status
   const [apiStatus, setApiStatus] = useState<'checking' | 'online' | 'offline'>('checking');
-
-  // Search input
-  const [searchQuery, setSearchQuery] = useState('');
 
   // Auto-rotate notices
   useEffect(() => {
@@ -54,13 +52,13 @@ export default function LandingPage() {
   }, []);
 
   const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-  const docsUrl = isLocal ? 'http://127.0.0.1:8000/docs' : '/api/docs';
+  const apiBase = isLocal
+    ? ((import.meta as unknown as { env?: { VITE_API_URL?: string } }).env?.VITE_API_URL || 'http://127.0.0.1:8000')
+    : '';
+  const docsUrl = `${apiBase || 'http://127.0.0.1:8000'}/docs`;
 
   // Backend telemetry check
   useEffect(() => {
-    const apiBase = isLocal
-      ? ((import.meta as unknown as { env?: { VITE_API_URL?: string } }).env?.VITE_API_URL || 'http://127.0.0.1:8000')
-      : '';
     const check = async () => {
       try {
         const r = await fetch(`${apiBase}/api/health`, { signal: AbortSignal.timeout(3500) });
@@ -77,8 +75,16 @@ export default function LandingPage() {
     check();
     const id = setInterval(check, 10000);
     return () => clearInterval(id);
-  }, [isLocal]);
+  }, [apiBase, isLocal]);
 
+
+  const scrollToSection = (id: string) => {
+    setDrawerOpen(false);
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   const currentNotice = NOTICES[noticeIdx];
 
@@ -108,11 +114,21 @@ export default function LandingPage() {
             <Link to="/gov/register" onClick={() => setDrawerOpen(false)} className="hover:text-blue-400 transition-colors text-sm font-bold text-blue-400">Officer Registration</Link>
             <Link to="/vendor/login" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold text-amber-400">Vendor Login</Link>
             <Link to="/vendor/register" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold text-amber-400">Vendor Registration</Link>
-            <a href="#about" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">About Us</a>
-            <a href="#gem2" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">GeM 2.0 Compliance Engine</a>
-            <a href="#initiatives" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">Our Initiatives</a>
-            <a href="#statistics" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">Live Statistics</a>
-            <a href={docsUrl} target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors text-sm font-bold">API Documentation</a>
+            <button onClick={() => scrollToSection('about')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">About Us</button>
+            <button onClick={() => scrollToSection('gem2')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">GeM 2.0 Compliance Engine</button>
+            <button 
+              onClick={() => {
+                setDrawerOpen(false);
+                setAboutModalTab('sector_faq');
+                setAboutModalOpen(true);
+              }} 
+              className="bg-transparent border-none text-amber-300 hover:text-amber-200 transition-colors text-sm font-bold cursor-pointer flex items-center gap-1.5"
+            >
+              <i className="fa-solid fa-book-bookmark text-xs" />
+              <span>Sector Regulatory Dossier</span>
+            </button>
+            <button onClick={() => scrollToSection('initiatives')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">Our Initiatives</button>
+            <button onClick={() => scrollToSection('statistics')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">Live Statistics</button>
           </div>
         </div>
       </div>
@@ -157,33 +173,11 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <div className="hidden md:flex flex-1 max-w-md mx-6 z-10">
-            <form 
-              onSubmit={(e) => { e.preventDefault(); alert(`Searching GeM 2.0 for: "${searchQuery}"`); }}
-              className="flex items-center bg-white rounded-full overflow-hidden shadow-md h-9 w-full"
-            >
-              <input 
-                type="text" 
-                placeholder="Search Tenders, Bidder Compliance, PQC Rules..." 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-5 py-2 text-gray-800 text-xs focus:outline-none placeholder:text-gray-400" 
-              />
-              <button 
-                type="submit" 
-                className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-5 h-full flex items-center justify-center transition shrink-0 border-none cursor-pointer"
-                aria-label="Search"
-              >
-                <span className="text-xs uppercase tracking-wide">Search</span>
-              </button>
-            </form>
-          </div>
-
-          <div className="flex items-center gap-3 z-10">
-            <nav className="hidden md:flex items-center space-x-2 text-xs font-semibold text-slate-200">
+          <div className="flex items-center space-x-2 sm:space-x-4 text-xs font-semibold">
+            <nav className="hidden lg:flex items-center space-x-3">
               <Link 
                 to="/gov/login" 
-                className="hover:text-blue-400 transition-colors px-2 py-1 rounded"
+                className="hover:text-blue-700 transition-colors px-2 py-1 rounded"
               >
                 Officer Login
               </Link>
@@ -196,7 +190,7 @@ export default function LandingPage() {
               </Link>
               <Link 
                 to="/vendor/login" 
-                className="hover:text-amber-400 transition-colors px-2 py-1 rounded"
+                className="hover:text-amber-600 transition-colors px-2 py-1 rounded"
               >
                 Vendor Login
               </Link>
@@ -216,15 +210,25 @@ export default function LandingPage() {
 
         </div>
 
-        <div className="bg-slate-950 border-t border-slate-800">
-          <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-[11px] font-bold tracking-wider text-slate-200 uppercase">
+        <div className="bg-[#002855] border-t border-sky-900/60">
+          <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-[11px] font-bold tracking-wider text-slate-100 uppercase">
             <div className="flex items-center space-x-6 overflow-x-auto py-1">
               <Link to="/" className="hover:text-amber-400 transition-colors text-amber-400">Home</Link>
-              <a href="#about" className="hover:text-amber-400 transition-colors">About Us</a>
-              <a href="#gem2" className="hover:text-amber-400 transition-colors">GeM 2.0 Platform</a>
-              <a href="#initiatives" className="hover:text-amber-400 transition-colors">Our Initiatives</a>
-              <a href="#portals" className="hover:text-amber-400 transition-colors">Portals Gateway</a>
-              <a href="#statistics" className="hover:text-amber-400 transition-colors">Statistics</a>
+              <button onClick={() => scrollToSection('about')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">About Us</button>
+              <button onClick={() => scrollToSection('gem2')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">GeM 2.0 Platform</button>
+              <button 
+                onClick={() => {
+                  setAboutModalTab('sector_faq');
+                  setAboutModalOpen(true);
+                }} 
+                className="bg-transparent border-none text-amber-300 hover:text-amber-200 transition-colors uppercase font-bold text-[11px] cursor-pointer flex items-center gap-1.5"
+              >
+                <i className="fa-solid fa-book-bookmark text-[10px]" />
+                <span>Sector Regulatory Dossier</span>
+              </button>
+              <button onClick={() => scrollToSection('initiatives')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">Our Initiatives</button>
+              <button onClick={() => scrollToSection('portals')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">Portals Gateway</button>
+              <button onClick={() => scrollToSection('statistics')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">Statistics</button>
             </div>
             <div className="hidden lg:flex items-center gap-2 text-slate-400 text-[10px] lowercase">
               <i className="fa-solid fa-bolt text-amber-400" />
@@ -242,9 +246,6 @@ export default function LandingPage() {
               <span className="text-slate-300 shrink-0 text-xs">
                 {currentNotice.desc}
               </span>
-              <a href={docsUrl} target="_blank" rel="noreferrer" className="text-amber-400 underline ml-4 hover:text-amber-300 text-[11px]">
-                API Telemetry Docs →
-              </a>
             </div>
           </div>
         </section>
@@ -609,6 +610,62 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* Sector-Wise Comprehensive Procurement Regulatory Dossier Gateway */}
+        <section id="faq" className="py-12 bg-slate-50 border-t border-slate-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-white rounded-2xl p-8 sm:p-10 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col lg:flex-row items-center justify-between gap-8">
+              
+              <div className="space-y-3 max-w-2xl text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 text-[11px] font-bold text-sky-800 uppercase tracking-widest bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
+                  <i className="fa-solid fa-book-bookmark text-sky-600" />
+                  <span>Public Procurement Regulatory Dossier</span>
+                </div>
+                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                  Sector-Wise Knowledge Base &amp; Regulatory FAQ Dossier
+                </h2>
+                <p className="text-sm text-slate-600 leading-relaxed">
+                  Access official statutory guidelines, GFR 2017 &amp; PPP-MII citations, MSME concessions, OEM authorization rules, civil contractor capacity formulas, and CAG audit protocols in an authenticated interactive dossier.
+                </p>
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-2 text-xs">
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold border border-slate-200">
+                    🏢 MSME &amp; Startups (25% Quota)
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold border border-slate-200">
+                    🏭 OEMs &amp; Make-in-India (Class-I)
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold border border-slate-200">
+                    🏗️ Civil &amp; Works Contractors
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold border border-slate-200">
+                    🏛️ Procurement Officers &amp; Buyers
+                  </span>
+                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold border border-slate-200">
+                    🛡️ CAG Anti-Cartel Vigilance
+                  </span>
+                </div>
+              </div>
+
+              <div className="shrink-0 flex flex-col items-center lg:items-end gap-3">
+                <button
+                  onClick={() => {
+                    setAboutModalTab('sector_faq');
+                    setAboutModalOpen(true);
+                  }}
+                  className="bg-[#002855] hover:bg-[#003B7A] text-white font-bold px-7 py-3.5 rounded-xl text-sm transition-all shadow-md hover:shadow-lg flex items-center gap-2.5 cursor-pointer hover:scale-[1.02]"
+                >
+                  <i className="fa-solid fa-folder-open text-amber-400 text-base" />
+                  <span>Open Sector Regulatory Dossier</span>
+                  <i className="fa-solid fa-arrow-right text-xs" />
+                </button>
+                <span className="text-[11px] text-slate-500 font-medium">
+                  Publicly open for review by Vendors, Buyers &amp; Citizens
+                </span>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
       </main>
 
       <footer className="bg-slate-900 text-slate-400 pt-12 pb-8 text-xs font-normal border-t border-slate-800">
@@ -652,7 +709,7 @@ export default function LandingPage() {
                 <li><Link to="/vendor" className="hover:text-amber-400 transition-colors">Vendor Compliance Vault</Link></li>
                 <li>
                   <button 
-                    onClick={() => { setAboutModalTab('mse_mii'); setAboutModalOpen(true); }}
+                    onClick={() => { setAboutModalTab('msme_mii'); setAboutModalOpen(true); }}
                     className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
                   >
                     MSE &amp; Make in India Policy
@@ -667,10 +724,10 @@ export default function LandingPage() {
               <ul className="space-y-2.5 text-xs text-slate-300">
                 <li>
                   <button 
-                    onClick={() => { setAboutModalTab('procurement_modes'); setAboutModalOpen(true); }}
+                    onClick={() => { setAboutModalTab('sector_faq'); setAboutModalOpen(true); }}
                     className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
                   >
-                    Frequently Asked Questions (FAQs)
+                    Sector-Wise Regulatory FAQs &amp; Knowledge Base
                   </button>
                 </li>
                 <li>
@@ -707,606 +764,649 @@ export default function LandingPage() {
         </div>
       </footer>
 
-      {aboutModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-3 sm:p-6 overflow-y-auto animate-fadeIn">
+       {aboutModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-y-auto animate-fadeIn">
           <div 
-            className="bg-white text-slate-900 w-full max-w-4xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[90vh] my-auto relative"
+            className="bg-white text-slate-900 w-full max-w-6xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col h-[90vh] my-auto relative"
             onClick={(e) => e.stopPropagation()}
           >
+            {/* Tiranga Top Accent */}
             <div style={{ height: '4px', background: 'linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%)' }} />
 
-            <div className="bg-slate-900 text-white p-5 sm:p-6 flex items-start justify-between border-b border-slate-800 relative">
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
-                  <i className="fa-solid fa-landmark text-xl" />
+            {/* Modal Header */}
+            <div className="bg-[#002855] text-white px-5 sm:px-6 py-3.5 flex items-center justify-between border-b border-sky-900/60 shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
+                  <i className="fa-solid fa-landmark text-lg" />
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
                       Sovereign Procurement Framework
                     </span>
-                    <span className="text-[10px] text-slate-400">GFR 2017 • Rule 149</span>
+                    <span className="text-[10px] text-slate-300">GFR 2017 &bull; Rule 149</span>
                   </div>
-                  <h3 className="text-lg sm:text-xl font-extrabold text-white mt-1">
-                    Government e-Marketplace (GeM) &amp; Public Procurement Suite
+                  <h3 className="text-base sm:text-lg font-extrabold text-white leading-tight">
+                    Government e-Marketplace (GeM) &bull; Official Regulatory Dossier
                   </h3>
-                  <p className="text-xs text-slate-300">
-                    Ministry of Commerce &amp; Industry, Government of India
-                  </p>
                 </div>
               </div>
 
               <button 
                 onClick={() => setAboutModalOpen(false)}
-                className="text-slate-400 hover:text-white bg-slate-800/60 hover:bg-slate-800 p-2 rounded-lg transition-colors border-none cursor-pointer"
+                className="text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors border-none cursor-pointer flex items-center justify-center"
                 aria-label="Close Modal"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <i className="fa-solid fa-xmark text-lg" />
               </button>
             </div>
 
-            <div className="bg-slate-100 border-b border-slate-200 px-4 sm:px-6 flex items-center gap-2 overflow-x-auto py-2 text-xs font-bold scrollbar-thin">
-              <button 
-                onClick={() => setAboutModalTab('overview')}
-                className={`px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 shrink-0 border-none cursor-pointer ${
-                  aboutModalTab === 'overview' 
-                    ? 'bg-amber-500 text-slate-950 shadow-sm' 
-                    : 'bg-transparent text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                <i className="fa-solid fa-circle-info" /> Overview &amp; Genesis
-              </button>
-
-              <button 
-                onClick={() => setAboutModalTab('gfr_rules')}
-                className={`px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 shrink-0 border-none cursor-pointer ${
-                  aboutModalTab === 'gfr_rules' 
-                    ? 'bg-amber-500 text-slate-950 shadow-sm' 
-                    : 'bg-transparent text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                <i className="fa-solid fa-scale-balanced" /> GFR Rule 149 Mandate
-              </button>
-
-              <button 
-                onClick={() => setAboutModalTab('procurement_modes')}
-                className={`px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 shrink-0 border-none cursor-pointer ${
-                  aboutModalTab === 'procurement_modes' 
-                    ? 'bg-amber-500 text-slate-950 shadow-sm' 
-                    : 'bg-transparent text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                <i className="fa-solid fa-cart-shopping" /> Procurement Modes
-              </button>
-
-              <button 
-                onClick={() => setAboutModalTab('msme_mii')}
-                className={`px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 shrink-0 border-none cursor-pointer ${
-                  aboutModalTab === 'msme_mii' 
-                    ? 'bg-amber-500 text-slate-950 shadow-sm' 
-                    : 'bg-transparent text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                <i className="fa-solid fa-hand-holding-dollar" /> MSME &amp; Make-In-India
-              </button>
-
-              <button 
-                onClick={() => setAboutModalTab('gem2_engine')}
-                className={`px-3.5 py-2 rounded-lg transition-all flex items-center gap-2 shrink-0 border-none cursor-pointer ${
-                  aboutModalTab === 'gem2_engine' 
-                    ? 'bg-blue-600 text-white shadow-sm' 
-                    : 'bg-transparent text-slate-600 hover:bg-slate-200'
-                }`}
-              >
-                <i className="fa-solid fa-microchip" /> GeM 2.0 AI Engine
-              </button>
-            </div>
-
-            <div className="p-5 sm:p-6 overflow-y-auto flex-1 text-sm leading-relaxed">
+            {/* Split Body: Left Sidebar + Right Content */}
+            <div className="flex flex-1 overflow-hidden flex-col md:flex-row">
               
-              {aboutModalTab === 'overview' && (
-                <div className="space-y-6">
-                  <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-r-lg">
-                    <h4 className="font-bold text-amber-900 text-base mb-1">National Public Procurement Portal of India</h4>
-                    <p className="text-xs text-amber-800">
-                      Launched in August 2016 and established as a 100% Government-owned Section 8 Special Purpose Vehicle (SPV), GeM transforms how government offices, defense agencies, and PSUs procure goods and services.
-                    </p>
+              {/* Left Dossier Sidebar */}
+              <aside className="w-full md:w-72 bg-slate-50 border-r border-slate-200 flex flex-col justify-between shrink-0 overflow-y-auto">
+                <div className="p-3 space-y-1 text-xs">
+                  <div className="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">
+                    <span>Dossier Chapters</span>
+                    <span className="bg-sky-100 text-sky-800 px-1.5 py-0.2 rounded font-mono font-bold text-[9px]">8 Sections</span>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-                      <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-                        <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs">1</span>
-                        Transparency &amp; Open Competition
-                      </div>
-                      <p className="text-xs text-slate-600">
-                        Eliminates human discretion in tender publication, bid opening, and L1 calculation. Contactless, paperless, and cashless procurement environment.
-                      </p>
+                  <button
+                    onClick={() => setAboutModalTab('overview')}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
+                      aboutModalTab === 'overview'
+                        ? 'bg-[#002855] text-white border-[#002855] shadow-xs'
+                        : 'bg-transparent text-slate-700 hover:bg-slate-200/70 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-circle-info ${aboutModalTab === 'overview' ? 'text-amber-400' : 'text-slate-500'}`} />
+                      <span>1. Overview &amp; Genesis</span>
                     </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
+                      aboutModalTab === 'overview' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>SPV</span>
+                  </button>
 
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-                      <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-                        <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs">2</span>
-                        Fiscal Savings &amp; Efficiency
-                      </div>
-                      <p className="text-xs text-slate-600">
-                        Standardized catalog specifications and dynamic pricing comparison have delivered an estimated average savings of ~10% across public procurement budgets.
-                      </p>
+                  <button
+                    onClick={() => setAboutModalTab('gfr_rules')}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
+                      aboutModalTab === 'gfr_rules'
+                        ? 'bg-[#002855] text-white border-[#002855] shadow-xs'
+                        : 'bg-transparent text-slate-700 hover:bg-slate-200/70 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-scale-balanced ${aboutModalTab === 'gfr_rules' ? 'text-amber-400' : 'text-slate-500'}`} />
+                      <span>2. GFR Rule 149 Mandate</span>
                     </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
+                      aboutModalTab === 'gfr_rules' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>Law</span>
+                  </button>
 
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-                      <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-                        <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs">3</span>
-                        Inclusivity &amp; Grassroots Access
-                      </div>
-                      <p className="text-xs text-slate-600">
-                        Direct market access for Micro &amp; Small Enterprises, Women entrepreneurs (Womaniya on GeM), Artisans (Tribes India / SARAS), and DPIIT Startups.
-                      </p>
+                  <button
+                    onClick={() => setAboutModalTab('procurement_modes')}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
+                      aboutModalTab === 'procurement_modes'
+                        ? 'bg-[#002855] text-white border-[#002855] shadow-xs'
+                        : 'bg-transparent text-slate-700 hover:bg-slate-200/70 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-cart-shopping ${aboutModalTab === 'procurement_modes' ? 'text-amber-400' : 'text-slate-500'}`} />
+                      <span>3. Procurement Modes</span>
                     </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
+                      aboutModalTab === 'procurement_modes' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>L1/RA</span>
+                  </button>
 
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-                      <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-                        <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs">4</span>
-                        Guaranteed Payment Timelines
-                      </div>
-                      <p className="text-xs text-slate-600">
-                        Integration with Public Financial Management System (PFMS) ensures mandated payment release within 10 days of CRAC (Consignee Receipt and Acceptance Certificate).
-                      </p>
+                  <button
+                    onClick={() => setAboutModalTab('msme_mii')}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
+                      aboutModalTab === 'msme_mii'
+                        ? 'bg-[#002855] text-white border-[#002855] shadow-xs'
+                        : 'bg-transparent text-slate-700 hover:bg-slate-200/70 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-hand-holding-dollar ${aboutModalTab === 'msme_mii' ? 'text-amber-400' : 'text-slate-500'}`} />
+                      <span>4. MSME &amp; Make in India</span>
                     </div>
-                  </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
+                      aboutModalTab === 'msme_mii' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>25%</span>
+                  </button>
 
-                  <div className="border-t border-slate-200 pt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
-                    <span className="font-semibold text-slate-700">Cumulative Volume: ₹8.42 Lakh Cr+</span>
-                    <span className="font-semibold text-slate-700">Registered Sellers: 1.82M+</span>
-                    <span className="font-semibold text-slate-700">Government Buyers: 74,200+</span>
-                  </div>
+                  <button
+                    onClick={() => setAboutModalTab('gem2_engine')}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
+                      aboutModalTab === 'gem2_engine'
+                        ? 'bg-[#002855] text-white border-[#002855] shadow-xs'
+                        : 'bg-transparent text-slate-700 hover:bg-slate-200/70 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-microchip ${aboutModalTab === 'gem2_engine' ? 'text-cyan-300' : 'text-slate-500'}`} />
+                      <span>5. 14 Verification Checks</span>
+                    </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
+                      aboutModalTab === 'gem2_engine' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>AI-PQC</span>
+                  </button>
+
+                  <button
+                    onClick={() => setAboutModalTab('audit_ledger')}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
+                      aboutModalTab === 'audit_ledger'
+                        ? 'bg-[#002855] text-white border-[#002855] shadow-xs'
+                        : 'bg-transparent text-slate-700 hover:bg-slate-200/70 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-cubes-stacked ${aboutModalTab === 'audit_ledger' ? 'text-amber-400' : 'text-slate-500'}`} />
+                      <span>6. CAG Cryptographic Audit</span>
+                    </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
+                      aboutModalTab === 'audit_ledger' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>SHA-256</span>
+                  </button>
+
+                  <button
+                    onClick={() => setAboutModalTab('security_cert')}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
+                      aboutModalTab === 'security_cert'
+                        ? 'bg-[#002855] text-white border-[#002855] shadow-xs'
+                        : 'bg-transparent text-slate-700 hover:bg-slate-200/70 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-shield-check ${aboutModalTab === 'security_cert' ? 'text-emerald-300' : 'text-slate-500'}`} />
+                      <span>7. Security &amp; STQC Audit</span>
+                    </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
+                      aboutModalTab === 'security_cert' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>NIC</span>
+                  </button>
+
+                  <button
+                    onClick={() => setAboutModalTab('sector_faq')}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
+                      aboutModalTab === 'sector_faq'
+                        ? 'bg-[#002855] text-white border-[#002855] shadow-xs'
+                        : 'bg-transparent text-slate-700 hover:bg-slate-200/70 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-book-bookmark ${aboutModalTab === 'sector_faq' ? 'text-amber-400' : 'text-slate-500'}`} />
+                      <span>8. Sector Regulatory FAQs</span>
+                    </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
+                      aboutModalTab === 'sector_faq' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>FAQ</span>
+                  </button>
                 </div>
-              )}
 
-              {aboutModalTab === 'gfr_rules' && (
-                <div className="space-y-6">
-                  <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
-                    <h4 className="font-bold text-blue-950 text-base mb-1">General Financial Rules (GFR 2017) — Rule 149</h4>
-                    <p className="text-xs text-blue-900">
-                      &quot;The procurement of Goods and Services by Ministries or Departments will be mandatory for Goods or Services available on GeM.&quot;
-                    </p>
+                <div className="p-3 border-t border-slate-200 bg-white space-y-1.5 text-[10px] text-slate-500">
+                  <div className="flex items-center gap-1.5 font-bold text-slate-800">
+                    <i className="fa-solid fa-shield-halved text-emerald-600" />
+                    <span>Sovereign Regulatory Code</span>
                   </div>
-
-                  <div className="space-y-4 text-xs text-slate-700">
-                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                      <h5 className="font-bold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
-                        <i className="fa-solid fa-gavel text-amber-600" /> Mandatory Statutory Obligation
-                      </h5>
-                      <p className="leading-relaxed">
-                        Under Rule 149 of GFR 2017, all Central Government Ministries, Departments, Subordinate Offices, Autonomous Bodies, and Central Public Sector Enterprises (CPSEs) are mandated to procure common use Goods and Services exclusively through the GeM portal.
-                      </p>
-                    </div>
-
-                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                      <h5 className="font-bold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
-                        <i className="fa-solid fa-ban text-red-600" /> Prohibition of Off-GeM Tenders
-                      </h5>
-                      <p className="leading-relaxed">
-                        Procuring entities cannot float physical or off-GeM tenders for items listed in the GeM product/service taxonomy unless a GeM Non-Availability Certificate (NAC) or custom bidding exemption is officially recorded.
-                      </p>
-                    </div>
-
-                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                      <h5 className="font-bold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
-                        <i className="fa-solid fa-stamp text-emerald-600" /> Purchase Committee Accountability
-                      </h5>
-                      <p className="leading-relaxed">
-                        The Buyer/Consignee and competent financial authority are legally accountable for ensuring reasonability of rates, statutory verification of bidder qualifications, and timely CRAC generation.
-                      </p>
-                    </div>
-                  </div>
+                  <p className="leading-tight text-slate-500">
+                    Governed by Ministry of Finance, GFR 2017 &amp; Central Vigilance Commission directives.
+                  </p>
                 </div>
-              )}
+              </aside>
 
-              {aboutModalTab === 'procurement_modes' && (
-                <div className="space-y-4">
-                  <h4 className="font-bold text-slate-900 text-base">Standard Procurement Thresholds on GeM</h4>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
-                      <div>
-                        <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px] uppercase">Up to ₹25,000</span>
-                        <h5 className="font-bold text-slate-900 text-sm mt-2 mb-1">Direct Purchase Mode</h5>
-                        <p className="text-slate-600 leading-relaxed">
-                          Buyers can directly purchase any available product meeting quality, specification, and delivery period from any available seller without competitive bidding.
+              {/* Right Content Area */}
+              <div className="flex-1 p-5 sm:p-7 overflow-y-auto bg-white text-sm leading-relaxed">
+                
+                {aboutModalTab === 'overview' && (
+                  <div className="space-y-6 animate-fadeIn">
+                    <div className="bg-sky-50 border-l-4 border-sky-600 p-4 rounded-r-lg">
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-sky-800 mb-1">
+                        Chapter 1 &bull; Genesis &amp; Framework
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-base mb-1">
+                        National Public Procurement Portal of India (SPV Model)
+                      </h4>
+                      <p className="text-xs text-slate-600">
+                        Launched in August 2016 and established as a 100% Government-owned Section 8 Special Purpose Vehicle (SPV), GeM transforms how central ministries, defense agencies, and state PSUs procure goods and services.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <span className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-xs font-bold">1</span>
+                          Transparency &amp; Open Competition
+                        </div>
+                        <p className="text-xs text-slate-600">
+                          Eliminates human discretion in tender publication, bid opening, and L1 calculation. Contactless, paperless, and cashless procurement environment.
                         </p>
                       </div>
-                      <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-500">
-                        ⚡ Turnaround: Immediate checkout
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <span className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold">2</span>
+                          Fiscal Savings &amp; Efficiency
+                        </div>
+                        <p className="text-xs text-slate-600">
+                          Standardized catalog specifications and dynamic pricing comparison deliver an estimated average savings of ~10% across public procurement budgets.
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <span className="w-6 h-6 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center text-xs font-bold">3</span>
+                          Inclusivity &amp; Grassroots Access
+                        </div>
+                        <p className="text-xs text-slate-600">
+                          Direct market access for Micro &amp; Small Enterprises, Women entrepreneurs (Womaniya on GeM), Artisans (Tribes India / SARAS), and DPIIT Startups.
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <span className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center text-xs font-bold">4</span>
+                          Guaranteed Payment Timelines
+                        </div>
+                        <p className="text-xs text-slate-600">
+                          Integration with Public Financial Management System (PFMS) ensures mandated payment release within 10 days of CRAC (Consignee Receipt and Acceptance Certificate).
+                        </p>
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
-                      <div>
-                        <span className="bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded text-[10px] uppercase">₹25,000 to ₹5,00,000</span>
-                        <h5 className="font-bold text-slate-900 text-sm mt-2 mb-1">L1 Comparison Mode</h5>
-                        <p className="text-slate-600 leading-relaxed">
-                          Automated online price comparison across at least 3 distinct manufacturers/OEMs meeting specifications. Lowest price (L1) bidder is awarded the contract.
-                        </p>
-                      </div>
-                      <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-500">
-                        ⚡ Turnaround: Instant L1 algorithm
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
-                      <div>
-                        <span className="bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded text-[10px] uppercase">Above ₹5,00,000</span>
-                        <h5 className="font-bold text-slate-900 text-sm mt-2 mb-1">Mandatory e-Bidding / Reverse Auction</h5>
-                        <p className="text-slate-600 leading-relaxed">
-                          Open e-Bidding published across the national portal with standard minimum 10-day notice period. Optional Reverse Auction (RA) enabled for dynamic competitive pricing.
-                        </p>
-                      </div>
-                      <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-500">
-                        ⚡ Two-Envelope: Technical + Financial
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
-                      <div>
-                        <span className="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px] uppercase">Specialized</span>
-                        <h5 className="font-bold text-slate-900 text-sm mt-2 mb-1">Custom &amp; BOQ Service Bidding</h5>
-                        <p className="text-slate-600 leading-relaxed">
-                          Bill of Quantities (BoQ) bidding for complex construction, software delivery, and facility management with SLA-linked milestone payments.
-                        </p>
-                      </div>
-                      <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-500">
-                        ⚡ Includes Milestone Stage Verification
-                      </div>
+                    <div className="border-t border-slate-200 pt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
+                      <span className="font-semibold text-slate-700">Cumulative Volume: ₹8.42 Lakh Cr+</span>
+                      <span className="font-semibold text-slate-700">Registered Sellers: 1.82M+</span>
+                      <span className="font-semibold text-slate-700">Government Buyers: 74,200+</span>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {aboutModalTab === 'msme_mii' && (
-                <div className="space-y-5">
-                  <div className="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-lg">
-                    <h4 className="font-bold text-emerald-950 text-base mb-1">Public Procurement Policy for MSEs &amp; Make-In-India (PPP-MII)</h4>
-                    <p className="text-xs text-emerald-900">
-                      Statutory concessions, purchase preference margins, and exemption frameworks for Indian manufacturers and innovators.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-                      <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-                        <i className="fa-solid fa-building-wheat text-emerald-600" />
-                        MSE Mandatory 25% Procurement
+                {aboutModalTab === 'gfr_rules' && (
+                  <div className="space-y-6 animate-fadeIn">
+                    <div className="bg-blue-50 border-l-4 border-blue-600 p-4 rounded-r-lg">
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-blue-800 mb-1">
+                        Chapter 2 &bull; Statutory Rule 149
                       </div>
-                      <ul className="list-disc pl-4 space-y-1.5 text-slate-600">
-                        <li><strong>25% of annual total procurement</strong> reserved for Micro and Small Enterprises.</li>
-                        <li>Sub-targets: <strong>4% for SC/ST MSEs</strong> and <strong>3% for Women-owned MSEs</strong>.</li>
-                        <li><strong>L1 + 15% Price Band:</strong> MSEs within 15% of non-MSE L1 allowed to match L1 price for 25% order volume.</li>
-                      </ul>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-                      <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-                        <i className="fa-solid fa-flag text-amber-600" />
-                        Make in India (PPP-MII) Order 2017
-                      </div>
-                      <ul className="list-disc pl-4 space-y-1.5 text-slate-600">
-                        <li><strong>Class-I Local Supplier:</strong> Local content ≥ 50%. Top preference in all tenders.</li>
-                        <li><strong>Class-II Local Supplier:</strong> Local content 20% to 50%.</li>
-                        <li><strong>Margin of Purchase Preference:</strong> 20% price band against non-local bidders.</li>
-                      </ul>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-                      <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-                        <i className="fa-solid fa-rocket text-purple-600" />
-                        Startup India Relaxations
-                      </div>
-                      <p className="text-slate-600 leading-relaxed">
-                        Under GFR Rule 173(i), DPIIT-recognized Startups are granted complete exemption from Prior Turnover and Prior Experience clauses, subject to meeting technical specifications.
+                      <h4 className="font-bold text-slate-900 text-base mb-1">General Financial Rules (GFR 2017) — Rule 149</h4>
+                      <p className="text-xs text-slate-600">
+                        &quot;The procurement of Goods and Services by Ministries or Departments will be mandatory for Goods or Services available on GeM.&quot;
                       </p>
                     </div>
 
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
-                      <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
-                        <i className="fa-solid fa-shield-halved text-blue-600" />
-                        EMD &amp; Tender Fee Exemption
+                    <div className="space-y-4 text-xs text-slate-700">
+                      <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                        <h5 className="font-bold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                          <i className="fa-solid fa-gavel text-amber-600" /> Mandatory Statutory Obligation
+                        </h5>
+                        <p className="leading-relaxed text-slate-600">
+                          Under Rule 149 of GFR 2017, all Central Government Ministries, Departments, Subordinate Offices, Autonomous Bodies, and Central Public Sector Enterprises (CPSEs) are mandated to procure common use Goods and Services exclusively through the GeM portal.
+                        </p>
                       </div>
-                      <p className="text-slate-600 leading-relaxed">
-                        100% waiver of Earnest Money Deposit (EMD) and Tender Document fees for Udyam-registered Micro &amp; Small Enterprises and NSIC-registered units.
-                      </p>
+
+                      <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                        <h5 className="font-bold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                          <i className="fa-solid fa-ban text-rose-600" /> Prohibition of Off-GeM Tenders
+                        </h5>
+                        <p className="leading-relaxed text-slate-600">
+                          Procuring entities cannot float physical or off-GeM tenders for items listed in the GeM product/service taxonomy unless a GeM Non-Availability Certificate (NAC) or custom bidding exemption is officially recorded.
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                        <h5 className="font-bold text-slate-900 text-sm mb-1.5 flex items-center gap-2">
+                          <i className="fa-solid fa-stamp text-emerald-600" /> Purchase Committee Accountability
+                        </h5>
+                        <p className="leading-relaxed text-slate-600">
+                          The Buyer/Consignee and competent financial authority are legally accountable for ensuring reasonability of rates, statutory verification of bidder qualifications, and timely CRAC generation.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {aboutModalTab === 'gem2_engine' && (
-                <div className="space-y-6">
-                  <div className="bg-slate-900 text-white p-5 rounded-2xl border border-slate-800 shadow-md">
-                    <div className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase mb-1">
-                      <i className="fa-solid fa-shield-halved" /> 14-Point Automated Verification Framework
+                {aboutModalTab === 'procurement_modes' && (
+                  <div className="space-y-5 animate-fadeIn">
+                    <div className="bg-slate-50 border-l-4 border-slate-600 p-4 rounded-r-lg">
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-slate-700 mb-1">
+                        Chapter 3 &bull; Standard Procurement Thresholds
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-base">Standard Procurement Thresholds &amp; Modes on GeM</h4>
                     </div>
-                    <h4 className="font-bold text-white text-lg">14 Automated Checks &amp; Implemented Solutions</h4>
-                    <p className="text-xs text-slate-300 mt-1 leading-relaxed">
-                      Our system replaces slow, error-prone manual document checking with instant, automatic verification directly through official government databases. Below are all 14 checks and how each one protects the procurement process in simple, everyday language:
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
                     
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">1</span>
-                          <span>GST Verification (Tax Filing Check)</span>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+                        <div>
+                          <span className="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px] uppercase">Up to ₹25,000</span>
+                          <h5 className="font-bold text-slate-900 text-sm mt-2 mb-1">Direct Purchase Mode</h5>
+                          <p className="text-slate-600 leading-relaxed">
+                            Allows purchase of goods/services meeting requisite quality and specifications directly from any available seller on GeM with verified reasonable price.
+                          </p>
                         </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Fake tax returns or cancelled GST numbers submitted by unqualified sellers.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Real-time automated check with the GST Portal to verify active registration, legal company name, and on-time monthly/quarterly tax filings (GSTR-3B &amp; 1).
-                        </p>
+                        <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-500">
+                          ⚡ Instant PO Generation
+                        </div>
                       </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> 100% Online &amp; Automated
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+                        <div>
+                          <span className="bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded text-[10px] uppercase">₹25,000 to ₹5,00,000</span>
+                          <h5 className="font-bold text-slate-900 text-sm mt-2 mb-1">L1 Comparison from 3 OEMs</h5>
+                          <p className="text-slate-600 leading-relaxed">
+                            Mandatory comparison among at least 3 different manufacturers/OEMs meeting specifications, awarding to the Lowest (L1) price supplier automatically.
+                          </p>
+                        </div>
+                        <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-500">
+                          ⚡ Online Comparison Sheet Generated
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+                        <div>
+                          <span className="bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded text-[10px] uppercase">Above ₹5,00,000</span>
+                          <h5 className="font-bold text-slate-900 text-sm mt-2 mb-1">Mandatory e-Bidding / Reverse Auction</h5>
+                          <p className="text-slate-600 leading-relaxed">
+                            Open e-Bidding published across the national portal with standard minimum 10-day notice period. Optional Reverse Auction (RA) enabled for dynamic competitive pricing.
+                          </p>
+                        </div>
+                        <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-500">
+                          ⚡ Two-Envelope: Technical + Financial
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between">
+                        <div>
+                          <span className="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px] uppercase">Specialized</span>
+                          <h5 className="font-bold text-slate-900 text-sm mt-2 mb-1">Custom &amp; BOQ Service Bidding</h5>
+                          <p className="text-slate-600 leading-relaxed">
+                            Bill of Quantities (BoQ) bidding for complex construction, software delivery, and facility management with SLA-linked milestone payments.
+                          </p>
+                        </div>
+                        <div className="mt-3 pt-2 border-t border-slate-200 text-[11px] text-slate-500">
+                          ⚡ Includes Milestone Stage Verification
+                        </div>
                       </div>
                     </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">2</span>
-                          <span>Company &amp; Director Verification (MCA-21)</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Paper-only shell companies or disqualified directors trying to win contracts.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Direct link to the Ministry of Corporate Affairs to verify Company Registration (CIN), active status, authorized share capital, and Director IDs (DIN).
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> Shell Companies Blocked
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">3</span>
-                          <span>PAN &amp; Income Tax Check (CBDT)</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Mismatched PAN details or forged 3-year annual financial turnover claims.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Direct verification with the Income Tax Department to match business PAN, legal entity name, and confirm 3-year Income Tax Return acknowledgments (ITR-V).
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> Verified Tax Records
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">4</span>
-                          <span>MSME &amp; Small Business Status (Udyam)</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Big companies falsely claiming small enterprise waivers or fake startup exemptions.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Live lookup with the MSME Udyam database to confirm Micro/Small classification, granting 100% tender fee waivers and 25% purchase reservations automatically.
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> 100% Tender Fee Waiver
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">5</span>
-                          <span>Worker Welfare &amp; PF/ESI Check (EPFO/ESIC)</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Contractors bidding for large works without real staff or failing to pay worker dues.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Automatic checks with Provident Fund (EPFO) and Employee State Insurance (ESIC) to verify real employee count and confirm zero pending worker defaults.
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> Verified Labor Compliance
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">6</span>
-                          <span>Make in India Local Content Audit</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Re-packaged foreign goods falsely claiming to be manufactured in India.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> An automated cost-calculator checking Indian raw materials, local labor, and factory value addition (Class-I: 50%+ local content gets top buying preference).
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> Domestic Manufacturer Priority
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">7</span>
-                          <span>Official Document Tamper Check (DigiLocker)</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Altered PDF documents, modified dates, or fake digital signatures.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Direct document retrieval from Government DigiLocker and unique digital fingerprinting (SHA-256) to ensure uploaded certificates are 100% authentic and unaltered.
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> Tamper-Proof Document Integrity
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">8</span>
-                          <span>CA Audited Turnover &amp; UDIN Validation</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Forged Chartered Accountant stamps and fake turnover certificates.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Automated check of the Unique Document Identification Number (UDIN) against the ICAI register to verify exact annual turnover and net worth.
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> Real CA Attestation Verified
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">9</span>
-                          <span>Debarment &amp; Blacklist Registry Check</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Blacklisted or banned contractors participating under hidden company names.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Automated screening against Central Public Procurement Portal (CPPP) and Ministry debarment lists to instantly block ineligible bidders.
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> Corrupt Bidders Blocked
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">10</span>
-                          <span>Fair Blind Evaluation (Hidden Company Names)</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Bias or favoritism towards famous brands during technical tender evaluations.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Bidder names are encrypted and masked as secret candidate IDs (e.g. <code>VEN-ANON-7741</code>). Officers grade purely on technical merit with zero bias.
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> 100% Unbiased &amp; Fair Grading
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">11</span>
-                          <span>Smart AI Document Discrepancy Scanner</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Human officers spending days reading 200-page bid documents to spot missing clauses or altered text.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> AI instantly scans all submitted PDF pages, highlighting rule violations, font anomalies, missing declarations, or conflicting dates in seconds.
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> Scans 200+ Pages in Seconds
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">12</span>
-                          <span>Optimal Fair Pricing Advisor</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Over-inflated tender prices or unviably low predatory bids that result in abandoned projects.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Smart price intelligence analyzing raw material rates, logistics, and historical winning quotes to recommend fair, winnable price ranges.
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> Prevents Predatory Pricing
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">13</span>
-                          <span>Transparent Quality &amp; Cost Merit Matrix</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Unclear ranking formulas or disputed tender awards.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Automatic, transparent ranking that combines Technical Merit (50%), Local Content (20%), Statutory Clearances (15%), and Compliance (15%).
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> 100% Mathematical Ranking
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
-                      <div>
-                        <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
-                          <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">14</span>
-                          <span>Permanent Audit Record (CAG &amp; CVC Ready)</span>
-                        </div>
-                        <p className="text-slate-600 leading-relaxed mb-2">
-                          <strong>Problem:</strong> Lost paper files, missing decision records, or untraceable changes during official audits.
-                        </p>
-                        <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
-                          <strong>Implemented Solution:</strong> Every check, score, and unmasking event is permanently recorded in a tamper-proof digital audit chain with 1-click export for CAG &amp; vigilance inspection.
-                        </p>
-                      </div>
-                      <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
-                        <i className="fa-solid fa-check" /> 1-Click CAG Audit Export
-                      </div>
-                    </div>
-
                   </div>
-                </div>
-              )}
+                )}
+
+                {aboutModalTab === 'msme_mii' && (
+                  <div className="space-y-5 animate-fadeIn">
+                    <div className="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-lg">
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-emerald-800 mb-1">
+                        Chapter 4 &bull; Inclusive Policy
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-base mb-1">Public Procurement Policy for MSEs &amp; Make-In-India (PPP-MII)</h4>
+                      <p className="text-xs text-slate-600">
+                        Statutory concessions, purchase preference margins, and exemption frameworks for Indian manufacturers and innovators.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <i className="fa-solid fa-building-wheat text-emerald-600" />
+                          MSE Mandatory 25% Procurement
+                        </div>
+                        <ul className="list-disc pl-4 space-y-1.5 text-slate-600">
+                          <li><strong>25% of annual total procurement</strong> reserved for Micro and Small Enterprises.</li>
+                          <li>Sub-targets: <strong>4% for SC/ST MSEs</strong> and <strong>3% for Women-owned MSEs</strong>.</li>
+                          <li><strong>L1 + 15% Price Band:</strong> MSEs within 15% of non-MSE L1 allowed to match L1 price for 25% order volume.</li>
+                        </ul>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <i className="fa-solid fa-flag text-amber-600" />
+                          Make in India (PPP-MII) Order 2017
+                        </div>
+                        <ul className="list-disc pl-4 space-y-1.5 text-slate-600">
+                          <li><strong>Class-I Local Supplier:</strong> Local content &ge; 50%. Top preference in all tenders.</li>
+                          <li><strong>Class-II Local Supplier:</strong> Local content 20% to 50%.</li>
+                          <li><strong>Margin of Purchase Preference:</strong> 20% price band against non-local bidders.</li>
+                        </ul>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <i className="fa-solid fa-rocket text-purple-600" />
+                          Startup India Relaxations
+                        </div>
+                        <p className="text-slate-600 leading-relaxed">
+                          Under GFR Rule 173(i), DPIIT-recognized Startups are granted complete exemption from Prior Turnover and Prior Experience clauses, subject to meeting technical specifications.
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <i className="fa-solid fa-shield-halved text-blue-600" />
+                          EMD &amp; Tender Fee Exemption
+                        </div>
+                        <p className="text-slate-600 leading-relaxed">
+                          100% waiver of Earnest Money Deposit (EMD) and Tender Document fees for Udyam-registered Micro &amp; Small Enterprises and NSIC-registered units.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {aboutModalTab === 'gem2_engine' && (
+                  <div className="space-y-6 animate-fadeIn">
+                    <div className="bg-[#002855] text-white p-5 rounded-2xl border border-sky-900 shadow-md">
+                      <div className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase mb-1">
+                        <i className="fa-solid fa-shield-halved" /> Chapter 5 &bull; Automated Verification
+                      </div>
+                      <h4 className="font-bold text-white text-lg">14 Automated Checks &amp; Implemented Solutions</h4>
+                      <p className="text-xs text-slate-200 mt-1 leading-relaxed">
+                        Replaces slow, error-prone manual document checking with instant, automatic verification directly through official government databases.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
+                        <div>
+                          <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
+                            <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">1</span>
+                            <span>GST Verification (Tax Filing Check)</span>
+                          </div>
+                          <p className="text-slate-600 leading-relaxed mb-2">
+                            <strong>Problem:</strong> Fake tax returns or cancelled GST numbers submitted by unqualified sellers.
+                          </p>
+                          <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
+                            <strong>Implemented Solution:</strong> Real-time automated check with the GST Portal to verify active registration and on-time monthly filings (GSTR-3B &amp; 1).
+                          </p>
+                        </div>
+                        <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                          <i className="fa-solid fa-check" /> 100% Online &amp; Automated
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
+                        <div>
+                          <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
+                            <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">2</span>
+                            <span>Company &amp; Director Verification (MCA-21)</span>
+                          </div>
+                          <p className="text-slate-600 leading-relaxed mb-2">
+                            <strong>Problem:</strong> Paper-only shell companies or disqualified directors trying to win contracts.
+                          </p>
+                          <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
+                            <strong>Implemented Solution:</strong> Direct link to Ministry of Corporate Affairs to verify CIN, active status, authorized capital, and Director IDs (DIN).
+                          </p>
+                        </div>
+                        <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                          <i className="fa-solid fa-check" /> Shell Companies Blocked
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
+                        <div>
+                          <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
+                            <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">3</span>
+                            <span>PAN &amp; Income Tax Check (CBDT)</span>
+                          </div>
+                          <p className="text-slate-600 leading-relaxed mb-2">
+                            <strong>Problem:</strong> Mismatched PAN details or forged 3-year annual financial turnover claims.
+                          </p>
+                          <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
+                            <strong>Implemented Solution:</strong> Direct verification with the Income Tax Department to match PAN entity name and confirm 3-year ITR filings.
+                          </p>
+                        </div>
+                        <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                          <i className="fa-solid fa-check" /> Verified Tax Records
+                        </div>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col justify-between hover:border-blue-400 transition-colors">
+                        <div>
+                          <div className="flex items-center gap-2 mb-2 font-bold text-slate-900">
+                            <span className="w-6 h-6 rounded-lg bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">4</span>
+                            <span>ICAI UDIN CA Certificate Verification</span>
+                          </div>
+                          <p className="text-slate-600 leading-relaxed mb-2">
+                            <strong>Problem:</strong> Forged Chartered Accountant stamps and fake turnover certificates.
+                          </p>
+                          <p className="text-blue-900 bg-blue-50/80 p-2 rounded-lg border border-blue-200/60 leading-relaxed">
+                            <strong>Implemented Solution:</strong> Automated check of the 18-digit UDIN against the ICAI register to verify exact annual turnover and net worth.
+                          </p>
+                        </div>
+                        <div className="mt-2 text-[11px] text-emerald-600 font-semibold flex items-center gap-1">
+                          <i className="fa-solid fa-check" /> Real CA Attestation Verified
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                )}
+
+                {aboutModalTab === 'audit_ledger' && (
+                  <div className="space-y-6 animate-fadeIn">
+                    <div className="bg-amber-50 border-l-4 border-amber-600 p-4 rounded-r-lg">
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-amber-800 mb-1">
+                        Chapter 6 &bull; Immutable Audit Trail
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-base mb-1">
+                        CAG Cryptographic Audit Ledger &amp; Anti-Cartelization Engine
+                      </h4>
+                      <p className="text-xs text-slate-600">
+                        Every tender action, bid submission, officer score, and unmasking event is permanently sealed in an append-only SHA-256 Merkle blockchain.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <i className="fa-solid fa-link text-blue-600" />
+                          Cryptographic Block Chaining
+                        </div>
+                        <p className="text-slate-600 leading-relaxed">
+                          Each ledger block contains <code>prevBlockHash</code>, timestamp, officer badge ID, digital signature, and SHA-256 payload hash. Tampering with any historical evaluation instantly breaks the verification hash.
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <i className="fa-solid fa-user-secret text-rose-600" />
+                          Anti-Collusion &amp; Twin Bidding Alert
+                        </div>
+                        <p className="text-slate-600 leading-relaxed">
+                          Automated cross-bidder correlation detects shared director DINs, identical bank account prefixes, matching IP/device hashes, or synchronized price quotation clusters.
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50 md:col-span-2">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <i className="fa-solid fa-file-export text-emerald-600" />
+                          1-Click CAG &amp; CVC Vigilance Dossier Export
+                        </div>
+                        <p className="text-slate-600 leading-relaxed">
+                          Generates an authenticated, timestamped PDF dossier containing full PQC evaluation breakdown, officer grading rationale, and Merkle block proof for external statutory scrutiny.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {aboutModalTab === 'security_cert' && (
+                  <div className="space-y-6 animate-fadeIn">
+                    <div className="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-lg">
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-emerald-800 mb-1">
+                        Chapter 7 &bull; Sovereign Security
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-base mb-1">
+                        STQC, NIC &amp; MeitY Sovereign Cloud Security Compliance
+                      </h4>
+                      <p className="text-xs text-slate-600">
+                        Strict compliance with Government of India cyber security norms, data residency mandates, and zero-trust double-blind access protocols.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <i className="fa-solid fa-server text-emerald-600" />
+                          100% Indian Data Residency
+                        </div>
+                        <p className="text-slate-600 leading-relaxed">
+                          All bidder data, uploaded PQC documents, and cryptographic logs reside exclusively on MeitY-empanelled data centers located within the territory of India.
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                        <div className="flex items-center gap-2 font-bold text-slate-900 mb-2">
+                          <i className="fa-solid fa-user-shield text-blue-600" />
+                          Double-Blind Identity Vault
+                        </div>
+                        <p className="text-slate-600 leading-relaxed">
+                          Vendor corporate identities are cryptographically masked as anonymous candidate tags (e.g. <code>VEN-ANON-7741</code>) until financial bids are unsealed by the Competent Buyer Authority.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {aboutModalTab === 'sector_faq' && (
+                  <div className="space-y-5 animate-fadeIn">
+                    <div className="bg-sky-50 border-l-4 border-sky-600 p-4 rounded-r-lg">
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-sky-800 mb-1">
+                        Chapter 8 &bull; Comprehensive Regulatory Knowledge Base
+                      </div>
+                      <h4 className="font-bold text-slate-900 text-base mb-1">
+                        Sector-Wise Public Procurement &amp; Statutory Regulatory FAQs
+                      </h4>
+                      <p className="text-xs text-slate-600">
+                        Official statutory answers, legal citations (GFR 2017, PPP-MII 2017, MSMED Act 2006, CVC Directives), and compliance guidelines categorized for all public procurement sectors.
+                      </p>
+                    </div>
+
+                    <SectorWiseFaq defaultCategory="ALL" />
+                  </div>
+                )}
+
+              </div>
 
             </div>
 
-            <div className="bg-slate-50 border-t border-slate-200 px-5 py-4 flex flex-wrap items-center justify-between gap-3 text-xs">
+            {/* Modal Footer */}
+            <div className="bg-slate-50 border-t border-slate-200 px-5 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
               <div className="flex items-center gap-2">
                 <Link 
                   to="/vendor/register" 
                   onClick={() => setAboutModalOpen(false)}
-                  className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-lg transition-colors inline-flex items-center gap-1.5"
+                  className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-lg transition-colors inline-flex items-center gap-1.5 shadow-xs"
                 >
                   <i className="fa-solid fa-user-plus" /> Vendor Registration
                 </Link>
                 <Link 
                   to="/gov/register" 
                   onClick={() => setAboutModalOpen(false)}
-                  className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-lg transition-colors inline-flex items-center gap-1.5"
+                  className="bg-[#002855] hover:bg-[#003875] text-white font-bold px-4 py-2 rounded-lg transition-colors inline-flex items-center gap-1.5 shadow-xs"
                 >
                   <i className="fa-solid fa-building-columns" /> Officer Registration
                 </Link>
@@ -1323,7 +1423,6 @@ export default function LandingPage() {
           </div>
         </div>
       )}
-
     </div>
   );
 }

@@ -4,11 +4,8 @@ import LandingPage from "./pages/LandingPage";
 
 // Lazy load portals and auth pages for optimal chunking
 const VendorPortal = lazy(() => import("./vendor/index"));
-const GovPortal = lazy(() => import("./gov/index"));
 const VendorLoginPage = lazy(() => import("./pages/VendorLoginPage"));
 const VendorRegisterPage = lazy(() => import("./pages/VendorRegisterPage"));
-const GovLoginPage = lazy(() => import("./pages/GovLoginPage"));
-const GovRegisterPage = lazy(() => import("./pages/GovRegisterPage"));
 
 function LoadingScreen({ label }: { label: string }) {
   return (
@@ -64,38 +61,10 @@ export default function App() {
         <Route path="/register" element={<Navigate to="/vendor/register" replace />} />
 
         <Route
-          path="/gov/login"
-          element={
-            <Suspense fallback={<LoadingScreen label="Procurement Officer Authentication" />}>
-              <GovLoginPage />
-            </Suspense>
-          }
-        />
-        <Route
-          path="/gov/register"
-          element={
-            <Suspense fallback={<LoadingScreen label="Procurement Officer Onboarding" />}>
-              <GovRegisterPage />
-            </Suspense>
-          }
-        />
-        <Route path="/gov-login" element={<Navigate to="/gov/login" replace />} />
-        <Route path="/gov-register" element={<Navigate to="/gov/register" replace />} />
-
-        <Route
           path="/vendor/*"
           element={
             <Suspense fallback={<LoadingScreen label="Vendor Compliance Portal" />}>
               <VendorPortal />
-            </Suspense>
-          }
-        />
-
-        <Route
-          path="/gov/*"
-          element={
-            <Suspense fallback={<LoadingScreen label="Procurement Officer Suite" />}>
-              <GovPortal />
             </Suspense>
           }
         />
