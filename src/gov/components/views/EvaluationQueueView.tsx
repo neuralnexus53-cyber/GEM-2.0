@@ -81,7 +81,7 @@ export const EvaluationQueueView: React.FC<EvaluationQueueViewProps> = ({
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
           
-          {onOpenVendorIntake && (
+          {onOpenVendorIntake && (currentRole === 'BUYER_AUTHORITY' || currentRole === 'SCRUTINY_OFFICER') && (
             <button
               onClick={onOpenVendorIntake}
               className="btn btn-outline"
@@ -117,7 +117,18 @@ export const EvaluationQueueView: React.FC<EvaluationQueueViewProps> = ({
       <div style={{ background: 'rgba(56, 189, 248, 0.06)', border: '1px solid rgba(56, 189, 248, 0.2)', borderRadius: '8px', padding: '12px 16px', display: 'flex', alignItems: 'center', gap: '12px' }}>
         <HelpCircle size={20} color="#38bdf8" style={{ flexShrink: 0 }} />
         <div style={{ fontSize: '0.775rem', color: '#e0f2fe', lineHeight: 1.4 }}>
-          <strong>How to Evaluate:</strong> Click <strong>"Grade & Review"</strong> on any bidder row to inspect their submitted documents, verify their Make in India declaration, and enter your technical marks. Government database checks have already been automatically verified below.
+          {currentRole === 'TEC_MEMBER' && (
+            <span><strong>Technical Committee Desk (GFR Rule 189):</strong> Click <strong>"Grade & Review"</strong> on any bidder row to inspect their submitted documents, verify their Make in India declaration, and enter your technical marks (/100). All bids are double-blind masked.</span>
+          )}
+          {currentRole === 'SCRUTINY_OFFICER' && (
+            <span><strong>Preliminary Scrutiny Desk (GFR Rule 164):</strong> Inspect 7 sovereign database checks (GST, EPFO, MCA) and click the purple eye icon to review document discrepancies. Proposal scoring is strictly reserved for the appointed TEC.</span>
+          )}
+          {currentRole === 'BUYER_AUTHORITY' && (
+            <span><strong>Competent Buyer Authority Console (Rule 160):</strong> Monitoring double-blind candidate progression. Once TEC evaluation finishes, you possess exclusive statutory power to authorize financial unmasking. Technical scoring is reserved for TEC.</span>
+          )}
+          {currentRole === 'CAG_AUDITOR' && (
+            <span><strong>CAG Vigilance Oversight (Art. 148):</strong> Read-only inspection of candidate submissions, statutory registry health, and cryptographic scoring trail. Marks and unmasking are locked.</span>
+          )}
         </div>
       </div>
 
@@ -297,19 +308,34 @@ export const EvaluationQueueView: React.FC<EvaluationQueueViewProps> = ({
 
                     <td>
                       <div style={{ display: 'flex', gap: '6px' }}>
-                        <button
-                          onClick={() => onOpenGradingModal(sub)}
-                          className="btn btn-primary btn-sm"
-                        >
-                          <FileCheck size={14} />
-                          <span>{latestReview ? 'Review Score' : 'Grade & Review'}</span>
-                        </button>
+                        {currentRole === 'TEC_MEMBER' ? (
+                          <button
+                            onClick={() => onOpenGradingModal(sub)}
+                            className="btn btn-primary btn-sm"
+                          >
+                            <FileCheck size={14} />
+                            <span>{latestReview ? 'Review Score' : 'Grade & Review'}</span>
+                          </button>
+                        ) : (
+                          <button
+                            disabled
+                            className="btn btn-outline btn-sm"
+                            style={{ opacity: 0.65, cursor: 'not-allowed', display: 'flex', alignItems: 'center', gap: '4px' }}
+                            title="Restricted: Under GFR 2017 Rule 189, candidate bid scoring is strictly restricted to appointed Technical Evaluation Committee (TEC) members"
+                          >
+                            <Lock size={12} color="#f59e0b" />
+                            <span>{latestReview ? `${latestReview.totalTechnicalMarks}/100 Pts` : 'Grading (TEC Only)'}</span>
+                          </button>
+                        )}
+
                         {hasDiscrepancies && onOpenDiscrepancyInspector && (
                           <button
                             onClick={() => onOpenDiscrepancyInspector(sub)}
                             className="btn btn-outline btn-sm"
-                            title="Inspect Document Differences"
-                            style={{ padding: '5px 8px' }}
+                            title={currentRole === 'SCRUTINY_OFFICER' 
+                              ? "Scrutiny Officer: Inspect Discrepancy & Issue Clarification" 
+                              : "Inspect Document Differences"}
+                            style={{ padding: '5px 8px', borderColor: currentRole === 'SCRUTINY_OFFICER' ? '#a855f7' : undefined }}
                           >
                             <Eye size={13} color="#c084fc" />
                           </button>

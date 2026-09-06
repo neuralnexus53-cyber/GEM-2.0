@@ -10,6 +10,7 @@ export const CURRENT_OFFICER: OfficerProfile = {
   officerId: 'GEM-OFF-9041',
   fullName: 'Shri Rajesh Sharma',
   designation: 'Director (Procurement & Evaluation)',
+  role: 'TEC_MEMBER',
   ministry: 'Ministry of Electronics & Information Technology (MeitY)',
   department: 'Public Procurement & GeM Governance Division',
   securityClearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',

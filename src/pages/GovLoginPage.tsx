@@ -37,29 +37,37 @@ export default function GovLoginPage() {
     );
 
     if (matched && matched.officer) {
-      localStorage.setItem('gem_gov_auth_session', JSON.stringify(matched.officer));
+      const officerWithRole = {
+        ...matched.officer,
+        role: matched.officer.role || 'TEC_MEMBER'
+      };
+      localStorage.setItem('gem_gov_auth_session', JSON.stringify(officerWithRole));
     } else {
       // Determine Ministry & Dept based on entered ID
       let ministry = 'Ministry of Road Transport & Highways (MoRTH)';
       let dept = 'Highways & Intelligent Transport Systems Division';
       let name = 'Dr. Vikramaditya Sharma, IAS';
       let designation = 'Joint Secretary & Tender Committee Chair';
+      let role: import('../gov/types/procurement').UserRole = 'TEC_MEMBER';
 
       if (cleanId.includes('def') || cleanId.includes('drdo')) {
         ministry = 'Ministry of Defence (MoD)';
         dept = 'Directorate of Defence Procurement & DRDO Telemetry';
         name = 'Shri Rajeshwar Singh, IDAS';
         designation = 'Director (Defence Contracts & Procurement)';
+        role = 'BUYER_AUTHORITY';
       } else if (cleanId.includes('rail')) {
         ministry = 'Ministry of Railways (Railway Board)';
         dept = 'Railway Electrification & Signalling Procurement Cell';
         name = 'Smt. Ananya Banerjee, IRSS';
         designation = 'Principal Chief Materials Manager (PCMM)';
-      } else if (cleanId.includes('power') || cleanId.includes('nhpc')) {
-        ministry = 'Ministry of Power & Renewable Energy';
-        dept = 'Solar EPC & Grid Procurement Directorate';
-        name = 'Shri Suresh Kumar, IA&AS';
-        designation = 'Advisor (Procurement & Contracts)';
+        role = 'SCRUTINY_OFFICER';
+      } else if (cleanId.includes('cag') || cleanId.includes('audit') || cleanId.includes('power') || cleanId.includes('nhpc')) {
+        ministry = 'Comptroller & Auditor General of India (CAG)';
+        dept = 'Commercial Audit & Sovereign Public Procurement Wing';
+        name = 'Shri K. Venkatraman, IA&AS';
+        designation = 'Principal Director of Audit (Procurement)';
+        role = 'CAG_AUDITOR';
       }
 
       const activeBadgeId = officerId.trim().toUpperCase() || 'PO-MORTH-2026-9812';
@@ -70,6 +78,7 @@ export default function GovLoginPage() {
         ministry: ministry,
         department: dept,
         securityClearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
+        role: role,
         badgeId: activeBadgeId,
         email: cleanId.includes('@') ? cleanId : `${cleanId.toLowerCase()}@nic.in`,
         dscCertificate: {
@@ -254,9 +263,9 @@ export default function GovLoginPage() {
 
           <div className="mt-6 pt-6 border-t border-slate-800/80">
             <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest block text-center mb-3">
-              ⚡ Instant 1-Click Access by Department
+              ⚡ Instant 1-Click Access by Role &amp; Department
             </span>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
               <button
                 type="button"
                 onClick={() => {
@@ -266,12 +275,16 @@ export default function GovLoginPage() {
                 }}
                 className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${
                   officerId === 'PO-MORTH-2026-9812'
-                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm'
+                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm ring-1 ring-blue-500'
                     : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
                 }`}
               >
-                <div className="font-bold text-white text-[11px]">🛣️ MoRTH / NHAI</div>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-[11px]">🛣️ MoRTH / NHAI</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">TEC</span>
+                </div>
                 <div className="text-[10px] text-slate-400 font-mono mt-0.5">PO-MORTH-2026-9812</div>
+                <div className="text-[9px] text-sky-400 font-semibold mt-0.5">Role: TEC_MEMBER (GFR Rule 189)</div>
               </button>
 
               <button
@@ -283,12 +296,16 @@ export default function GovLoginPage() {
                 }}
                 className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${
                   officerId === 'PO-DEF-2026-4412'
-                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm'
+                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm ring-1 ring-blue-500'
                     : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
                 }`}
               >
-                <div className="font-bold text-white text-[11px]">🛡️ Min. of Defence</div>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-[11px]">🛡️ Min. of Defence</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">BUYER</span>
+                </div>
                 <div className="text-[10px] text-slate-400 font-mono mt-0.5">PO-DEF-2026-4412</div>
+                <div className="text-[9px] text-amber-400 font-semibold mt-0.5">Role: BUYER_AUTHORITY (Rule 160)</div>
               </button>
 
               <button
@@ -300,12 +317,37 @@ export default function GovLoginPage() {
                 }}
                 className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${
                   officerId === 'PO-RAIL-2026-5501'
-                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm'
+                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm ring-1 ring-blue-500'
                     : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
                 }`}
               >
-                <div className="font-bold text-white text-[11px]">🚆 Indian Railways</div>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-[11px]">🚆 Indian Railways</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">SCRUTINY</span>
+                </div>
                 <div className="text-[10px] text-slate-400 font-mono mt-0.5">PO-RAIL-2026-5501</div>
+                <div className="text-[9px] text-emerald-400 font-semibold mt-0.5">Role: SCRUTINY_OFFICER (Rule 164)</div>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setOfficerId('PO-CAG-2026-1088');
+                  setPasscode('SecurePass@2026');
+                  setOtpCode('202688');
+                }}
+                className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${
+                  officerId === 'PO-CAG-2026-1088'
+                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm ring-1 ring-blue-500'
+                    : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-white text-[11px]">⚖️ CAG Audit &amp; Vigilance</span>
+                  <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">AUDITOR</span>
+                </div>
+                <div className="text-[10px] text-slate-400 font-mono mt-0.5">PO-CAG-2026-1088</div>
+                <div className="text-[9px] text-purple-400 font-semibold mt-0.5">Role: CAG_AUDITOR (Art. 148)</div>
               </button>
             </div>
           </div>

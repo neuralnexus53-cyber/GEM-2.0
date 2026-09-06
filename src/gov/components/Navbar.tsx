@@ -151,6 +151,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   <CheckCircle2 className="w-2.5 h-2.5" />
                   {officerProfile.clearanceLevel || 'LEVEL_3_CAG_SIGNER'}
                 </span>
+                <span className="hidden sm:inline-flex items-center gap-1 text-[9px] px-2 py-0.5 rounded bg-[#001D3D] text-sky-300 font-bold border border-[#1E3A68]">
+                  <Lock className="w-2.5 h-2.5 text-amber-400" />
+                  <span>{currentRole}</span>
+                </span>
               </div>
               <p className="text-[10px] text-slate-300 font-medium hidden sm:block">
                 सक्षम प्राधिकारी एवं तकनीकी मूल्यांकन समिति पोर्टल | Sovereign Public Procurement Evaluation

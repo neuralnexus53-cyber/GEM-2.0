@@ -18,6 +18,7 @@ export interface OfficerProfile {
   officerId: string; // e.g. "GEM-OFF-9041"
   fullName: string; // "Shri Rajesh Sharma"
   designation: string; // "Director (Procurement & Evaluation)"
+  role?: UserRole; // Assigned sovereign role locked at registration
   ministry: string; // "Ministry of Electronics & Information Technology"
   department: string; // "Public Procurement & GeM Governance Division"
   securityClearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)' | 'Level-3 (Confidential)' | 'Level-2 (Restricted)' | string;
@@ -273,3 +274,92 @@ export interface UpstreamIntakeDocket {
   localContentDeclared: number;
   category: string;
 }
+
+export type ActiveTab = 
+  | 'TENDERS'
+  | 'EVAL_QUEUE'
+  | 'STATUTORY'
+  | 'AI_SCORECARD'
+  | 'MII_AUDIT'
+  | 'COMPOSITE_MATRIX'
+  | 'CAG_LEDGER'
+  | 'OFFICER_PROFILE';
+
+export interface RolePermissionConfig {
+  role: UserRole;
+  title: string;
+  hindiTitle: string;
+  statutoryRule: string;
+  summary: string;
+  allowedTabs: ActiveTab[];
+  canCreateTender: boolean;
+  canScoreProposals: boolean;
+  canUnmaskVault: boolean;
+  canIssueDiscrepancyNotice: boolean;
+  canExportCagDossier: boolean;
+  canSimulateVendorIntake: boolean;
+  canModifyQcbsWeights: boolean;
+}
+
+export const ROLE_DEFINITIONS: Record<UserRole, RolePermissionConfig> = {
+  SCRUTINY_OFFICER: {
+    role: 'SCRUTINY_OFFICER',
+    title: 'Preliminary Scrutiny Officer',
+    hindiTitle: 'प्रारंभिक संवीक्षा अधिकारी',
+    statutoryRule: 'GFR 2017 Rule 164 (Two-Bid Scrutiny)',
+    summary: 'Validates 7 Sovereign registries (GSTN, MCA, EPFO, ESIC, CBDT, GeM Blacklist) and PQC eligibility. Issues 48h discrepancy notices. Cannot assign technical scores or unmask commercial vault.',
+    allowedTabs: ['EVAL_QUEUE', 'STATUTORY', 'AI_SCORECARD', 'OFFICER_PROFILE'],
+    canCreateTender: false,
+    canScoreProposals: false,
+    canUnmaskVault: false,
+    canIssueDiscrepancyNotice: true,
+    canExportCagDossier: false,
+    canSimulateVendorIntake: true,
+    canModifyQcbsWeights: false,
+  },
+  TEC_MEMBER: {
+    role: 'TEC_MEMBER',
+    title: 'Technical Evaluation Committee Member',
+    hindiTitle: 'तकनीकी मूल्यांकन समिति सदस्य',
+    statutoryRule: 'GFR 2017 Rule 189 (Evaluation Committee)',
+    summary: 'Scores candidate bids across 4 technical dimensions (/100 total), evaluates Make in India compliance, signs marks with Class-3 DSC. Cannot create tenders or unmask commercial vault.',
+    allowedTabs: ['EVAL_QUEUE', 'AI_SCORECARD', 'MII_AUDIT', 'COMPOSITE_MATRIX', 'OFFICER_PROFILE'],
+    canCreateTender: false,
+    canScoreProposals: true,
+    canUnmaskVault: false,
+    canIssueDiscrepancyNotice: false,
+    canExportCagDossier: false,
+    canSimulateVendorIntake: false,
+    canModifyQcbsWeights: false,
+  },
+  BUYER_AUTHORITY: {
+    role: 'BUYER_AUTHORITY',
+    title: 'Competent Buyer Authority',
+    hindiTitle: 'सक्षम क्रेता प्राधिकारी',
+    statutoryRule: 'GeM Rule 160 & Delegation of Financial Powers',
+    summary: 'Publishes public tenders, manages PQC clauses, configures QCBS weight distributions, and holds exclusive statutory authority to authorize double-blind vault unmasking for commercial stage.',
+    allowedTabs: ['TENDERS', 'EVAL_QUEUE', 'COMPOSITE_MATRIX', 'CAG_LEDGER', 'OFFICER_PROFILE'],
+    canCreateTender: true,
+    canScoreProposals: false,
+    canUnmaskVault: true,
+    canIssueDiscrepancyNotice: false,
+    canExportCagDossier: true,
+    canSimulateVendorIntake: true,
+    canModifyQcbsWeights: true,
+  },
+  CAG_AUDITOR: {
+    role: 'CAG_AUDITOR',
+    title: 'CAG Vigilance & Audit Officer',
+    hindiTitle: 'सीएजी सतर्कता एवं लेखापरीक्षा अधिकारी',
+    statutoryRule: 'CAG Act Section 14 / Constitution Art. 148',
+    summary: 'Read-only statutory oversight across all tenders, verifies Merkle SHA-256 ledger integrity, inspects discrepancy trails, and exports official CAG compliance dossiers.',
+    allowedTabs: ['CAG_LEDGER', 'COMPOSITE_MATRIX', 'STATUTORY', 'AI_SCORECARD', 'MII_AUDIT', 'OFFICER_PROFILE'],
+    canCreateTender: false,
+    canScoreProposals: false,
+    canUnmaskVault: false,
+    canIssueDiscrepancyNotice: false,
+    canExportCagDossier: true,
+    canSimulateVendorIntake: false,
+    canModifyQcbsWeights: false,
+  }
+};

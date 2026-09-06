@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Lock, ShieldAlert } from 'lucide-react';
 import { Navbar } from './components/Navbar';
 import { Sidebar, ActiveTab } from './components/Sidebar';
 import { TenderManagementView } from './components/views/TenderManagementView';
@@ -24,7 +25,8 @@ import {
   AuditLedgerBlock, 
   OfficerScoreEntry,
   OfficerProfile,
-  UpstreamIntakeDocket
+  UpstreamIntakeDocket,
+  ROLE_DEFINITIONS
 } from './types/procurement';
 import { 
   INITIAL_TENDERS, 
@@ -41,9 +43,6 @@ export const App: React.FC = () => {
   const [submissions, setSubmissions] = useState<MaskedSubmission[]>(INITIAL_SUBMISSIONS);
   const [auditLedger, setAuditLedger] = useState<AuditLedgerBlock[]>(INITIAL_AUDIT_LEDGER);
   
-  const [currentRole, setCurrentRole] = useState<UserRole>('TEC_MEMBER');
-  const [activeTab, setActiveTab] = useState<ActiveTab>('EVAL_QUEUE');
-  const [isVaultUnmasked, setIsVaultUnmasked] = useState<boolean>(false);
   const [officerProfile, setOfficerProfile] = useState<OfficerProfile>(() => {
     const saved = localStorage.getItem('gem_gov_auth_session');
     if (saved) {
@@ -53,6 +52,23 @@ export const App: React.FC = () => {
     }
     return CURRENT_OFFICER;
   });
+
+  // Strict Single Role permanently bound to officer identity
+  const currentRole: UserRole = officerProfile.role || 'TEC_MEMBER';
+  const roleConfig = ROLE_DEFINITIONS[currentRole] || ROLE_DEFINITIONS.TEC_MEMBER;
+  const allowedTabs = roleConfig.allowedTabs;
+
+  const [activeTab, setActiveTab] = useState<ActiveTab>(() => {
+    return allowedTabs[0] || 'EVAL_QUEUE';
+  });
+  const [isVaultUnmasked, setIsVaultUnmasked] = useState<boolean>(false);
+
+  // Enforce tab authorization guard
+  useEffect(() => {
+    if (!allowedTabs.includes(activeTab)) {
+      setActiveTab(allowedTabs[0]);
+    }
+  }, [currentRole, activeTab, allowedTabs]);
   
   const [activeGradingSubmission, setActiveGradingSubmission] = useState<MaskedSubmission | null>(null);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
@@ -228,6 +244,36 @@ export const App: React.FC = () => {
 
   // Render view router
   const renderActiveView = () => {
+    if (!allowedTabs.includes(activeTab)) {
+      return (
+        <div className="bg-[#0A192F] border border-red-500/40 rounded-2xl p-8 text-center max-w-lg mx-auto my-12 shadow-2xl space-y-4">
+          <div className="w-14 h-14 rounded-2xl bg-red-500/10 text-red-400 flex items-center justify-center mx-auto border border-red-500/20">
+            <Lock className="w-7 h-7 text-red-400" />
+          </div>
+          <div className="space-y-1">
+            <span className="text-[10px] font-mono text-red-400 uppercase tracking-widest font-bold">
+              Access Prohibited &bull; GFR 2017
+            </span>
+            <h3 className="text-lg font-bold text-white">
+              Role Authority Limitation
+            </h3>
+          </div>
+          <p className="text-xs text-slate-300 leading-relaxed">
+            Your registered officer role <strong className="text-amber-300">{roleConfig.title}</strong> is restricted from accessing the <strong>{activeTab}</strong> console under statutory procurement rules.
+          </p>
+          <div className="text-[11px] text-sky-400 font-mono bg-[#051124] p-3 rounded-xl border border-[#1E3A68]">
+            Statutory Rule: {roleConfig.statutoryRule}
+          </div>
+          <button
+            onClick={() => setActiveTab(allowedTabs[0])}
+            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs transition-colors cursor-pointer border-none shadow-lg"
+          >
+            Go to Authorized Workspace ({allowedTabs[0]})
+          </button>
+        </div>
+      );
+    }
+
     switch (activeTab) {
       case 'TENDERS':
         return (
@@ -236,6 +282,7 @@ export const App: React.FC = () => {
             activeTender={activeTender}
             onSelectTender={(id) => setSelectedTenderId(id)}
             onCreateTender={handleCreateTender}
+            currentRole={currentRole}
           />
         );
       case 'EVAL_QUEUE':
@@ -321,7 +368,6 @@ export const App: React.FC = () => {
           ledgerCount={ledgerCount}
           openExportModal={() => setShowExportModal(true)}
           currentRole={currentRole}
-          setCurrentRole={(role) => setCurrentRole(role)}
           selectedTender={activeTender}
           allTenders={tenders}
           setSelectedTenderId={(id) => setSelectedTenderId(id)}

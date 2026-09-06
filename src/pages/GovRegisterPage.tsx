@@ -48,6 +48,7 @@ export default function GovRegisterPage() {
     badgeId: 'PO-MORTH-2026-9812',
     officeLocation: 'Transport Bhawan, 1 Parliament Street, New Delhi',
     clearanceLevel: 'Level-3 (Senior Procurement Officer)',
+    role: 'TEC_MEMBER' as import('../gov/types/procurement').UserRole,
     cagPin: '9821',
     password: 'SecurePass@2026',
     agreeDeclaration: true
@@ -90,6 +91,7 @@ export default function GovRegisterPage() {
       phone: formData.phone || '+91 98112 04921',
       officeLocation: formData.officeLocation || 'Central Secretariat, New Delhi',
       securityClearanceLevel: formData.clearanceLevel || 'Level-4 (Top Secret / Sovereign Procurement)',
+      role: formData.role || 'TEC_MEMBER',
       profilePhotoUrl: photoPreview,
       dscCertificate: {
         issuer: 'National Informatics Centre (NIC-CA) Class-3 Sovereign',
@@ -278,7 +280,7 @@ export default function GovRegisterPage() {
                   </span>
                   <span className="text-[10px] text-slate-400">Click to fill form instantly</span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
                   <button
                     type="button"
                     onClick={() => {
@@ -291,6 +293,7 @@ export default function GovRegisterPage() {
                         badgeId: 'PO-MORTH-2026-9812',
                         officeLocation: 'Transport Bhawan, 1 Parliament Street, New Delhi',
                         clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
+                        role: 'TEC_MEMBER',
                         cagPin: '9821',
                         password: 'SecurePass@2026',
                         agreeDeclaration: true
@@ -299,7 +302,8 @@ export default function GovRegisterPage() {
                     className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
                   >
                     <div className="font-bold text-white text-[11px]">🛣️ MoRTH / NHAI</div>
-                    <div className="text-[9px] text-slate-400">Dr. Vikramaditya, IAS</div>
+                    <div className="text-[9px] text-sky-400 font-bold">TEC_MEMBER</div>
+                    <div className="text-[8px] text-slate-400">Dr. Vikramaditya, IAS</div>
                   </button>
 
                   <button
@@ -314,6 +318,7 @@ export default function GovRegisterPage() {
                         badgeId: 'PO-DEF-2026-4412',
                         officeLocation: 'South Block, Central Secretariat, New Delhi',
                         clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
+                        role: 'BUYER_AUTHORITY',
                         cagPin: '4412',
                         password: 'SecurePass@2026',
                         agreeDeclaration: true
@@ -322,7 +327,8 @@ export default function GovRegisterPage() {
                     className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
                   >
                     <div className="font-bold text-white text-[11px]">🛡️ Min. of Defence</div>
-                    <div className="text-[9px] text-slate-400">Shri Rajeshwar, IDAS</div>
+                    <div className="text-[9px] text-emerald-400 font-bold">BUYER_AUTHORITY</div>
+                    <div className="text-[8px] text-slate-400">Shri Rajeshwar, IDAS</div>
                   </button>
 
                   <button
@@ -337,6 +343,7 @@ export default function GovRegisterPage() {
                         badgeId: 'PO-RAIL-2026-5501',
                         officeLocation: 'Rail Bhawan, Rafi Marg, New Delhi',
                         clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
+                        role: 'SCRUTINY_OFFICER',
                         cagPin: '5501',
                         password: 'SecurePass@2026',
                         agreeDeclaration: true
@@ -345,7 +352,33 @@ export default function GovRegisterPage() {
                     className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
                   >
                     <div className="font-bold text-white text-[11px]">🚆 Indian Railways</div>
-                    <div className="text-[9px] text-slate-400">Smt. Ananya, IRSS</div>
+                    <div className="text-[9px] text-amber-400 font-bold">SCRUTINY_OFFICER</div>
+                    <div className="text-[8px] text-slate-400">Smt. Ananya, IRSS</div>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData({
+                        fullName: 'Shri K. S. Venkatraman, IA&AS',
+                        designation: 'Principal Director of Audit (Defence & Public Works)',
+                        ministryIndex: 3,
+                        email: 'venkatraman.cag@cag.gov.in',
+                        phone: '+91 98101 22340',
+                        badgeId: 'PO-CAG-2026-9041',
+                        officeLocation: 'CAG Headquarters, 9 Deen Dayal Upadhyaya Marg, New Delhi',
+                        clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
+                        role: 'CAG_AUDITOR',
+                        cagPin: '9041',
+                        password: 'SecurePass@2026',
+                        agreeDeclaration: true
+                      });
+                    }}
+                    className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
+                  >
+                    <div className="font-bold text-white text-[11px]">🏛️ CAG / Vigilance</div>
+                    <div className="text-[9px] text-purple-400 font-bold">CAG_AUDITOR</div>
+                    <div className="text-[8px] text-slate-400">Shri Venkatraman</div>
                   </button>
                 </div>
               </div>
@@ -427,6 +460,85 @@ export default function GovRegisterPage() {
                     onChange={handleChange}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 placeholder:text-slate-600"
                   />
+                </div>
+              </div>
+
+              {/* Sovereign GFR Role Selection (Permanent Binding) */}
+              <div className="p-4 rounded-xl bg-slate-950/90 border border-blue-500/40 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Lock size={16} className="text-amber-400" />
+                    <label className="text-xs font-extrabold text-white uppercase tracking-wider">
+                      Designated Statutory Role (Permanent Binding per GFR 2017) *
+                    </label>
+                  </div>
+                  <span className="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">
+                    LOCKED ON REGISTRATION
+                  </span>
+                </div>
+                
+                <p className="text-[11px] text-slate-300">
+                  Select your exact procurement role. Under GFR 2017 Rules 164 &amp; 189, your dashboard privileges, visible tabs, and decision authorities will be permanently restricted to this single role.
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
+                  {[
+                    {
+                      id: 'SCRUTINY_OFFICER',
+                      name: 'Preliminary Scrutiny Officer',
+                      rule: 'GFR 2017 Rule 164',
+                      badge: 'PQC & Registries',
+                      desc: 'Validates 7 Sovereign registries (GSTN, MCA, EPFO, CBDT) & PQC compliance. Issues 48h discrepancy notices. Cannot assign technical scores.'
+                    },
+                    {
+                      id: 'TEC_MEMBER',
+                      name: 'Technical Committee (TEC)',
+                      rule: 'GFR 2017 Rule 189',
+                      badge: 'Double-Blind Grading',
+                      desc: 'Scores technical bids (/100 pts), evaluates Make in India compliance, signs marks with DSC. Cannot create tenders or unmask vault.'
+                    },
+                    {
+                      id: 'BUYER_AUTHORITY',
+                      name: 'Competent Buyer Authority',
+                      rule: 'GeM Rule 160',
+                      badge: 'Tenders & Vault Key',
+                      desc: 'Publishes public tenders, sets QCBS weights, and holds exclusive authority to authorize commercial double-blind vault unmasking.'
+                    },
+                    {
+                      id: 'CAG_AUDITOR',
+                      name: 'CAG Vigilance Auditor',
+                      rule: 'CAG Act Section 14',
+                      badge: 'Read-Only Oversight',
+                      desc: 'Cryptographic oversight across all bids, verifies Merkle SHA-256 ledger integrity, and exports official CAG compliance dossiers.'
+                    }
+                  ].map((r) => {
+                    const isSelected = formData.role === r.id;
+                    return (
+                      <div
+                        key={r.id}
+                        onClick={() => setFormData(prev => ({ ...prev, role: r.id as import('../gov/types/procurement').UserRole }))}
+                        className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
+                          isSelected
+                            ? 'bg-blue-600/20 border-blue-500 ring-1 ring-blue-500 text-white shadow-md'
+                            : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className={`text-xs font-bold ${isSelected ? 'text-blue-300' : 'text-slate-200'}`}>
+                            {r.name}
+                          </span>
+                          <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${
+                            isSelected ? 'bg-blue-500 text-white' : 'bg-slate-800 text-slate-400'
+                          }`}>
+                            {r.rule}
+                          </span>
+                        </div>
+                        <p className="text-[10px] leading-relaxed text-slate-400 line-clamp-2">
+                          {r.desc}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 

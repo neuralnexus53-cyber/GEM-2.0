@@ -24,17 +24,9 @@ import {
   PlusCircle,
   ExternalLink
 } from 'lucide-react';
-import { UserRole, Tender, OfficerProfile } from '../types/procurement';
+import { UserRole, Tender, OfficerProfile, ActiveTab, ROLE_DEFINITIONS } from '../types/procurement';
 
-export type ActiveTab = 
-  | 'TENDERS'
-  | 'EVAL_QUEUE'
-  | 'STATUTORY'
-  | 'AI_SCORECARD'
-  | 'MII_AUDIT'
-  | 'COMPOSITE_MATRIX'
-  | 'CAG_LEDGER'
-  | 'OFFICER_PROFILE';
+export type { ActiveTab };
 
 interface SidebarProps {
   activeTab: ActiveTab;
@@ -44,7 +36,7 @@ interface SidebarProps {
   ledgerCount: number;
   openExportModal: () => void;
   currentRole: UserRole;
-  setCurrentRole: (role: UserRole) => void;
+  setCurrentRole?: (role: UserRole) => void;
   selectedTender: Tender;
   allTenders: Tender[];
   setSelectedTenderId: (id: string) => void;
@@ -147,6 +139,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
   ];
 
+  const roleConfig = ROLE_DEFINITIONS[currentRole] || ROLE_DEFINITIONS.TEC_MEMBER;
+  const allowedTabs = roleConfig.allowedTabs;
+
+  const visibleTenderNav = tenderNavItems.filter(item => allowedTabs.includes(item.id));
+  const visibleEvalNav = evalNavItems.filter(item => allowedTabs.includes(item.id));
+  const visibleAuditNav = auditNavItems.filter(item => allowedTabs.includes(item.id));
+
   return (
     <aside className="w-64 min-w-[16rem] bg-[#08172D] text-slate-200 border-r border-[#1E3A68] flex flex-col justify-between p-3.5 h-[calc(100vh-80px)] overflow-y-auto shrink-0 shadow-lg">
       <div className="flex flex-col gap-3.5">
@@ -167,165 +166,182 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {officerProfile.department || 'Central Procurement Division'}
           </div>
 
-          <div className="pt-1 border-t border-[#1E3A68]/60">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[9px] font-bold text-sky-400 uppercase tracking-wider">
-                GFR 2017 Role Authority
+          <div className="pt-1.5 border-t border-[#1E3A68]/60 space-y-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[9px] font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1">
+                <Lock className="w-2.5 h-2.5 text-amber-400" />
+                <span>Statutory GFR Role</span>
               </span>
-              <span className="text-[8px] text-slate-400 font-mono">Rule 164/189</span>
+              <span className="text-[8px] font-mono px-1.5 py-0.2 rounded bg-amber-500/15 text-amber-300 font-bold border border-amber-500/30">
+                LOCKED
+              </span>
             </div>
-            <select
-              value={currentRole}
-              onChange={(e) => setCurrentRole(e.target.value as UserRole)}
-              className="w-full bg-[#001D3D] text-slate-100 border border-[#1E3A68] hover:border-[#0284C7] rounded px-2 py-1 text-[11px] font-bold cursor-pointer focus:outline-none focus:ring-1 focus:ring-sky-500"
-            >
-              <option value="TEC_MEMBER">Technical Committee (TEC_MEMBER)</option>
-              <option value="SCRUTINY_OFFICER">Scrutiny Officer (SCRUTINY_OFFICER)</option>
-              <option value="BUYER_AUTHORITY">GeM Buyer Authority (BUYER_AUTHORITY)</option>
-              <option value="CAG_AUDITOR">Statutory Vigilance (CAG_AUDITOR)</option>
-            </select>
+            <div className="bg-[#001D3D] text-slate-100 border border-[#1E3A68] rounded-lg p-2 text-left">
+              <div className="text-[11px] font-bold text-amber-300">
+                {roleConfig.title}
+              </div>
+              <div className="text-[9px] text-sky-300 font-mono mt-0.5">
+                {roleConfig.statutoryRule}
+              </div>
+              <div className="text-[8px] text-slate-400 mt-1 flex items-center gap-1">
+                <Shield className="w-2.5 h-2.5 text-emerald-400" />
+                <span>Assigned at registration &bull; Single-role mandate</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="space-y-1">
-          <div className="px-2 mb-1">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              Tender Administration
-            </span>
+        {visibleTenderNav.length > 0 && (
+          <div className="space-y-1">
+            <div className="px-2 mb-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                Tender Administration
+              </span>
+            </div>
+
+            {visibleTenderNav.map(item => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center justify-between w-full px-2.5 py-2 rounded-lg text-left font-semibold text-xs transition-all border-none cursor-pointer ${
+                    isActive
+                      ? 'bg-[#002855] text-amber-400 border border-[#0284C7] font-bold shadow-sm'
+                      : 'text-slate-300 hover:bg-[#0C1A30] hover:text-white'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
+                    <span>{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${item.badgeColor}`}>
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
+        )}
 
-          {tenderNavItems.map(item => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`flex items-center justify-between w-full px-2.5 py-2 rounded-lg text-left font-semibold text-xs transition-all border-none cursor-pointer ${
-                  isActive
-                    ? 'bg-[#002855] text-amber-400 border border-[#0284C7] font-bold shadow-sm'
-                    : 'text-slate-300 hover:bg-[#0C1A30] hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
-                  <span>{item.label}</span>
-                </div>
-                {item.badge && (
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${item.badgeColor}`}>
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+        {visibleEvalNav.length > 0 && (
+          <div className="space-y-1">
+            <div className="px-2 mb-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                14-Point Evaluation Desk
+              </span>
+            </div>
 
-        <div className="space-y-1">
-          <div className="px-2 mb-1">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              14-Point Evaluation Desk
-            </span>
+            {visibleEvalNav.map(item => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center justify-between w-full px-2.5 py-2 rounded-lg text-left font-semibold text-xs transition-all border-none cursor-pointer ${
+                    isActive
+                      ? 'bg-[#002855] text-amber-400 border border-[#0284C7] font-bold shadow-sm'
+                      : 'text-slate-300 hover:bg-[#0C1A30] hover:text-white'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
+                    <span>{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${item.badgeColor}`}>
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
+        )}
 
-          {evalNavItems.map(item => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`flex items-center justify-between w-full px-2.5 py-2 rounded-lg text-left font-semibold text-xs transition-all border-none cursor-pointer ${
-                  isActive
-                    ? 'bg-[#002855] text-amber-400 border border-[#0284C7] font-bold shadow-sm'
-                    : 'text-slate-300 hover:bg-[#0C1A30] hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
-                  <span>{item.label}</span>
-                </div>
-                {item.badge && (
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${item.badgeColor}`}>
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+        {visibleAuditNav.length > 0 && (
+          <div className="space-y-1">
+            <div className="px-2 mb-1">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                Audit &amp; Oversight
+              </span>
+            </div>
 
-        <div className="space-y-1">
-          <div className="px-2 mb-1">
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-              Audit &amp; Oversight
-            </span>
+            {visibleAuditNav.map(item => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`flex items-center justify-between w-full px-2.5 py-2 rounded-lg text-left font-semibold text-xs transition-all border-none cursor-pointer ${
+                    isActive
+                      ? 'bg-[#002855] text-amber-400 border border-[#0284C7] font-bold shadow-sm'
+                      : 'text-slate-300 hover:bg-[#0C1A30] hover:text-white'
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
+                    <span>{item.label}</span>
+                  </div>
+                  {item.badge && (
+                    <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${item.badgeColor}`}>
+                      {item.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
-
-          {auditNavItems.map(item => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`flex items-center justify-between w-full px-2.5 py-2 rounded-lg text-left font-semibold text-xs transition-all border-none cursor-pointer ${
-                  isActive
-                    ? 'bg-[#002855] text-amber-400 border border-[#0284C7] font-bold shadow-sm'
-                    : 'text-slate-300 hover:bg-[#0C1A30] hover:text-white'
-                }`}
-              >
-                <div className="flex items-center gap-2">
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-amber-400' : 'text-slate-400'}`} />
-                  <span>{item.label}</span>
-                </div>
-                {item.badge && (
-                  <span className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${item.badgeColor}`}>
-                    {item.badge}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+        )}
 
       </div>
 
       <div className="mt-4 pt-3 border-t border-[#1E3A68] space-y-2">
         
-        <div className="bg-[#051124] p-2 rounded-lg border border-[#1E3A68]">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-[10px] uppercase font-bold text-slate-400">Vault Masking</span>
-            <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
-              isVaultUnmasked ? 'bg-[#3B0D0D] text-red-300' : 'bg-[#052410] text-emerald-300'
-            }`}>
-              {isVaultUnmasked ? 'UNMASKED' : 'MASKED'}
-            </span>
+        {roleConfig.canUnmaskVault && (
+          <div className="bg-[#051124] p-2 rounded-lg border border-[#1E3A68]">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] uppercase font-bold text-slate-400">Vault Masking (Buyer Only)</span>
+              <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
+                isVaultUnmasked ? 'bg-[#3B0D0D] text-red-300' : 'bg-[#052410] text-emerald-300'
+              }`}>
+                {isVaultUnmasked ? 'UNMASKED' : 'MASKED'}
+              </span>
+            </div>
+            <button
+              onClick={() => setIsVaultUnmasked(!isVaultUnmasked)}
+              className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 bg-[#001D3D] hover:bg-[#002855] border border-[#1E3A68] rounded text-[11px] font-bold text-slate-200 hover:text-amber-400 transition-colors border-none cursor-pointer"
+            >
+              {isVaultUnmasked ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+              <span>{isVaultUnmasked ? 'Re-Mask Double-Blind Vault' : 'Authorize Vault Unmasking'}</span>
+            </button>
           </div>
+        )}
+
+        {roleConfig.canExportCagDossier && (
           <button
-            onClick={() => setIsVaultUnmasked(!isVaultUnmasked)}
-            className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 bg-[#001D3D] hover:bg-[#002855] border border-[#1E3A68] rounded text-[11px] font-bold text-slate-200 hover:text-amber-400 transition-colors border-none cursor-pointer"
+            onClick={openExportModal}
+            className="w-full flex items-center justify-center gap-2 bg-[#15803D] hover:bg-[#166534] text-white font-bold py-2 px-3 rounded-lg text-xs transition-colors border-none cursor-pointer shadow-sm"
           >
-            {isVaultUnmasked ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-            <span>{isVaultUnmasked ? 'Re-Mask Double-Blind Vault' : 'Buyer Vault Unmasking'}</span>
+            <Download className="w-3.5 h-3.5" />
+            <span>Export CAG Audit Dossier</span>
           </button>
-        </div>
+        )}
 
-        <button
-          onClick={openExportModal}
-          className="w-full flex items-center justify-center gap-2 bg-[#15803D] hover:bg-[#166534] text-white font-bold py-2 px-3 rounded-lg text-xs transition-colors border-none cursor-pointer shadow-sm"
-        >
-          <Download className="w-3.5 h-3.5" />
-          <span>Export CAG Audit Dossier</span>
-        </button>
-
-        <button
-          onClick={onOpenVendorIntake}
-          className="w-full flex items-center justify-center gap-1.5 bg-[#002855] hover:bg-[#001D3D] border border-[#1E3A68] text-slate-200 hover:text-amber-400 font-semibold py-1.5 px-3 rounded-lg text-[11px] transition-colors border-none cursor-pointer"
-        >
-          <PlusCircle className="w-3 h-3 text-amber-400" />
-          <span>Vendor Intake Simulator</span>
-        </button>
+        {roleConfig.canSimulateVendorIntake && (
+          <button
+            onClick={onOpenVendorIntake}
+            className="w-full flex items-center justify-center gap-1.5 bg-[#002855] hover:bg-[#001D3D] border border-[#1E3A68] text-slate-200 hover:text-amber-400 font-semibold py-1.5 px-3 rounded-lg text-[11px] transition-colors border-none cursor-pointer"
+          >
+            <PlusCircle className="w-3 h-3 text-amber-400" />
+            <span>Vendor Intake Simulator</span>
+          </button>
+        )}
 
       </div>
     </aside>

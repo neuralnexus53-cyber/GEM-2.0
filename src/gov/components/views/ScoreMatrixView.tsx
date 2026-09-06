@@ -65,7 +65,7 @@ export const ScoreMatrixView: React.FC<ScoreMatrixViewProps> = ({
           </p>
         </div>
 
-        {currentRole === 'BUYER_AUTHORITY' && (
+        {currentRole === 'BUYER_AUTHORITY' ? (
           <button
             onClick={() => setIsVaultUnmasked(!isVaultUnmasked)}
             className={`btn ${isVaultUnmasked ? 'btn-danger' : 'btn-primary'}`}
@@ -73,6 +73,11 @@ export const ScoreMatrixView: React.FC<ScoreMatrixViewProps> = ({
             {isVaultUnmasked ? <Lock size={16} /> : <Unlock size={16} />}
             <span>{isVaultUnmasked ? 'Re-Seal Vault (Double-Blind)' : 'Authorize Commercial Bid Unmasking'}</span>
           </button>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(15, 23, 42, 0.8)', border: '1px solid #334155', padding: '8px 14px', borderRadius: '8px', fontSize: '0.75rem', color: '#94a3b8' }}>
+            <Lock size={14} color="#f59e0b" />
+            <span>Vault Unmasking: Reserved for Buyer Authority under GFR Rule 160(xiv)</span>
+          </div>
         )}
       </div>
 
@@ -81,7 +86,7 @@ export const ScoreMatrixView: React.FC<ScoreMatrixViewProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Sliders size={18} color="var(--accent-blue)" />
             <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: '#ffffff' }}>
-              Dynamic QCBS Weight Distribution Simulator
+              Dynamic QCBS Weight Distribution Simulator {currentRole !== 'BUYER_AUTHORITY' && <span style={{ fontSize: '0.7rem', color: '#f59e0b', fontWeight: 400 }}>(Locked to Tender Terms)</span>}
             </h3>
           </div>
           <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
@@ -99,9 +104,10 @@ export const ScoreMatrixView: React.FC<ScoreMatrixViewProps> = ({
               type="range"
               min="0"
               max="100"
+              disabled={currentRole !== 'BUYER_AUTHORITY'}
               value={weights.technical}
               onChange={(e) => setWeights({ ...weights, technical: Number(e.target.value) })}
-              style={{ width: '100%', accentColor: '#38bdf8' }}
+              style={{ width: '100%', accentColor: '#38bdf8', opacity: currentRole !== 'BUYER_AUTHORITY' ? 0.6 : 1, cursor: currentRole !== 'BUYER_AUTHORITY' ? 'not-allowed' : 'pointer' }}
             />
           </div>
 
@@ -114,9 +120,10 @@ export const ScoreMatrixView: React.FC<ScoreMatrixViewProps> = ({
               type="range"
               min="0"
               max="100"
+              disabled={currentRole !== 'BUYER_AUTHORITY'}
               value={weights.miiLocalContent}
               onChange={(e) => setWeights({ ...weights, miiLocalContent: Number(e.target.value) })}
-              style={{ width: '100%', accentColor: '#ff9933' }}
+              style={{ width: '100%', accentColor: '#ff9933', opacity: currentRole !== 'BUYER_AUTHORITY' ? 0.6 : 1, cursor: currentRole !== 'BUYER_AUTHORITY' ? 'not-allowed' : 'pointer' }}
             />
           </div>
 
@@ -129,9 +136,10 @@ export const ScoreMatrixView: React.FC<ScoreMatrixViewProps> = ({
               type="range"
               min="0"
               max="100"
+              disabled={currentRole !== 'BUYER_AUTHORITY'}
               value={weights.statutory}
               onChange={(e) => setWeights({ ...weights, statutory: Number(e.target.value) })}
-              style={{ width: '100%', accentColor: '#10b981' }}
+              style={{ width: '100%', accentColor: '#10b981', opacity: currentRole !== 'BUYER_AUTHORITY' ? 0.6 : 1, cursor: currentRole !== 'BUYER_AUTHORITY' ? 'not-allowed' : 'pointer' }}
             />
           </div>
 
@@ -144,9 +152,10 @@ export const ScoreMatrixView: React.FC<ScoreMatrixViewProps> = ({
               type="range"
               min="0"
               max="100"
+              disabled={currentRole !== 'BUYER_AUTHORITY'}
               value={weights.aiCompliance}
               onChange={(e) => setWeights({ ...weights, aiCompliance: Number(e.target.value) })}
-              style={{ width: '100%', accentColor: '#a855f7' }}
+              style={{ width: '100%', accentColor: '#a855f7', opacity: currentRole !== 'BUYER_AUTHORITY' ? 0.6 : 1, cursor: currentRole !== 'BUYER_AUTHORITY' ? 'not-allowed' : 'pointer' }}
             />
           </div>
         </div>

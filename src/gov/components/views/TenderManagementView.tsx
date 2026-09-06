@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Plus, Check, Shield, FileText, Settings, AlertCircle, Sparkles, Scale } from 'lucide-react';
-import { Tender, PQCItem } from '../../types/procurement';
+import { Plus, Check, Shield, FileText, Settings, AlertCircle, Sparkles, Scale, Lock } from 'lucide-react';
+import { Tender, PQCItem, UserRole } from '../../types/procurement';
 
 interface TenderManagementViewProps {
   tenders: Tender[];
   activeTender: Tender;
   onSelectTender: (id: string) => void;
   onCreateTender: (tender: Tender) => void;
+  currentRole?: UserRole;
 }
 
 export const TenderManagementView: React.FC<TenderManagementViewProps> = ({
@@ -14,6 +15,7 @@ export const TenderManagementView: React.FC<TenderManagementViewProps> = ({
   activeTender,
   onSelectTender,
   onCreateTender,
+  currentRole,
 }) => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
@@ -81,13 +83,20 @@ export const TenderManagementView: React.FC<TenderManagementViewProps> = ({
           </p>
         </div>
 
-        <button 
-          onClick={() => setShowCreateModal(true)} 
-          className="px-4 py-2 bg-[#E65100] hover:bg-[#C2410C] text-white rounded-lg text-xs sm:text-sm font-bold flex items-center gap-2 transition-colors cursor-pointer shadow-md w-fit border-none"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Create New Public Tender</span>
-        </button>
+        {(!currentRole || currentRole === 'BUYER_AUTHORITY') ? (
+          <button 
+            onClick={() => setShowCreateModal(true)} 
+            className="px-4 py-2 bg-[#E65100] hover:bg-[#C2410C] text-white rounded-lg text-xs sm:text-sm font-bold flex items-center gap-2 transition-colors cursor-pointer shadow-md w-fit border-none"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Create New Public Tender</span>
+          </button>
+        ) : (
+          <div className="flex items-center gap-2 px-3 py-2 bg-slate-900 border border-slate-800 rounded-lg text-xs text-slate-400">
+            <Lock className="w-3.5 h-3.5 text-amber-400" />
+            <span>Tender publishing locked to Competent Buyer Authority (GeM Rule 160)</span>
+          </div>
+        )}
       </div>
 
       <div className="gov-card p-5 border-l-4 border-l-[#0284C7]">
