@@ -38,7 +38,7 @@ jobs:
         run: npm run build
         env:
           # Set VITE_API_URL in GitHub → Settings → Secrets → Actions
-          VITE_API_URL: ${{ secrets.VITE_API_URL || '' }}
+          VITE_API_URL: ${{ secrets.VITE_API_URL }}
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v4
