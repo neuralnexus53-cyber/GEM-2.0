@@ -141,3 +141,24 @@ class EvaluationRequest(BaseModel):
     tender_title: str
     tender_value_cr: float
     document_ids: List[str] = []
+
+# Compliance Clarification Ticket Models
+class ComplianceTicketCreate(BaseModel):
+    role: Literal["VENDOR", "OFFICER", "CITIZEN"] = "VENDOR"
+    category: str
+    org_name: str
+    contact_name: str
+    email: str
+    phone: Optional[str] = ""
+    tender_id: Optional[str] = ""
+    priority: Literal["STANDARD", "URGENT"] = "STANDARD"
+    subject: str
+    description: str
+    attachment_name: Optional[str] = None
+
+class ComplianceTicketUpdate(BaseModel):
+    status: Optional[Literal["REGISTERED", "IN_REVIEW", "DISPATCHED_TO_COMMITTEE", "RESOLVED"]] = None
+    status_label: Optional[str] = None
+    assigned_officer: Optional[str] = None
+    progress: Optional[int] = None
+    resolution_notes: Optional[str] = None

@@ -6,7 +6,6 @@ import {
   Award, 
   CheckCircle2, 
   Lock, 
-  Camera, 
   Save, 
   Edit3, 
   FileCheck, 
@@ -17,9 +16,14 @@ import {
   Mail,
   Phone,
   ShieldAlert,
-  Cpu
+  Cpu,
+  Sparkles,
+  PlusCircle,
+  ArrowRight,
+  ExternalLink
 } from 'lucide-react';
-import { OfficerProfile } from '../../types/procurement';
+import { Link } from 'react-router-dom';
+import { OfficerProfile, ROLE_DEFINITIONS, UserRole } from '../../types/procurement';
 
 interface GovOfficerProfileViewProps {
   profile: OfficerProfile;
@@ -46,21 +50,6 @@ export const GovOfficerProfileView: React.FC<GovOfficerProfileViewProps> = ({
 
   const [isSaving, setIsSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<string | null>(null);
-
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const photoUrl = reader.result as string;
-        setEditData(prev => ({ ...prev, profilePhotoUrl: photoUrl }));
-        const updated = { ...profile, profilePhotoUrl: photoUrl };
-        if (onProfileUpdated) onProfileUpdated(updated);
-        localStorage.setItem('gem_gov_auth_session', JSON.stringify(updated));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
 
   const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,18 +99,13 @@ export const GovOfficerProfileView: React.FC<GovOfficerProfileViewProps> = ({
         
         <div className="relative flex flex-col md:flex-row items-center md:items-start gap-6">
           
-          <div className="relative group shrink-0">
+          <div className="relative shrink-0">
             <img 
               src={profile.profilePhotoUrl || editData.profilePhotoUrl} 
               alt={profile.fullName} 
               className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover border-3 border-blue-400 shadow-2xl bg-slate-900"
             />
-            <label className="absolute inset-0 bg-slate-950/70 rounded-2xl flex flex-col items-center justify-center text-blue-300 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-xs font-bold">
-              <Camera size={20} className="mb-1" />
-              <span>Update</span>
-              <input type="file" accept="image/*" onChange={handlePhotoUpload} className="hidden" />
-            </label>
-            <div className="absolute -bottom-2 -right-2 bg-blue-600 text-white p-1.5 rounded-full shadow-lg border-2 border-[#0A2540]">
+            <div className="absolute -bottom-2 -right-2 bg-blue-600 text-white p-1.5 rounded-full shadow-lg border-2 border-[#0A2540]" title="NIC-CA Class-3 Digital Signature Certified">
               <Award size={16} />
             </div>
           </div>
@@ -211,73 +195,195 @@ export const GovOfficerProfileView: React.FC<GovOfficerProfileViewProps> = ({
       )}
 
       {activeTab === 'CREDENTIALS' && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4 text-slate-800">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <Landmark size={16} className="text-blue-600" />
-                <span>Institutional Authority Record</span>
-              </h3>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">
-                ACTIVE
-              </span>
-            </div>
+        <div className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4 text-slate-800">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Landmark size={16} className="text-blue-600" />
+                  <span>Institutional Authority Record</span>
+                </h3>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold border border-emerald-300">
+                  ACTIVE
+                </span>
+              </div>
 
-            <div className="space-y-3 text-xs">
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <span className="text-slate-500 block text-[11px]">Authorized Officer Full Name</span>
-                <span className="font-bold text-slate-900 text-sm">{profile.fullName}</span>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <span className="text-slate-500 block text-[11px]">Designation &amp; Committee Role</span>
-                <span className="font-bold text-blue-700">{profile.designation}</span>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <span className="text-slate-500 block text-[11px]">Ministry &amp; Attached Directorate</span>
-                <span className="font-semibold text-slate-800">{profile.ministry} ({profile.department})</span>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <span className="text-slate-500 block text-[11px]">Official Headquarters Location</span>
-                <span className="font-medium text-slate-700">{profile.officeLocation || 'Transport Bhawan, New Delhi'}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4 text-slate-800">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                <ShieldCheck size={16} className="text-emerald-600" />
-                <span>NIC Class-3 Digital Signature Certificate</span>
-              </h3>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold border border-blue-300">
-                PKCS#11
-              </span>
-            </div>
-
-            <div className="space-y-3 text-xs">
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <span className="text-slate-500 block text-[11px]">Certificate Authority (Issuer)</span>
-                <span className="font-bold text-slate-900">{profile.dscCertificate?.issuer || 'National Informatics Centre (NIC-CA) Class-3'}</span>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <span className="text-slate-500 block text-[11px]">Hardware Token Serial</span>
-                <span className="font-mono font-bold text-blue-700">{profile.dscCertificate?.serialNumber || 'IN-NIC-8942-0199-B7'}</span>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <span className="text-slate-500 block text-[11px]">Cryptographic SHA-256 Security Hash</span>
-                <span className="font-mono font-bold text-slate-800 break-all">{profile.dscCertificate?.fingerprintSha256 || '7B8F9A01C2945DF8812456AE3290FE19823467AB'}</span>
-              </div>
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100 flex items-center justify-between">
-                <div>
-                  <span className="text-slate-500 block text-[11px]">Validity Status</span>
-                  <span className="font-bold text-emerald-700">Valid through {profile.dscCertificate?.validUntil || '2028-12-31'}</span>
+              <div className="space-y-3 text-xs">
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <span className="text-slate-500 block text-[11px]">Authorized Officer Full Name</span>
+                  <span className="font-bold text-slate-900 text-sm">{profile.fullName}</span>
                 </div>
-                <span className="text-[10px] text-emerald-700 font-bold">✓ Hardware Synced</span>
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <span className="text-slate-500 block text-[11px]">Designation &amp; Committee Role</span>
+                  <span className="font-bold text-blue-700">{profile.designation}</span>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <span className="text-slate-500 block text-[11px]">Ministry &amp; Attached Directorate</span>
+                  <span className="font-semibold text-slate-800">{profile.ministry} ({profile.department})</span>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <span className="text-slate-500 block text-[11px]">Official Headquarters Location</span>
+                  <span className="font-medium text-slate-700">{profile.officeLocation || 'Transport Bhawan, New Delhi'}</span>
+                </div>
               </div>
             </div>
+
+            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4 text-slate-800">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <ShieldCheck size={16} className="text-emerald-600" />
+                  <span>NIC Class-3 Digital Signature Certificate</span>
+                </h3>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold border border-blue-300">
+                  PKCS#11
+                </span>
+              </div>
+
+              <div className="space-y-3 text-xs">
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <span className="text-slate-500 block text-[11px]">Certificate Authority (Issuer)</span>
+                  <span className="font-bold text-slate-900">{profile.dscCertificate?.issuer || 'National Informatics Centre (NIC-CA) Class-3'}</span>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <span className="text-slate-500 block text-[11px]">Hardware Token Serial</span>
+                  <span className="font-mono font-bold text-blue-700">{profile.dscCertificate?.serialNumber || 'IN-NIC-8942-0199-B7'}</span>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100">
+                  <span className="text-slate-500 block text-[11px]">Cryptographic SHA-256 Security Hash</span>
+                  <span className="font-mono font-bold text-slate-800 break-all">{profile.dscCertificate?.fingerprintSha256 || '7B8F9A01C2945DF8812456AE3290FE19823467AB'}</span>
+                </div>
+                <div className="p-3 bg-slate-50 rounded-lg border border-slate-100 flex items-center justify-between">
+                  <div>
+                    <span className="text-slate-500 block text-[11px]">Validity Status</span>
+                    <span className="font-bold text-emerald-700">Valid through {profile.dscCertificate?.validUntil || '2028-12-31'}</span>
+                  </div>
+                  <span className="text-[10px] text-emerald-700 font-bold">✓ Hardware Synced</span>
+                </div>
+              </div>
+            </div>
+
           </div>
 
+          {/* Exceptional Multi-Role Appointments & Isolated Credential Dossiers */}
+          <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4 text-slate-800">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                  <Award size={16} className="text-amber-600" />
+                  <span>Exceptional Multi-Role Appointments &amp; Isolated Credential Dossiers</span>
+                </h3>
+                <p className="text-[11px] text-slate-500 mt-0.5">
+                  GFR 2017 Rules 164, 189 &amp; 160 segregation-of-duties mandate: Each assigned procurement role requires a dedicated registration and isolated credentials.
+                </p>
+              </div>
+              <Link
+                to={`/gov/register?secondary=true&email=${encodeURIComponent(profile.email || '')}&name=${encodeURIComponent(profile.fullName || '')}`}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-lg transition-colors no-underline shrink-0 shadow-sm"
+              >
+                <PlusCircle size={14} />
+                <span>Register Exceptional 2nd Role</span>
+              </Link>
+            </div>
+
+            {(() => {
+              const registeredOfficersList: any[] = JSON.parse(localStorage.getItem('gem_registered_officers') || '[]');
+              const officerDossiers = registeredOfficersList.filter((o: any) => {
+                const emailMatch = o.officer?.email && profile.email && o.officer.email.toLowerCase() === profile.email.toLowerCase();
+                const nameMatch = o.officer?.fullName && profile.fullName && o.officer.fullName.toLowerCase() === profile.fullName.toLowerCase();
+                return emailMatch || nameMatch;
+              });
+
+              return (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Current Active Dossier */}
+                  <div className="p-4 rounded-xl bg-emerald-50/70 border-2 border-emerald-500 relative space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-emerald-600 text-white flex items-center gap-1">
+                        <CheckCircle2 size={11} />
+                        <span>CURRENT ACTIVE SESSION</span>
+                      </span>
+                      <span className="text-[10px] font-mono font-bold text-emerald-800">
+                        {profile.badgeId}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="font-extrabold text-sm text-slate-900">
+                        {ROLE_DEFINITIONS[profile.role]?.title || profile.role}
+                      </h4>
+                      <div className="text-xs text-emerald-800 font-semibold mt-0.5">
+                        {ROLE_DEFINITIONS[profile.role]?.statutoryRule}
+                      </div>
+                      <p className="text-[11px] text-slate-600 mt-1 leading-normal">
+                        {ROLE_DEFINITIONS[profile.role]?.summary}
+                      </p>
+                    </div>
+                    <div className="pt-2 border-t border-emerald-200/60 flex items-center justify-between text-[11px] font-mono text-emerald-900">
+                      <span>DSC: {profile.dscCertificate?.serialNumber || 'Hardware Synced'}</span>
+                      <span className="font-bold text-emerald-700">✓ Isolated Session Active</span>
+                    </div>
+                  </div>
+
+                  {/* Other Registered Role Dossiers */}
+                  {officerDossiers.filter((d: any) => d.officer?.badgeId !== profile.badgeId).map((d: any, idx: number) => {
+                    const rKey = (d.officer?.role || 'BUYER_AUTHORITY') as UserRole;
+                    const rDef = ROLE_DEFINITIONS[rKey] || ROLE_DEFINITIONS.BUYER_AUTHORITY;
+                    return (
+                      <div key={idx} className="p-4 rounded-xl bg-slate-50 border border-slate-300 hover:border-blue-400 transition-all space-y-2 relative">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-blue-100 text-blue-800 border border-blue-200 flex items-center gap-1">
+                            <Lock size={11} />
+                            <span>ISOLATED GFR DOSSIER</span>
+                          </span>
+                          <span className="text-[10px] font-mono font-bold text-slate-700">
+                            {d.officer?.badgeId}
+                          </span>
+                        </div>
+                        <div>
+                          <h4 className="font-extrabold text-sm text-slate-900">
+                            {rDef.title}
+                          </h4>
+                          <div className="text-xs text-blue-700 font-semibold mt-0.5">
+                            {rDef.statutoryRule}
+                          </div>
+                          <p className="text-[11px] text-slate-600 mt-1 leading-normal">
+                            {rDef.summary}
+                          </p>
+                        </div>
+                        <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[11px]">
+                          <span className="font-mono text-slate-500">
+                            DSC: {d.officer?.dscCertificate?.serialNumber || 'Hardware Synced'}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              localStorage.setItem('gem_gov_auth_session', JSON.stringify(d.officer));
+                              window.location.reload();
+                            }}
+                            className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs flex items-center gap-1 transition-colors border-none cursor-pointer shadow-sm"
+                          >
+                            <span>Switch Dashboard</span>
+                            <ArrowRight size={12} />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Notice when no secondary role is registered yet */}
+                  {officerDossiers.filter((d: any) => d.officer?.badgeId !== profile.badgeId).length === 0 && (
+                    <div className="p-4 rounded-xl bg-slate-50 border border-dashed border-slate-300 flex flex-col justify-center items-center text-center space-y-2 text-slate-500">
+                      <ShieldAlert size={24} className="text-slate-400" />
+                      <div className="text-xs font-bold text-slate-700">No Secondary Roles Registered</div>
+                      <p className="text-[11px] text-slate-500 max-w-xs leading-normal">
+                        If this officer is subsequently appointed to an evaluation committee or buyer authority as an exception, click above to register a dedicated role dossier.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
         </div>
       )}
 
@@ -365,20 +471,21 @@ export const GovOfficerProfileView: React.FC<GovOfficerProfileViewProps> = ({
 
           <form onSubmit={handleSaveProfile} className="space-y-5">
             
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-center gap-4">
+            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center gap-4">
               <img 
                 src={editData.profilePhotoUrl} 
                 alt="Profile Preview" 
-                className="w-16 h-16 rounded-xl object-cover border-2 border-blue-600"
+                className="w-16 h-16 rounded-xl object-cover border-2 border-blue-600 shadow-sm"
               />
               <div className="space-y-1">
-                <label className="text-xs font-bold text-slate-900 block">Change Officer Photograph</label>
-                <input 
-                  type="file" 
-                  accept="image/*" 
-                  onChange={handlePhotoUpload}
-                  className="text-xs text-slate-500 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:font-bold hover:file:bg-blue-500 cursor-pointer"
-                />
+                <span className="text-xs font-bold text-slate-900 block">NIC Service Record Biometric Identity</span>
+                <span className="text-[11px] text-slate-500 block">
+                  Official identity credentials locked &amp; synchronized via SPARROW e-HRMS Government Registry.
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold border border-emerald-300 inline-flex items-center gap-1 font-mono">
+                  <CheckCircle2 size={10} />
+                  <span>NIC PERSONNEL DATABASE SYNCED</span>
+                </span>
               </div>
             </div>
 

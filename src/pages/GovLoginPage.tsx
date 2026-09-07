@@ -11,8 +11,13 @@ import {
   ShieldAlert, 
   Cpu, 
   Sparkles,
-  Smartphone
+  Smartphone,
+  AlertTriangle,
+  Layers,
+  Award,
+  ChevronRight
 } from 'lucide-react';
+import { ROLE_DEFINITIONS, UserRole } from '../gov/types/procurement';
 
 export default function GovLoginPage() {
   const navigate = useNavigate();
@@ -21,6 +26,31 @@ export default function GovLoginPage() {
   const [otpCode, setOtpCode] = useState('202688');
   const [isLoading, setIsLoading] = useState(false);
 
+  const [selectedDscToken, setSelectedDscToken] = useState('PO-MORTH-2026-9812');
+  const [matchingDossiers, setMatchingDossiers] = useState<any[]>([]);
+
+  const handleDscTokenChange = (tokenId: string) => {
+    setSelectedDscToken(tokenId);
+    if (!tokenId) return;
+
+    if (tokenId === 'PO-MORTH-2026-9812') {
+      setOfficerId('PO-MORTH-2026-9812');
+      setPasscode('SecurePass@2026');
+      setOtpCode('202688');
+    } else if (tokenId === 'PO-DEF-2026-4412') {
+      setOfficerId('PO-DEF-2026-4412');
+      setPasscode('SecurePass@2026');
+      setOtpCode('202688');
+    } else if (tokenId === 'PO-RAIL-2026-5501') {
+      setOfficerId('PO-RAIL-2026-5501');
+      setPasscode('SecurePass@2026');
+      setOtpCode('202688');
+    } else if (tokenId === 'PO-CAG-2026-1088') {
+      setOfficerId('PO-CAG-2026-1088');
+      setPasscode('SecurePass@2026');
+      setOtpCode('202688');
+    }
+  };
 
   const handleOfficerLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,11 +60,34 @@ export default function GovLoginPage() {
 
     // Check local registered officers
     const regOfficers = JSON.parse(localStorage.getItem('gem_registered_officers') || '[]');
-    const matched = regOfficers.find((o: any) => 
-      o.officer?.email?.toLowerCase() === cleanId || 
-      o.officer?.badgeId?.toLowerCase() === cleanId ||
-      o.officer?.officerId?.toLowerCase() === cleanId
-    );
+    
+    // Find all dossiers matching the entered email, badgeId, or username
+    const matches = regOfficers.filter((o: any) => {
+      const email = o.officer?.email?.toLowerCase() || '';
+      const badge = o.officer?.badgeId?.toLowerCase() || '';
+      const officerIdVal = o.officer?.officerId?.toLowerCase() || '';
+      const name = o.officer?.fullName?.toLowerCase() || '';
+      const cleanPrefix = cleanId.includes('@') ? cleanId.split('@')[0] : cleanId;
+      const emailPrefix = email.includes('@') ? email.split('@')[0] : email;
+
+      return (
+        email === cleanId ||
+        badge === cleanId ||
+        officerIdVal === cleanId ||
+        (cleanPrefix && emailPrefix === cleanPrefix) ||
+        (name && name.includes(cleanId))
+      );
+    });
+
+    // If multiple dossiers match (e.g. officer registered for secondary role under GFR Rule 189/160 exception)
+    if (matches.length > 1 && !matches.some((m: any) => m.officer?.badgeId?.toLowerCase() === cleanId)) {
+      setMatchingDossiers(matches);
+      setIsLoading(false);
+      return;
+    }
+
+    // If exactly one match or an exact badgeId matched
+    const matched = matches.find((m: any) => m.officer?.badgeId?.toLowerCase() === cleanId) || matches[0];
 
     if (matched && matched.officer) {
       const officerWithRole = {
@@ -115,6 +168,11 @@ export default function GovLoginPage() {
     navigate('/gov');
   };
 
+  const handleSelectDossier = (dossier: any) => {
+    localStorage.setItem('gem_gov_auth_session', JSON.stringify(dossier.officer));
+    navigate('/gov');
+  };
+
   return (
     <div className="min-h-screen bg-slate-950 text-white flex flex-col font-sans">
       
@@ -174,183 +232,241 @@ export default function GovLoginPage() {
             </p>
           </div>
 
-          <form onSubmit={handleOfficerLogin} className="space-y-5" autoComplete="off">
-            <div>
-              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-                Government Officer Employee ID / Email
-              </label>
-              <div className="relative">
-                <input 
-                  type="text"
-                  required
-                  autoComplete="off"
-                  value={officerId}
-                  onChange={(e) => setOfficerId(e.target.value)}
-                  placeholder="PO-DEPT-YEAR-XXXX"
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 font-mono"
-                />
+          {matchingDossiers.length > 1 ? (
+            <div className="space-y-5 animate-fadeIn">
+              <div className="text-center">
+                <div className="w-14 h-14 bg-amber-500/10 rounded-2xl flex items-center justify-center text-amber-400 mx-auto mb-3 border border-amber-500/30">
+                  <Award size={28} />
+                </div>
+                <span className="text-amber-400 text-xs font-bold uppercase tracking-widest block mb-1">
+                  GFR Rule 189/160 Exception Mandate
+                </span>
+                <h2 className="text-xl font-extrabold text-white tracking-tight">
+                  Dual Role Appointments Detected
+                </h2>
+                <p className="text-xs text-slate-300 mt-1 max-w-sm mx-auto leading-relaxed">
+                  Officer identity <strong className="text-white">{matchingDossiers[0]?.officer?.fullName || officerId}</strong> holds multiple isolated credential dossiers. Under GFR separation of duties, choose which isolated role dashboard to launch:
+                </p>
               </div>
-            </div>
 
-            <div>
-              <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
-                Security Passcode
-              </label>
-              <input 
-                type="password"
-                required
-                autoComplete="new-password"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Enter authorized password"
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 font-mono"
-              />
-            </div>
+              <div className="space-y-3">
+                {matchingDossiers.map((item, idx) => {
+                  const roleKey = (item.officer?.role || 'TEC_MEMBER') as UserRole;
+                  const def = ROLE_DEFINITIONS[roleKey] || ROLE_DEFINITIONS.TEC_MEMBER;
+                  return (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-blue-500/60 transition-all space-y-2 group"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-sm text-white group-hover:text-blue-300 transition-colors">
+                              {def.title}
+                            </span>
+                            <span className="text-[9px] px-2 py-0.5 rounded font-mono font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                              {def.statutoryRule}
+                            </span>
+                          </div>
+                          <div className="text-[11px] text-slate-400 mt-0.5">
+                            {item.officer?.department || item.officer?.ministry}
+                          </div>
+                        </div>
+                      </div>
 
-            <div className="bg-slate-950/80 border border-blue-500/30 rounded-xl p-4 space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
-                  <Smartphone size={14} className="text-emerald-400" />
-                  <span>Aadhaar / Official Mobile OTP</span>
-                </label>
+                      <div className="grid grid-cols-2 gap-2 text-[10px] font-mono bg-slate-900/80 p-2 rounded-lg border border-slate-800 text-slate-400">
+                        <div>
+                          <span className="text-slate-500 block">Badge ID:</span>
+                          <span className="text-sky-400 font-bold">{item.officer?.badgeId}</span>
+                        </div>
+                        <div>
+                          <span className="text-slate-500 block">DSC Token:</span>
+                          <span className="text-emerald-400 font-bold truncate block">
+                            {item.officer?.dscCertificate?.serialNumber || 'Hardware Synced'}
+                          </span>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleSelectDossier(item)}
+                        className="w-full mt-2 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 px-3 rounded-lg text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-none shadow-md"
+                      >
+                        <Lock size={13} />
+                        <span>Authenticate &amp; Open {def.title.split(' ')[0]} Dashboard</span>
+                        <ArrowRight size={13} />
+                      </button>
+                    </div>
+                  );
+                })}
               </div>
-              <div className="flex gap-2">
-                <input 
-                  type="text"
-                  maxLength={6}
-                  autoComplete="off"
-                  value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value)}
-                  placeholder="• • • • • •"
-                  className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-center text-emerald-400 font-bold font-mono tracking-widest text-base focus:outline-none focus:border-blue-500"
-                />
+
+              <div className="pt-2 flex items-center justify-between">
                 <button
                   type="button"
-                  onClick={() => alert("OTP sent to your registered official mobile number.")}
-                  className="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs text-slate-200 font-bold rounded-lg cursor-pointer"
+                  onClick={() => setMatchingDossiers([])}
+                  className="text-xs text-slate-400 hover:text-white px-3 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg cursor-pointer border-none transition-colors"
                 >
-                  Resend OTP
+                  ← Return to Login Form
                 </button>
+                <Link
+                  to={`/gov/register?secondary=true${officerId.includes('@') ? `&email=${encodeURIComponent(officerId)}` : ''}`}
+                  className="text-xs text-amber-400 hover:text-amber-300 font-semibold"
+                >
+                  + Register Another Secondary Role
+                </Link>
               </div>
             </div>
+          ) : (
+            <>
+              <form onSubmit={handleOfficerLogin} className="space-y-5" autoComplete="off">
+                
+                {/* Authorized NIC-CA Hardware Certificate / DSC Token Selector */}
+                <div className="bg-slate-950/90 border border-blue-500/40 rounded-xl p-3.5 space-y-2.5 shadow-inner">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                      <Cpu size={15} className="text-sky-400" />
+                      <span>Authorized NIC Certificate / Hardware Token (PKCS#11)</span>
+                    </label>
+                    <span className="text-[9px] px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 font-bold border border-emerald-500/30 font-mono flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>USB TOKEN DETECTED</span>
+                    </span>
+                  </div>
 
-            <div className="bg-blue-950/40 border border-blue-900/60 rounded-xl p-3.5 flex items-start gap-3 text-xs text-slate-300">
-              <ShieldCheck size={18} className="text-blue-400 shrink-0 mt-0.5" />
-              <span>
-                You are logging in as <strong>Procurement Officer (PO)</strong> with full statutory audit and evaluation authority.
-              </span>
-            </div>
+                  <select
+                    value={selectedDscToken}
+                    onChange={(e) => handleDscTokenChange(e.target.value)}
+                    className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2.5 text-xs text-white focus:outline-none focus:border-blue-500 font-mono cursor-pointer"
+                  >
+                    <option value="">-- [Auto-Detect / Select Inserted NIC Hardware Token] --</option>
+                    <option value="PO-MORTH-2026-9812">
+                      NIC-CA Class-3: Dr. Vikramaditya Sharma, IAS (MoRTH) — [TEC Member: Rule 189]
+                    </option>
+                    <option value="PO-DEF-2026-4412">
+                      NIC-CA Class-3: Shri Rajeshwar Singh, IDAS (MoD) — [Buyer Authority: Rule 160]
+                    </option>
+                    <option value="PO-RAIL-2026-5501">
+                      NIC-CA Class-3: Smt. Ananya Banerjee, IRSS (Railways) — [Scrutiny Officer: Rule 164]
+                    </option>
+                    <option value="PO-CAG-2026-1088">
+                      NIC-CA Class-3: Shri K. S. Venkatraman, IA&AS (CAG) — [Vigilance Auditor: Art. 148]
+                    </option>
+                  </select>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-4 rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-none shadow-lg disabled:opacity-50 hover:shadow-blue-500/20"
-            >
-              {isLoading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Authorizing Sovereign Session...</span>
-                </>
-              ) : (
-                <>
-                  <Lock size={15} />
-                  <span>Access Procurement Officer Suite</span>
-                  <ArrowRight size={15} />
-                </>
-              )}
-            </button>
-          </form>
-
-          <div className="mt-6 pt-6 border-t border-slate-800/80">
-            <span className="text-[11px] font-bold text-slate-400 uppercase tracking-widest block text-center mb-3">
-              ⚡ Instant 1-Click Access by Role &amp; Department
-            </span>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
-              <button
-                type="button"
-                onClick={() => {
-                  setOfficerId('PO-MORTH-2026-9812');
-                  setPasscode('SecurePass@2026');
-                  setOtpCode('202688');
-                }}
-                className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${
-                  officerId === 'PO-MORTH-2026-9812'
-                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm ring-1 ring-blue-500'
-                    : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-[11px]">🛣️ MoRTH / NHAI</span>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">TEC</span>
+                  {selectedDscToken && (
+                    <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 bg-slate-900/60 px-2.5 py-1.5 rounded border border-slate-800">
+                      <span className="text-emerald-400 font-bold flex items-center gap-1">
+                        <CheckCircle2 size={11} />
+                        <span>FIPS 140-2 Level 3 Validated</span>
+                      </span>
+                      <span className="text-slate-400">Model: ePass2003 Hardware Cryptographic Token</span>
+                    </div>
+                  )}
                 </div>
-                <div className="text-[10px] text-slate-400 font-mono mt-0.5">PO-MORTH-2026-9812</div>
-                <div className="text-[9px] text-sky-400 font-semibold mt-0.5">Role: TEC_MEMBER (GFR Rule 189)</div>
-              </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setOfficerId('PO-DEF-2026-4412');
-                  setPasscode('SecurePass@2026');
-                  setOtpCode('202688');
-                }}
-                className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${
-                  officerId === 'PO-DEF-2026-4412'
-                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm ring-1 ring-blue-500'
-                    : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-[11px]">🛡️ Min. of Defence</span>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">BUYER</span>
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                    Government Officer Employee ID / Email
+                  </label>
+                  <div className="relative">
+                    <input 
+                      type="text"
+                      required
+                      autoComplete="off"
+                      value={officerId}
+                      onChange={(e) => setOfficerId(e.target.value)}
+                      placeholder="PO-DEPT-YEAR-XXXX"
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 font-mono"
+                    />
+                  </div>
                 </div>
-                <div className="text-[10px] text-slate-400 font-mono mt-0.5">PO-DEF-2026-4412</div>
-                <div className="text-[9px] text-amber-400 font-semibold mt-0.5">Role: BUYER_AUTHORITY (Rule 160)</div>
-              </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setOfficerId('PO-RAIL-2026-5501');
-                  setPasscode('SecurePass@2026');
-                  setOtpCode('202688');
-                }}
-                className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${
-                  officerId === 'PO-RAIL-2026-5501'
-                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm ring-1 ring-blue-500'
-                    : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-[11px]">🚆 Indian Railways</span>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">SCRUTINY</span>
+                <div>
+                  <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">
+                    Security Passcode
+                  </label>
+                  <input 
+                    type="password"
+                    required
+                    autoComplete="new-password"
+                    value={passcode}
+                    onChange={(e) => setPasscode(e.target.value)}
+                    placeholder="Enter authorized password"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-blue-500 font-mono"
+                  />
                 </div>
-                <div className="text-[10px] text-slate-400 font-mono mt-0.5">PO-RAIL-2026-5501</div>
-                <div className="text-[9px] text-emerald-400 font-semibold mt-0.5">Role: SCRUTINY_OFFICER (Rule 164)</div>
-              </button>
 
-              <button
-                type="button"
-                onClick={() => {
-                  setOfficerId('PO-CAG-2026-1088');
-                  setPasscode('SecurePass@2026');
-                  setOtpCode('202688');
-                }}
-                className={`p-2.5 rounded-lg border text-left cursor-pointer transition-all ${
-                  officerId === 'PO-CAG-2026-1088'
-                    ? 'bg-blue-500/10 border-blue-500 text-white shadow-sm ring-1 ring-blue-500'
-                    : 'bg-slate-950/60 border-slate-800 text-slate-400 hover:border-slate-700'
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-[11px]">⚖️ CAG Audit &amp; Vigilance</span>
-                  <span className="text-[9px] px-1.5 py-0.2 rounded font-mono font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">AUDITOR</span>
+                <div className="bg-slate-950/80 border border-blue-500/30 rounded-xl p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider flex items-center gap-1.5">
+                      <Smartphone size={14} className="text-emerald-400" />
+                      <span>Aadhaar / Official Mobile OTP</span>
+                    </label>
+                  </div>
+                  <div className="flex gap-2">
+                    <input 
+                      type="text"
+                      maxLength={6}
+                      autoComplete="off"
+                      value={otpCode}
+                      onChange={(e) => setOtpCode(e.target.value)}
+                      placeholder="• • • • • •"
+                      className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-center text-emerald-400 font-bold font-mono tracking-widest text-base focus:outline-none focus:border-blue-500"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => alert("OTP sent to your registered official mobile number.")}
+                      className="px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 text-xs text-slate-200 font-bold rounded-lg cursor-pointer"
+                    >
+                      Resend OTP
+                    </button>
+                  </div>
                 </div>
-                <div className="text-[10px] text-slate-400 font-mono mt-0.5">PO-CAG-2026-1088</div>
-                <div className="text-[9px] text-purple-400 font-semibold mt-0.5">Role: CAG_AUDITOR (Art. 148)</div>
-              </button>
-            </div>
-          </div>
+
+                <div className="bg-blue-950/40 border border-blue-900/60 rounded-xl p-3.5 flex items-start gap-3 text-xs text-slate-300">
+                  <ShieldCheck size={18} className="text-blue-400 shrink-0 mt-0.5" />
+                  <span>
+                    You are logging in as <strong>Procurement Officer (PO)</strong> with full statutory audit and evaluation authority.
+                  </span>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 px-4 rounded-xl text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2 cursor-pointer border-none shadow-lg disabled:opacity-50 hover:shadow-blue-500/20"
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Authorizing Sovereign Session...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Lock size={15} />
+                      <span>Access Procurement Officer Suite</span>
+                      <ArrowRight size={15} />
+                    </>
+                  )}
+                </button>
+              </form>
+
+              <div className="mt-4 p-3 rounded-xl bg-amber-950/30 border border-amber-500/30 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+                  <span className="text-slate-300 text-[11px]">
+                    Assigned a <strong>second role as an exception</strong>?
+                  </span>
+                </div>
+                <Link 
+                  to={`/gov/register?secondary=true${officerId.includes('@') ? `&email=${encodeURIComponent(officerId)}` : ''}`}
+                  className="text-amber-400 hover:text-amber-300 font-bold underline text-[11px] shrink-0"
+                >
+                  Register Second Role Dossier →
+                </Link>
+              </div>
+            </>
+          )}
 
         </div>
       </main>

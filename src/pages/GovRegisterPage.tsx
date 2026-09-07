@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Building2, 
   ShieldCheck, 
@@ -7,22 +7,16 @@ import {
   Lock, 
   KeyRound, 
   ArrowRight, 
-  Sparkles, 
   Landmark, 
-  Camera, 
   Check, 
   Award,
   FileCheck,
   Shield,
-  Briefcase
+  Briefcase,
+  AlertTriangle
 } from 'lucide-react';
 
-const PRESET_OFFICER_PHOTOS = [
-  { label: 'CPO Male', url: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80' },
-  { label: 'Director Female', url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&auto=format&fit=crop&q=80' },
-  { label: 'Senior Engineer', url: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&auto=format&fit=crop&q=80' },
-  { label: 'Joint Secretary', url: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&auto=format&fit=crop&q=80' }
-];
+const DEFAULT_OFFICER_PHOTO = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80';
 
 const MINISTRIES_LIST = [
   { ministry: 'Ministry of Road Transport & Highways', dept: 'National Highways Authority of India (NHAI)', code: 'MORTH' },
@@ -35,35 +29,58 @@ const MINISTRIES_LIST = [
 
 export default function GovRegisterPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const isSecondaryQuery = searchParams.get('secondary') === 'true';
+  const queryEmail = searchParams.get('email') || '';
+  const queryName = searchParams.get('name') || '';
+
   const [isLoading, setIsLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [photoPreview, setPhotoPreview] = useState<string>(PRESET_OFFICER_PHOTOS[0].url);
+  const photoPreview = DEFAULT_OFFICER_PHOTO;
 
-  const [formData, setFormData] = useState({
-    fullName: 'Dr. Vikramaditya Sharma, IAS',
-    designation: 'Joint Secretary & Tender Committee Chair',
-    ministryIndex: 0,
-    email: 'vikramaditya.ias@nic.in',
-    phone: '+91 98112 04921',
-    badgeId: 'PO-MORTH-2026-9812',
-    officeLocation: 'Transport Bhawan, 1 Parliament Street, New Delhi',
-    clearanceLevel: 'Level-3 (Senior Procurement Officer)',
-    role: 'TEC_MEMBER' as import('../gov/types/procurement').UserRole,
-    cagPin: '9821',
-    password: 'SecurePass@2026',
-    agreeDeclaration: true
+  const [formData, setFormData] = useState(() => {
+    const existing = localStorage.getItem('gem_gov_auth_session');
+    let base = {
+      fullName: queryName || 'Dr. Vikramaditya Sharma, IAS',
+      designation: 'Joint Secretary & Tender Committee Chair',
+      ministryIndex: 0,
+      email: queryEmail || 'vikramaditya.ias@nic.in',
+      phone: '+91 98112 04921',
+      badgeId: '',
+      officeLocation: 'Transport Bhawan, 1 Parliament Street, New Delhi',
+      clearanceLevel: 'Level-3 (Senior Procurement Officer)',
+      role: (isSecondaryQuery ? 'BUYER_AUTHORITY' : 'TEC_MEMBER') as import('../gov/types/procurement').UserRole,
+      cagPin: '9821',
+      password: 'SecurePass@2026',
+      agreeDeclaration: true
+    };
+
+    if (isSecondaryQuery && existing) {
+      try {
+        const parsed = JSON.parse(existing);
+        base.fullName = queryName || parsed.fullName || base.fullName;
+        base.email = queryEmail || parsed.email || base.email;
+        base.officeLocation = parsed.officeLocation || base.officeLocation;
+        base.phone = parsed.phone || base.phone;
+        base.designation = parsed.designation || base.designation;
+        if (parsed.role === 'TEC_MEMBER') base.role = 'BUYER_AUTHORITY';
+        else if (parsed.role === 'BUYER_AUTHORITY') base.role = 'TEC_MEMBER';
+        else if (parsed.role === 'SCRUTINY_OFFICER') base.role = 'TEC_MEMBER';
+        else base.role = 'CAG_AUDITOR';
+      } catch (e) {}
+    }
+    return base;
   });
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPhotoPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+  // Check if current officer email/name has already registered prior role(s)
+  const registeredOfficersList: any[] = JSON.parse(localStorage.getItem('gem_registered_officers') || '[]');
+  const priorRegistrations = registeredOfficersList.filter((o: any) => 
+    (formData.email && o.officer?.email?.toLowerCase() === formData.email.toLowerCase()) ||
+    (formData.fullName && o.officer?.fullName?.toLowerCase() === formData.fullName.toLowerCase())
+  );
+  const priorRoles: string[] = priorRegistrations.map((o: any) => o.officer?.role).filter(Boolean);
+  const isExceptionalSecondaryRegistration = isSecondaryQuery || priorRoles.length > 0;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -78,7 +95,17 @@ export default function GovRegisterPage() {
     setIsLoading(true);
 
     const selectedMin = MINISTRIES_LIST[Number(formData.ministryIndex)] || MINISTRIES_LIST[0];
-    const generatedBadgeId = formData.badgeId.trim() || `PO-${selectedMin.code}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+    
+    // Suffix badge ID for secondary role to ensure 100% credential uniqueness
+    let generatedBadgeId = formData.badgeId.trim();
+    if (!generatedBadgeId) {
+      generatedBadgeId = `PO-${selectedMin.code}-2026-${Math.floor(1000 + Math.random() * 9000)}`;
+      if (isExceptionalSecondaryRegistration) {
+        generatedBadgeId += `-${formData.role}`;
+      }
+    } else if (isExceptionalSecondaryRegistration && !generatedBadgeId.endsWith(`-${formData.role}`)) {
+      generatedBadgeId += `-${formData.role}`;
+    }
 
     const officerData = {
       officerId: generatedBadgeId,
@@ -94,18 +121,18 @@ export default function GovRegisterPage() {
       role: formData.role || 'TEC_MEMBER',
       profilePhotoUrl: photoPreview,
       dscCertificate: {
-        issuer: 'National Informatics Centre (NIC-CA) Class-3 Sovereign',
-        tokenType: 'PKCS#11 Hardware Token (ePass2003)',
-        serialNumber: `IN-NIC-2026-${Math.floor(1000 + Math.random() * 9000)}-B7`,
-        fingerprintSha256: `7B8F9A01C2945DF8812456AE3290FE19823467${Math.floor(10 + Math.random() * 89)}`,
+        issuer: `National Informatics Centre (NIC-CA) Class-3 [${formData.role} Isolated Compartment]`,
+        tokenType: `PKCS#11 Hardware Token (${formData.role} Key Vault)`,
+        serialNumber: `IN-NIC-2026-${Math.floor(1000 + Math.random() * 9000)}-${formData.role}`,
+        fingerprintSha256: `SHA256:NIC_${Date.now()}_${formData.role}_SECURE_TOKEN`,
         validUntil: '2028-12-31',
         status: 'ACTIVE_VALIDATED' as const
       },
       sessionContext: {
-        tokenHash: `0x${Math.random().toString(16).substring(2, 10)}...NIC_SOVEREIGN`,
+        tokenHash: `0x${Math.random().toString(16).substring(2, 10)}...${formData.role}`,
         loginTimestamp: new Date().toLocaleTimeString('en-IN') + ' IST',
         ipAddress: '10.14.92.11 (NIC GovNet Internal)',
-        mfaMethod: 'Dual-Factor: Aadhaar OTP + DSC Token',
+        mfaMethod: 'Dual-Factor: Aadhaar OTP + Role-Specific DSC Token',
         expiresInMinutes: 480
       }
     };
@@ -126,6 +153,7 @@ export default function GovRegisterPage() {
           badge_id: generatedBadgeId,
           phone: formData.phone,
           clearance_level: formData.clearanceLevel,
+          role: formData.role,
           profile_photo_url: photoPreview,
           office_location: formData.officeLocation,
           cag_pin: formData.cagPin
@@ -133,17 +161,20 @@ export default function GovRegisterPage() {
       }).catch(() => {});
     } catch (e) {}
 
-    // 2. Persist active officer session in localStorage
+    // 2. Persist active officer session in localStorage (opens isolated dashboard for this role)
     localStorage.setItem('gem_gov_auth_session', JSON.stringify(officerData));
     localStorage.setItem(`gem_officer_profile_${generatedBadgeId}`, JSON.stringify(officerData));
 
-    // Save to list of registered officers
-    const existingOfficers = JSON.parse(localStorage.getItem('gem_registered_officers') || '[]');
-    existingOfficers.push({
-      officer: officerData,
-      password: formData.password
-    });
-    localStorage.setItem('gem_registered_officers', JSON.stringify(existingOfficers));
+    // Save to list of registered officers, keeping all role dossiers separate
+    const existingOfficers: any[] = JSON.parse(localStorage.getItem('gem_registered_officers') || '[]');
+    const updatedOfficers = [
+      ...existingOfficers.filter((o: any) => o.officer?.badgeId !== generatedBadgeId),
+      {
+        officer: officerData,
+        password: formData.password
+      }
+    ];
+    localStorage.setItem('gem_registered_officers', JSON.stringify(updatedOfficers));
 
     setIsLoading(false);
     setSuccess(true);
@@ -225,161 +256,38 @@ export default function GovRegisterPage() {
           ) : (
             <form onSubmit={handleGovRegister} className="space-y-6" autoComplete="off">
               
-              <div className="bg-slate-950/80 p-4 rounded-xl border border-slate-800 space-y-3">
-                <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider">
-                  Official Officer Photograph / NIC ID Badge *
-                </label>
-                <div className="flex flex-col sm:flex-row items-center gap-4">
-                  <div className="relative group">
-                    <img 
-                      src={photoPreview} 
-                      alt="Officer Photo" 
-                      className="w-20 h-20 rounded-xl object-cover border-2 border-blue-500 shadow-md bg-slate-900"
-                    />
-                    <label className="absolute inset-0 bg-slate-950/70 rounded-xl flex flex-col items-center justify-center text-blue-400 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-[10px] font-bold">
-                      <Camera size={18} className="mb-1" />
-                      <span>Upload</span>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handlePhotoUpload} 
-                        className="hidden" 
-                      />
-                    </label>
-                  </div>
-                  <div className="flex-1 space-y-2 text-center sm:text-left">
-                    <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                      {PRESET_OFFICER_PHOTOS.map((av, idx) => (
-                        <button
-                          key={idx}
-                          type="button"
-                          onClick={() => setPhotoPreview(av.url)}
-                          className={`text-[10px] px-2.5 py-1 rounded-lg border font-semibold transition-all ${
-                            photoPreview === av.url 
-                              ? 'bg-blue-500 text-white border-blue-400 font-bold' 
-                              : 'bg-slate-900 text-slate-300 border-slate-700 hover:border-slate-500'
-                          }`}
-                        >
-                          {av.label}
-                        </button>
-                      ))}
+              {/* Sovereign Identity & NIC GovNet Verification Banner */}
+              <div className="bg-slate-950/90 p-4 rounded-xl border border-blue-500/40 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2.5">
+                    <ShieldCheck className="w-6 h-6 text-emerald-400 shrink-0" />
+                    <div>
+                      <span className="text-xs font-extrabold text-white uppercase tracking-wider block">
+                        NIC Sovereign Identity &amp; Service Book Verification
+                      </span>
+                      <span className="text-[10px] text-slate-400 block">
+                        Government Personnel Authentication Gateway • e-Pramaan Single Sign-On
+                      </span>
                     </div>
-                    <p className="text-[11px] text-slate-400">
-                      Upload your official passport photo or choose an avatar for the digital CAG evaluation ledger.
-                    </p>
                   </div>
-                </div>
-              </div>
-
-              {/* ⚡ 1-Click Auto-Fill Presets */}
-              <div className="p-3 rounded-xl bg-slate-950/80 border border-blue-500/30">
-                <div className="text-[11px] font-bold text-blue-400 uppercase tracking-wider flex items-center justify-between mb-2">
-                  <span className="flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                    <span>⚡ 1-Click Quick Officer Presets</span>
+                  <span className="text-[10px] px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-300 font-bold border border-emerald-500/30 flex items-center gap-1 font-mono shrink-0">
+                    <CheckCircle2 size={11} />
+                    <span>NIC GOVNET CLEARED</span>
                   </span>
-                  <span className="text-[10px] text-slate-400">Click to fill form instantly</span>
                 </div>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFormData({
-                        fullName: 'Dr. Vikramaditya Sharma, IAS',
-                        designation: 'Joint Secretary & Tender Committee Chair',
-                        ministryIndex: 0,
-                        email: 'vikramaditya.ias@nic.in',
-                        phone: '+91 98112 04921',
-                        badgeId: 'PO-MORTH-2026-9812',
-                        officeLocation: 'Transport Bhawan, 1 Parliament Street, New Delhi',
-                        clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
-                        role: 'TEC_MEMBER',
-                        cagPin: '9821',
-                        password: 'SecurePass@2026',
-                        agreeDeclaration: true
-                      });
-                    }}
-                    className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
-                  >
-                    <div className="font-bold text-white text-[11px]">🛣️ MoRTH / NHAI</div>
-                    <div className="text-[9px] text-sky-400 font-bold">TEC_MEMBER</div>
-                    <div className="text-[8px] text-slate-400">Dr. Vikramaditya, IAS</div>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFormData({
-                        fullName: 'Shri Rajeshwar Singh, IDAS',
-                        designation: 'Director (Defence Contracts & DRDO Telemetry)',
-                        ministryIndex: 1,
-                        email: 'rajeshwar.singh@mod.gov.in',
-                        phone: '+91 98234 11092',
-                        badgeId: 'PO-DEF-2026-4412',
-                        officeLocation: 'South Block, Central Secretariat, New Delhi',
-                        clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
-                        role: 'BUYER_AUTHORITY',
-                        cagPin: '4412',
-                        password: 'SecurePass@2026',
-                        agreeDeclaration: true
-                      });
-                    }}
-                    className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
-                  >
-                    <div className="font-bold text-white text-[11px]">🛡️ Min. of Defence</div>
-                    <div className="text-[9px] text-emerald-400 font-bold">BUYER_AUTHORITY</div>
-                    <div className="text-[8px] text-slate-400">Shri Rajeshwar, IDAS</div>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFormData({
-                        fullName: 'Smt. Ananya Banerjee, IRSS',
-                        designation: 'Principal Chief Materials Manager (PCMM)',
-                        ministryIndex: 2,
-                        email: 'ananya.banerjee@railnet.gov.in',
-                        phone: '+91 94331 88201',
-                        badgeId: 'PO-RAIL-2026-5501',
-                        officeLocation: 'Rail Bhawan, Rafi Marg, New Delhi',
-                        clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
-                        role: 'SCRUTINY_OFFICER',
-                        cagPin: '5501',
-                        password: 'SecurePass@2026',
-                        agreeDeclaration: true
-                      });
-                    }}
-                    className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
-                  >
-                    <div className="font-bold text-white text-[11px]">🚆 Indian Railways</div>
-                    <div className="text-[9px] text-amber-400 font-bold">SCRUTINY_OFFICER</div>
-                    <div className="text-[8px] text-slate-400">Smt. Ananya, IRSS</div>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFormData({
-                        fullName: 'Shri K. S. Venkatraman, IA&AS',
-                        designation: 'Principal Director of Audit (Defence & Public Works)',
-                        ministryIndex: 3,
-                        email: 'venkatraman.cag@cag.gov.in',
-                        phone: '+91 98101 22340',
-                        badgeId: 'PO-CAG-2026-9041',
-                        officeLocation: 'CAG Headquarters, 9 Deen Dayal Upadhyaya Marg, New Delhi',
-                        clearanceLevel: 'Level-4 (Top Secret / Sovereign Procurement)',
-                        role: 'CAG_AUDITOR',
-                        cagPin: '9041',
-                        password: 'SecurePass@2026',
-                        agreeDeclaration: true
-                      });
-                    }}
-                    className="p-2 rounded-lg bg-slate-900 border border-slate-700 hover:border-blue-400 text-left transition-all cursor-pointer"
-                  >
-                    <div className="font-bold text-white text-[11px]">🏛️ CAG / Vigilance</div>
-                    <div className="text-[9px] text-purple-400 font-bold">CAG_AUDITOR</div>
-                    <div className="text-[8px] text-slate-400">Shri Venkatraman</div>
-                  </button>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1 text-[11px]">
+                  <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">Authentication Protocol</span>
+                    <span className="font-semibold text-slate-200">Aadhaar e-KYC + NIC SPARROW</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">Digital Signature Vault</span>
+                    <span className="font-semibold text-blue-300">PKCS#11 FIPS 140-2 Level 3</span>
+                  </div>
+                  <div className="p-2.5 rounded-lg bg-slate-900 border border-slate-800">
+                    <span className="text-slate-400 text-[10px] block">Statutory Audit Anchor</span>
+                    <span className="font-semibold text-amber-300">CAG Merkle SHA-256 Ledger</span>
+                  </div>
                 </div>
               </div>
 
@@ -463,6 +371,22 @@ export default function GovRegisterPage() {
                 </div>
               </div>
 
+              {/* Exceptional Secondary Role Appointment Notice */}
+              {isExceptionalSecondaryRegistration && (
+                <div className="p-4 rounded-xl bg-gradient-to-r from-amber-500/15 via-amber-500/5 to-transparent border border-amber-500/40 space-y-2">
+                  <div className="flex items-center gap-2 text-amber-400 font-bold text-xs uppercase tracking-wider">
+                    <AlertTriangle size={16} />
+                    <span>Exceptional Secondary Role Appointment (GFR Rule 189/160 Exception Mandate)</span>
+                  </div>
+                  <p className="text-xs text-slate-200 leading-relaxed">
+                    Officer identity <strong className="text-white">{formData.fullName}</strong> holds prior registered credentials for: <span className="font-mono text-amber-300 font-bold bg-amber-950/80 px-2 py-0.5 rounded border border-amber-500/40">{priorRoles.join(', ')}</span>.
+                  </p>
+                  <p className="text-[11px] text-slate-400 leading-normal">
+                    Under GFR 2017 separation-of-duties rules, an officer cannot combine conflicting procurement powers in a single dashboard. Registering this exceptional secondary role will issue a <strong>dedicated Sovereign Credential Dossier</strong> (Badge ID suffix: <code className="text-sky-300 font-bold">-{formData.role}</code>) and separate Class-3 DSC Token, granting access to a completely isolated, role-limited dashboard.
+                  </p>
+                </div>
+              )}
+
               {/* Sovereign GFR Role Selection (Permanent Binding) */}
               <div className="p-4 rounded-xl bg-slate-950/90 border border-blue-500/40 space-y-3">
                 <div className="flex items-center justify-between">
@@ -513,11 +437,12 @@ export default function GovRegisterPage() {
                     }
                   ].map((r) => {
                     const isSelected = formData.role === r.id;
+                    const isAlreadyHeld = priorRoles.includes(r.id);
                     return (
                       <div
                         key={r.id}
                         onClick={() => setFormData(prev => ({ ...prev, role: r.id as import('../gov/types/procurement').UserRole }))}
-                        className={`p-3 rounded-xl border text-left cursor-pointer transition-all ${
+                        className={`p-3 rounded-xl border text-left cursor-pointer transition-all relative ${
                           isSelected
                             ? 'bg-blue-600/20 border-blue-500 ring-1 ring-blue-500 text-white shadow-md'
                             : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-300'
@@ -527,11 +452,18 @@ export default function GovRegisterPage() {
                           <span className={`text-xs font-bold ${isSelected ? 'text-blue-300' : 'text-slate-200'}`}>
                             {r.name}
                           </span>
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${
-                            isSelected ? 'bg-blue-500 text-white' : 'bg-slate-800 text-slate-400'
-                          }`}>
-                            {r.rule}
-                          </span>
+                          <div className="flex items-center gap-1">
+                            {isAlreadyHeld && (
+                              <span className="text-[8px] px-1 py-0.2 rounded font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-600">
+                                PRIOR ROLE
+                              </span>
+                            )}
+                            <span className={`text-[9px] px-1.5 py-0.5 rounded font-mono font-bold ${
+                              isSelected ? 'bg-blue-500 text-white' : 'bg-slate-800 text-slate-400'
+                            }`}>
+                              {r.rule}
+                            </span>
+                          </div>
                         </div>
                         <p className="text-[10px] leading-relaxed text-slate-400 line-clamp-2">
                           {r.desc}

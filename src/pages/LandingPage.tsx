@@ -1,26 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { SectorWiseFaq } from '../components/SectorWiseFaq';
-
-const NOTICES = [
-  { tag: 'NOTICE', desc: 'GeM 2.0 portal maintenance scheduled for this Sunday from 2:00 AM to 6:00 AM IST.' },
-  { tag: 'UPDATE', desc: 'New automated AI compliance verification guidelines active for all tenders under GFR Rule 144.' },
-  { tag: 'ALERT',  desc: 'Class-I and Class-II local suppliers must upload Make-in-India self-declaration with audited local content.' },
-  { tag: 'MSME',   desc: 'Udyam registration renewal & annual return filing compliance check enabled for FY 2025-26.' }
-];
-
-const BANNERS = [
-  './images/banner1.jpg',
-  './images/banner2.jpg',
-  './images/banner3.jpg'
+import { OperationalArchitecture } from '../components/OperationalArchitecture';
+import { ComplianceTicketModal } from '../components/ComplianceTicketModal';
+const HERO_SLIDES = [
+  {
+    image: './images/banner1.jpg',
+    tag: 'Smart India Hackathon 2026 • Sovereign Procurement',
+    title: 'GEM 2.0 COMPLIANCE PORTAL',
+    desc: 'Automated 14-point AI compliance verification connecting 7+ Sovereign Databases, GSTN, CBDT, MCA-21, and MSME Udyam for 100% transparent public procurement.',
+  },
+  {
+    image: './images/banner2.jpg',
+    tag: 'Anti-Cartel Defense • SHA-256 Cryptography',
+    title: 'DOUBLE-BLIND SEALED BID VAULT',
+    desc: 'Military-grade cryptographic vault with anonymous bidder masking (e.g. VEN-ANON-7741) and dual-key unsealing, guaranteeing zero bias and tamper-evident evaluations.',
+  },
+  {
+    image: './images/banner3.jpg',
+    tag: 'Make-in-India & MSME Public Procurement',
+    title: 'EMPOWERING INDIGENOUS ENTERPRISES',
+    desc: 'Automated 25% MSME purchase preference enforcement and Class-I local content verification, empowering domestic manufacturers and startups nationwide.',
+  },
 ];
 
 export default function LandingPage() {
   // Drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  // Notice ticker state
-  const [noticeIdx, setNoticeIdx] = useState(0);
 
   // Hero carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -30,23 +36,17 @@ export default function LandingPage() {
 
   // About GeM Public Procurement Details Modal
   const [aboutModalOpen, setAboutModalOpen] = useState(false);
-  const [aboutModalTab, setAboutModalTab] = useState<'overview' | 'gfr_rules' | 'procurement_modes' | 'msme_mii' | 'gem2_engine' | 'audit_ledger' | 'security_cert' | 'sector_faq'>('overview');
+  const [aboutModalTab, setAboutModalTab] = useState<'overview' | 'gfr_rules' | 'procurement_modes' | 'msme_mii' | 'compliance_suite' | 'gem2_engine' | 'audit_ledger' | 'security_cert' | 'sector_faq' | 'operational_arch'>('overview');
 
-  // Backend API status
-  const [apiStatus, setApiStatus] = useState<'checking' | 'online' | 'offline'>('checking');
+  // Compliance Clarification Ticket Modal
+  const [ticketModalOpen, setTicketModalOpen] = useState(false);
+  const [ticketModalTab, setTicketModalTab] = useState<'raise' | 'track'>('raise');
 
-  // Auto-rotate notices
-  useEffect(() => {
-    const id = setInterval(() => {
-      setNoticeIdx(i => (i + 1) % NOTICES.length);
-    }, 4000);
-    return () => clearInterval(id);
-  }, []);
 
   // Auto-advance hero carousel
   useEffect(() => {
     const id = setInterval(() => {
-      setCurrentSlide(s => (s + 1) % BANNERS.length);
+      setCurrentSlide(s => (s + 1) % HERO_SLIDES.length);
     }, 5500);
     return () => clearInterval(id);
   }, []);
@@ -57,25 +57,6 @@ export default function LandingPage() {
     : '';
   const docsUrl = `${apiBase || 'http://127.0.0.1:8000'}/docs`;
 
-  // Backend telemetry check
-  useEffect(() => {
-    const check = async () => {
-      try {
-        const r = await fetch(`${apiBase}/api/health`, { signal: AbortSignal.timeout(3500) });
-        if (r.ok) {
-          setApiStatus('online');
-        } else {
-          const fallbackR = await fetch(`${apiBase}/`, { signal: AbortSignal.timeout(2500) });
-          setApiStatus(fallbackR.ok ? 'online' : (isLocal ? 'offline' : 'online'));
-        }
-      } catch {
-        setApiStatus(isLocal ? 'offline' : 'online');
-      }
-    };
-    check();
-    const id = setInterval(check, 10000);
-    return () => clearInterval(id);
-  }, [apiBase, isLocal]);
 
 
   const scrollToSection = (id: string) => {
@@ -85,8 +66,6 @@ export default function LandingPage() {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
-
-  const currentNotice = NOTICES[noticeIdx];
 
   return (
     <div className="bg-gray-100 font-sans text-slate-800 relative min-h-screen">
@@ -114,18 +93,34 @@ export default function LandingPage() {
             <Link to="/gov/register" onClick={() => setDrawerOpen(false)} className="hover:text-blue-400 transition-colors text-sm font-bold text-blue-400">Officer Registration</Link>
             <Link to="/vendor/login" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold text-amber-400">Vendor Login</Link>
             <Link to="/vendor/register" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold text-amber-400">Vendor Registration</Link>
-            <button onClick={() => scrollToSection('about')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">About Us</button>
-            <button onClick={() => scrollToSection('gem2')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">GeM 2.0 Compliance Engine</button>
+            <button 
+              onClick={() => scrollToSection('architecture')} 
+              className="bg-transparent border-none text-amber-300 hover:text-amber-200 transition-colors text-sm font-bold cursor-pointer flex items-center gap-1.5"
+            >
+              <i className="fa-solid fa-diagram-project text-xs" />
+              <span>Operational Architecture</span>
+            </button>
             <button 
               onClick={() => {
                 setDrawerOpen(false);
                 setAboutModalTab('sector_faq');
                 setAboutModalOpen(true);
               }} 
-              className="bg-transparent border-none text-amber-300 hover:text-amber-200 transition-colors text-sm font-bold cursor-pointer flex items-center gap-1.5"
+              className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer flex items-center gap-1.5"
             >
               <i className="fa-solid fa-book-bookmark text-xs" />
               <span>Sector Regulatory Dossier</span>
+            </button>
+            <button 
+              onClick={() => {
+                setDrawerOpen(false);
+                setTicketModalTab('raise');
+                setTicketModalOpen(true);
+              }} 
+              className="bg-transparent border-none text-emerald-300 hover:text-emerald-200 transition-colors text-sm font-bold cursor-pointer flex items-center gap-1.5"
+            >
+              <i className="fa-solid fa-ticket text-xs" />
+              <span>Clarification Ticket</span>
             </button>
             <button onClick={() => scrollToSection('initiatives')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">Our Initiatives</button>
             <button onClick={() => scrollToSection('statistics')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">Live Statistics</button>
@@ -137,9 +132,10 @@ export default function LandingPage() {
         
         <div style={{ height: '3px', background: 'linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%)' }} />
 
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4 relative">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           
-          <div className="flex items-center gap-3 shrink-0 z-10">
+          {/* Left Side: Menu Option + Logo & Writing */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             <button 
               onClick={() => setDrawerOpen(true)} 
               className="p-1.5 text-white hover:text-amber-400 focus:outline-none cursor-pointer border-none bg-transparent flex items-center gap-2" 
@@ -150,10 +146,10 @@ export default function LandingPage() {
               </svg>
               <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider text-slate-300">Menu</span>
             </button>
-          </div>
 
-          <div className="absolute left-1/2 -translate-x-1/2 md:static md:translate-x-0 flex items-center justify-center z-0">
-            <Link to="/" className="flex items-center gap-3">
+            <div className="h-6 w-[1px] bg-slate-700 hidden sm:block" />
+
+            <Link to="/" className="flex items-center gap-2.5 sm:gap-3">
               <img 
                 src="./images/logoclone1.png" 
                 alt="GeM Logo" 
@@ -163,10 +159,10 @@ export default function LandingPage() {
                 }}
               />
               <div className="flex flex-col">
-                <span className="font-extrabold text-sm sm:text-base text-white tracking-tight leading-tight">
+                <span className="font-extrabold text-sm sm:text-base text-white tracking-tight leading-tight whitespace-nowrap">
                   GEM 2.0 COMPLIANCE PORTAL
                 </span>
-                <span className="text-[10px] text-amber-400 font-medium tracking-wider">
+                <span className="text-[10px] text-amber-400 font-medium tracking-wider whitespace-nowrap hidden sm:inline">
                   Automated Bidder Compliance &amp; Verification Suite
                 </span>
               </div>
@@ -214,73 +210,65 @@ export default function LandingPage() {
           <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-[11px] font-bold tracking-wider text-slate-100 uppercase">
             <div className="flex items-center space-x-6 overflow-x-auto py-1">
               <Link to="/" className="hover:text-amber-400 transition-colors text-amber-400">Home</Link>
-              <button onClick={() => scrollToSection('about')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">About Us</button>
-              <button onClick={() => scrollToSection('gem2')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">GeM 2.0 Platform</button>
+              <button 
+                onClick={() => scrollToSection('architecture')} 
+                className="bg-transparent border-none text-amber-300 hover:text-amber-200 transition-colors uppercase font-bold text-[11px] cursor-pointer flex items-center gap-1.5"
+              >
+                <i className="fa-solid fa-diagram-project text-[10px]" />
+                <span>Operational Architecture</span>
+              </button>
               <button 
                 onClick={() => {
                   setAboutModalTab('sector_faq');
                   setAboutModalOpen(true);
                 }} 
-                className="bg-transparent border-none text-amber-300 hover:text-amber-200 transition-colors uppercase font-bold text-[11px] cursor-pointer flex items-center gap-1.5"
+                className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer flex items-center gap-1.5"
               >
                 <i className="fa-solid fa-book-bookmark text-[10px]" />
-                <span>Sector Regulatory Dossier</span>
+                <span>Regulatory FAQ Dossier</span>
               </button>
               <button onClick={() => scrollToSection('initiatives')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">Our Initiatives</button>
               <button onClick={() => scrollToSection('portals')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">Portals Gateway</button>
               <button onClick={() => scrollToSection('statistics')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">Statistics</button>
             </div>
-            <div className="hidden lg:flex items-center gap-2 text-slate-400 text-[10px] lowercase">
-              <i className="fa-solid fa-bolt text-amber-400" />
-              <span>automated 14-point compliance engine active</span>
-            </div>
           </div>
         </div>
 
-        <section className="bg-slate-950 py-1.5 px-4 w-full border-t border-slate-800">
-          <div className="max-w-7xl mx-auto flex items-center overflow-hidden text-xs">
-            <div className="inline-flex items-center gap-3 whitespace-nowrap">
-              <span className="bg-amber-500 text-slate-950 font-bold text-[10px] px-2 py-0.5 rounded uppercase shrink-0">
-                {currentNotice.tag}
-              </span>
-              <span className="text-slate-300 shrink-0 text-xs">
-                {currentNotice.desc}
-              </span>
-            </div>
-          </div>
-        </section>
-
       </header>
 
-      <section className="relative w-full overflow-hidden bg-slate-900 group h-[300px] sm:h-[400px] md:h-[500px] lg:h-[calc(100vh-180px)] min-h-[420px]">
+      <section className="relative w-full overflow-hidden bg-slate-950 group h-[440px] sm:h-[480px] md:h-[520px] lg:h-[560px] min-h-[420px]">
         
         <div 
           className="relative w-full h-full flex transition-transform duration-700 ease-in-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
-          {BANNERS.map((bannerSrc, idx) => (
+          {HERO_SLIDES.map((slide, idx) => (
             <div key={idx} className="w-full min-w-full h-full flex-shrink-0 relative">
               <img 
-                src={bannerSrc} 
-                alt={`GeM Hero Banner ${idx + 1}`} 
-                className="w-full h-full object-cover object-top"
+                src={slide.image} 
+                alt={slide.title} 
+                className="w-full h-full object-cover object-center"
+                style={{
+                  maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0.5) 85%, rgba(0,0,0,0) 100%)',
+                  WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 60%, rgba(0,0,0,0.5) 85%, rgba(0,0,0,0) 100%)',
+                }}
                 onError={(e) => {
                   // Fallback gradient if banner image not found
                   (e.target as HTMLElement).style.display = 'none';
                 }}
               />
               
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/50 to-transparent flex items-center">
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/95 via-slate-950/75 to-slate-950/30 flex items-center">
                 <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
-                  <div className="max-w-xl">
+                  <div className="max-w-xl pb-10 sm:pb-12">
                     <span className="bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4 inline-block">
-                      Smart India Hackathon 2026
+                      {slide.tag}
                     </span>
                     <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white leading-tight mb-4 drop-shadow-md">
-                      GEM 2.0 COMPLIANCE PORTAL
+                      {slide.title}
                     </h1>
                     <p className="text-slate-200 text-xs sm:text-sm md:text-base leading-relaxed mb-6 drop-shadow">
-                      Automated 14-point AI verification across 7+ Government Portals, GSTN, CBDT, MSME Udyam, MII Local Content, and CAG Cryptographic Merkle Ledger.
+                      {slide.desc}
                     </p>
                     <div className="flex flex-wrap gap-2.5 sm:gap-3">
                       <Link 
@@ -315,23 +303,26 @@ export default function LandingPage() {
           ))}
         </div>
 
+        {/* Seamless bottom fade blending into the page background */}
+        <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent pointer-events-none z-10" />
+
         <button 
-          onClick={() => setCurrentSlide(s => (s - 1 + BANNERS.length) % BANNERS.length)}
+          onClick={() => setCurrentSlide(s => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
           className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full w-11 h-11 cursor-pointer transition focus:outline-none z-30 flex items-center justify-center border-none"
           aria-label="Previous Slide"
         >
           <i className="fa-solid fa-chevron-left text-lg" />
         </button>
         <button 
-          onClick={() => setCurrentSlide(s => (s + 1) % BANNERS.length)}
+          onClick={() => setCurrentSlide(s => (s + 1) % HERO_SLIDES.length)}
           className="absolute top-1/2 right-4 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full w-11 h-11 cursor-pointer transition focus:outline-none z-30 flex items-center justify-center border-none"
           aria-label="Next Slide"
         >
           <i className="fa-solid fa-chevron-right text-lg" />
         </button>
 
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 z-30">
-          {BANNERS.map((_, idx) => (
+        <div className="absolute bottom-16 sm:bottom-20 md:bottom-24 left-1/2 -translate-x-1/2 flex items-center gap-2 z-20">
+          {HERO_SLIDES.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentSlide(idx)}
@@ -344,101 +335,111 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <main className="w-full bg-white text-slate-800 pb-16">
+      <main className="w-full bg-gradient-to-b from-slate-950 via-slate-900/10 to-gray-50 text-slate-800 pb-16 relative">
         
-        <section id="about" className="max-w-7xl mx-auto px-4 pt-10 sm:pt-14 relative z-20 text-slate-800">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+        {/* Four Cards Grid: Overlaps blended banner edge with minimized vertical space */}
+        <section id="about" className="max-w-7xl mx-auto px-4 -mt-12 sm:-mt-16 md:-mt-20 relative z-30 text-slate-800">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 items-stretch">
             
+            {/* Box 1: About GeM Public Procurement */}
             <div 
               onClick={() => { setAboutModalTab('overview'); setAboutModalOpen(true); }}
-              className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative cursor-pointer"
+              className="bg-white/95 backdrop-blur-md rounded-2xl p-6 border border-slate-200/80 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative cursor-pointer"
             >
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-500" />
+              <div className="absolute -top-10 -right-10 w-28 h-28 bg-amber-500/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-500" />
               <div>
-                <div className="w-12 h-12 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-600 mb-6 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors duration-300">
-                  <i className="fa-solid fa-circle-info text-xl" />
+                <div className="w-11 h-11 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-600 mb-4 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors duration-300">
+                  <i className="fa-solid fa-circle-info text-lg" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3 tracking-tight">About GeM Public Procurement</h2>
-                <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                  Government e-Marketplace (GeM) is the National Public Procurement Portal of India. It facilitates end-to-end online procurement of goods and services for Central &amp; State Ministries, PSUs, and local bodies transparently, efficiently, and inclusively.
+                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">About GeM Public Procurement</h2>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Government e-Marketplace (GeM) is the National Public Procurement Portal of India, facilitating transparent, GFR-compliant online procurement for Ministries &amp; PSUs.
                 </p>
-                <div className="flex items-center gap-4 text-xs font-semibold text-slate-500">
-                  <span><i className="fa-solid fa-check text-emerald-500 mr-1" /> Transparent</span>
-                  <span><i className="fa-solid fa-check text-emerald-500 mr-1" /> GFR 144 Aligned</span>
-                  <span><i className="fa-solid fa-check text-emerald-500 mr-1" /> National Reach</span>
+                <div className="flex flex-wrap gap-1.5 text-[11px] font-semibold text-slate-500 mb-2">
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> Transparent</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> GFR 144</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> All-India</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold text-amber-600 group-hover:text-amber-700 transition-colors mt-6">
+              <div className="flex items-center gap-2 text-xs font-bold text-amber-600 group-hover:text-amber-700 transition-colors pt-3 border-t border-slate-100 mt-2">
                 LEARN MORE <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
+            {/* Box 2: GeM 2.0 Compliance Engine */}
             <div 
               id="gem2" 
-              onClick={() => { setAboutModalTab('gem2_engine'); setAboutModalOpen(true); }}
-              className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative cursor-pointer"
+              onClick={() => { setAboutModalTab('compliance_suite'); setAboutModalOpen(true); }}
+              className="bg-white/95 backdrop-blur-md rounded-2xl p-6 border border-slate-200/80 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative cursor-pointer"
             >
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-500" />
+              <div className="absolute -top-10 -right-10 w-28 h-28 bg-blue-500/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-500" />
               <div>
-                <div className="w-12 h-12 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-600 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
-                  <i className="fa-solid fa-laptop-code text-xl" />
+                <div className="w-11 h-11 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                  <i className="fa-solid fa-laptop-code text-lg" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3 tracking-tight">GeM 2.0 Compliance Engine</h2>
-                <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                  GeM 2.0 introduces automated multi-portal verification: direct API handshakes with GSTN, MCA-21, CBDT, MSME Udyam, EPFO/ESIC, DigiLocker, and CPPP Debarment databases to eliminate tender fraud and collusion.
+                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">GeM 2.0 Compliance Engine</h2>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Automated multi-portal verification: direct API handshakes with GSTN, MCA-21, CBDT, MSME Udyam, EPFO, and CPPP to eliminate tender fraud and bid collusion.
                 </p>
-                <div className="flex items-center gap-4 text-xs font-semibold text-slate-500">
-                  <span><i className="fa-solid fa-check text-blue-500 mr-1" /> 7+ Sovereign Gateways</span>
-                  <span><i className="fa-solid fa-check text-blue-500 mr-1" /> AI Discrepancy Scanner</span>
-                  <span><i className="fa-solid fa-check text-blue-500 mr-1" /> CAG Merkle Ledger</span>
+                <div className="flex flex-wrap gap-1.5 text-[11px] font-semibold text-slate-500 mb-2">
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-blue-500 mr-1" /> 7+ Gateways</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-blue-500 mr-1" /> AI Scanner</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-blue-500 mr-1" /> CAG Ledger</span>
                 </div>
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold text-blue-600 group-hover:text-blue-700 transition-colors mt-6">
-                EXPLORE COMPLIANCE SUITE <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
+              <div className="flex items-center gap-2 text-xs font-bold text-blue-600 group-hover:text-blue-700 transition-colors pt-3 border-t border-slate-100 mt-2">
+                EXPLORE SUITE <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
-          </div>
-        </section>
-
-        <section id="initiatives" className="max-w-7xl mx-auto px-4 py-12 text-slate-800">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-            
+            {/* Box 3: Sovereign Initiatives & MSME Focus */}
             <div 
+              id="initiatives" 
               onClick={() => { setAboutModalTab('msme_mii'); setAboutModalOpen(true); }}
-              className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative cursor-pointer"
+              className="bg-white/95 backdrop-blur-md rounded-2xl p-6 border border-slate-200/80 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative cursor-pointer"
             >
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-500" />
+              <div className="absolute -top-10 -right-10 w-28 h-28 bg-emerald-500/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-500" />
               <div>
-                <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-600 mb-6 group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
-                  <i className="fa-solid fa-lightbulb text-xl" />
+                <div className="w-11 h-11 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-600 mb-4 group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
+                  <i className="fa-solid fa-lightbulb text-lg" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-4 tracking-tight">Sovereign Initiatives &amp; MSME Focus</h2>
-                <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                  From supporting Micro &amp; Small Enterprises through mandatory 25% public procurement targets, to fostering Start-up Runway innovations and Make-in-India (MII) Class-I preferences, we ensure inclusive growth.
+                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">Sovereign Initiatives &amp; MSME</h2>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Supporting Micro &amp; Small Enterprises via mandatory 25% public procurement quota, Start-up Runway innovations, and Make-in-India Class-I preferences.
                 </p>
+                <div className="flex flex-wrap gap-1.5 text-[11px] font-semibold text-slate-500 mb-2">
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> 25% MSME</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> MII Class-I</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> Startups</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 group-hover:text-emerald-700 transition-colors">
-                VIEW MSME &amp; STARTUP POLICIES <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 group-hover:text-emerald-700 transition-colors pt-3 border-t border-slate-100 mt-2">
+                VIEW POLICIES <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
+            {/* Box 4: 14-Point Automated Verification Framework */}
             <div 
               onClick={() => { setAboutModalTab('gem2_engine'); setAboutModalOpen(true); }}
-              className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-sm hover:shadow-md hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative cursor-pointer"
+              className="bg-white/95 backdrop-blur-md rounded-2xl p-6 border border-slate-200/80 shadow-lg hover:shadow-2xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between group overflow-hidden relative cursor-pointer"
             >
-              <div className="absolute -top-10 -right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-500" />
+              <div className="absolute -top-10 -right-10 w-28 h-28 bg-purple-500/10 rounded-full blur-2xl group-hover:scale-150 transition-all duration-500" />
               <div>
-                <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-600 mb-6 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
-                  <i className="fa-solid fa-shield-halved text-xl" />
+                <div className="w-11 h-11 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-600 mb-4 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
+                  <i className="fa-solid fa-shield-halved text-lg" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mb-4 tracking-tight">14-Point Automated Verification Framework</h2>
-                <p className="text-sm text-slate-600 leading-relaxed mb-6">
-                  Automated checks for Tax (GST), Company (MCA), PAN, Small Business (MSME), Worker Welfare (EPFO/ESI), Local Manufacturing (Make in India), Document Authenticity, and Fair Blind Grading.
+                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">14-Point Automated Framework</h2>
+                <p className="text-xs text-slate-600 leading-relaxed mb-4">
+                  Automated checks for Tax (GST), Company (MCA), PAN, MSME, EPFO/ESI, Local Content, Document Authenticity, and Fair Double-Blind Grading.
                 </p>
+                <div className="flex flex-wrap gap-1.5 text-[11px] font-semibold text-slate-500 mb-2">
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-purple-500 mr-1" /> 14 Checks</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-purple-500 mr-1" /> Double-Blind</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-purple-500 mr-1" /> 0 Bias</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 text-xs font-bold text-purple-600 group-hover:text-purple-700 transition-colors">
-                VIEW ALL 14 IMPLEMENTED CHECKS <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
+              <div className="flex items-center gap-2 text-xs font-bold text-purple-600 group-hover:text-purple-700 transition-colors pt-3 border-t border-slate-100 mt-2">
+                VIEW ALL CHECKS <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
@@ -580,91 +581,22 @@ export default function LandingPage() {
 
           </div>
 
-          <div className="mt-10 flex justify-center">
-            <div className={`inline-flex items-center gap-2.5 rounded-full px-5 py-2.5 text-xs font-semibold border shadow-sm transition-colors ${
-              apiStatus === 'online' 
-                ? 'bg-emerald-50 border-emerald-200 text-emerald-800' 
-                : apiStatus === 'offline' 
-                ? 'bg-red-50 border-red-200 text-red-700' 
-                : 'bg-slate-100 border-slate-200 text-slate-600'
-            }`}>
-              <span className={`w-2.5 h-2.5 rounded-full inline-block ${
-                apiStatus === 'online' ? 'bg-emerald-500 animate-pulse' : apiStatus === 'offline' ? 'bg-red-500' : 'bg-slate-400'
-              }`} />
-              <span>
-                {apiStatus === 'online'
-                  ? (isLocal ? 'FastAPI Engine Online — Shared Relational Store Connected' : 'FastAPI Sovereign Engine Online — Live Supabase Connected')
-                  : apiStatus === 'offline'
-                  ? (isLocal ? 'Backend Server Offline — Run: python run_all.py' : 'Cloud Sovereign Engine Active (Supabase Relational Bridge)')
-                  : 'Pinging Sovereign Engine...'}
-              </span>
-              <a 
-                href={docsUrl} 
-                target="_blank" 
-                rel="noreferrer" 
-                className="ml-2 font-bold underline hover:opacity-80 text-amber-700"
-              >
-                API Swagger Docs ↗
-              </a>
-            </div>
-          </div>
         </section>
 
-        {/* Sector-Wise Comprehensive Procurement Regulatory Dossier Gateway */}
-        <section id="faq" className="py-12 bg-slate-50 border-t border-slate-200">
+        {/* GeM 2.0 End-to-End Operational Architecture in Simple Words & Stepwise with Photos */}
+        <section id="architecture" className="py-16 bg-slate-50 border-t border-slate-200 scroll-mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-white rounded-2xl p-8 sm:p-10 border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col lg:flex-row items-center justify-between gap-8">
-              
-              <div className="space-y-3 max-w-2xl text-center lg:text-left">
-                <div className="inline-flex items-center gap-2 text-[11px] font-bold text-sky-800 uppercase tracking-widest bg-sky-50 px-3 py-1 rounded-full border border-sky-200">
-                  <i className="fa-solid fa-book-bookmark text-sky-600" />
-                  <span>Public Procurement Regulatory Dossier</span>
-                </div>
-                <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                  Sector-Wise Knowledge Base &amp; Regulatory FAQ Dossier
-                </h2>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Access official statutory guidelines, GFR 2017 &amp; PPP-MII citations, MSME concessions, OEM authorization rules, civil contractor capacity formulas, and CAG audit protocols in an authenticated interactive dossier.
-                </p>
-                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-2 text-xs">
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold border border-slate-200">
-                    🏢 MSME &amp; Startups (25% Quota)
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold border border-slate-200">
-                    🏭 OEMs &amp; Make-in-India (Class-I)
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold border border-slate-200">
-                    🏗️ Civil &amp; Works Contractors
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold border border-slate-200">
-                    🏛️ Procurement Officers &amp; Buyers
-                  </span>
-                  <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700 font-semibold border border-slate-200">
-                    🛡️ CAG Anti-Cartel Vigilance
-                  </span>
-                </div>
-              </div>
-
-              <div className="shrink-0 flex flex-col items-center lg:items-end gap-3">
-                <button
-                  onClick={() => {
-                    setAboutModalTab('sector_faq');
-                    setAboutModalOpen(true);
-                  }}
-                  className="bg-[#002855] hover:bg-[#003B7A] text-white font-bold px-7 py-3.5 rounded-xl text-sm transition-all shadow-md hover:shadow-lg flex items-center gap-2.5 cursor-pointer hover:scale-[1.02]"
-                >
-                  <i className="fa-solid fa-folder-open text-amber-400 text-base" />
-                  <span>Open Sector Regulatory Dossier</span>
-                  <i className="fa-solid fa-arrow-right text-xs" />
-                </button>
-                <span className="text-[11px] text-slate-500 font-medium">
-                  Publicly open for review by Vendors, Buyers &amp; Citizens
-                </span>
-              </div>
-
-            </div>
+            <OperationalArchitecture
+              onOpenFaqDossier={() => {
+                setAboutModalTab('sector_faq');
+                setAboutModalOpen(true);
+              }}
+            />
           </div>
         </section>
+
+        {/* Alias anchor for backward compatibility */}
+        <div id="faq" />
 
       </main>
 
@@ -673,15 +605,27 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-10 border-b border-slate-800">
 
+            {/* Column 1: Statutory & Policy Framework */}
             <div className="bg-slate-950/60 p-6 rounded-xl border border-slate-800 flex flex-col text-center">
-              <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-wider">Web Info &amp; Terms</h3>
+              <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-wider flex items-center justify-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-400 inline-block" />
+                <span>Statutory &amp; Policy Mandates</span>
+              </h3>
               <ul className="space-y-2.5 text-xs text-slate-300">
                 <li>
                   <button 
                     onClick={() => { setAboutModalTab('gfr_rules'); setAboutModalOpen(true); }}
                     className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
                   >
-                    Terms of Use &amp; GFR Rules
+                    GFR 2017 &bull; Rule 149 Legal Framework
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => { setAboutModalTab('procurement_modes'); setAboutModalOpen(true); }}
+                    className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
+                  >
+                    Public Procurement Modes (L1 / RA)
                   </button>
                 </li>
                 <li>
@@ -689,7 +633,33 @@ export default function LandingPage() {
                     onClick={() => { setAboutModalTab('overview'); setAboutModalOpen(true); }}
                     className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
                   >
-                    Website Policy &amp; Security Standards
+                    GeM SPV Governance &amp; Genesis
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => { setAboutModalTab('security_cert'); setAboutModalOpen(true); }}
+                    className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
+                  >
+                    STQC &amp; ISO 27001 Security Architecture
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            {/* Column 2: GeM 2.0 Compliance Suite */}
+            <div className="bg-slate-950/60 p-6 rounded-xl border border-slate-800 flex flex-col text-center">
+              <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-wider flex items-center justify-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 inline-block" />
+                <span>GeM 2.0 Compliance</span>
+              </h3>
+              <ul className="space-y-2.5 text-xs text-slate-300">
+                <li>
+                  <button 
+                    onClick={() => { setAboutModalTab('compliance_suite'); setAboutModalOpen(true); }}
+                    className="hover:text-cyan-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs font-medium"
+                  >
+                    GeM 2.0 Compliance Engine Suite
                   </button>
                 </li>
                 <li>
@@ -697,31 +667,51 @@ export default function LandingPage() {
                     onClick={() => { setAboutModalTab('gem2_engine'); setAboutModalOpen(true); }}
                     className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
                   >
-                    Document Verification Guidelines
+                    Automated 14-Point AI Verification
                   </button>
                 </li>
-              </ul>
-            </div>
-
-            <div className="bg-slate-950/60 p-6 rounded-xl border border-slate-800 flex flex-col text-center">
-              <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-wider">GeM 2.0 Compliance</h3>
-              <ul className="space-y-2.5 text-xs text-slate-300">
-                <li><Link to="/vendor" className="hover:text-amber-400 transition-colors">Vendor Compliance Vault</Link></li>
                 <li>
                   <button 
                     onClick={() => { setAboutModalTab('msme_mii'); setAboutModalOpen(true); }}
                     className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
                   >
-                    MSE &amp; Make in India Policy
+                    MSE 25% Preference &amp; Make in India (PPP-MII)
                   </button>
                 </li>
-                <li><a href={docsUrl} target="_blank" rel="noreferrer" className="hover:text-amber-400 transition-colors">Swagger API Documentation</a></li>
+                <li>
+                  <button 
+                    onClick={() => { setAboutModalTab('procurement_modes'); setAboutModalOpen(true); }}
+                    className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
+                  >
+                    Double-Blind Vault &amp; Anti-Cartel Shield
+                  </button>
+                </li>
+                <li>
+                  <button 
+                    onClick={() => { setAboutModalTab('audit_ledger'); setAboutModalOpen(true); }}
+                    className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
+                  >
+                    CAG Sovereign Cryptographic Audit Ledger
+                  </button>
+                </li>
               </ul>
             </div>
 
+            {/* Column 3: Helpdesk & Grievance Redressal */}
             <div className="bg-slate-950/60 p-6 rounded-xl border border-slate-800 flex flex-col text-center">
-              <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-wider">Helpdesk &amp; Support</h3>
+              <h3 className="text-white font-bold mb-4 uppercase text-xs tracking-wider flex items-center justify-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                <span>Helpdesk &amp; Support</span>
+              </h3>
               <ul className="space-y-2.5 text-xs text-slate-300">
+                <li>
+                  <button 
+                    onClick={() => scrollToSection('architecture')}
+                    className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
+                  >
+                    Operational Architecture (Step-by-Step)
+                  </button>
+                </li>
                 <li>
                   <button 
                     onClick={() => { setAboutModalTab('sector_faq'); setAboutModalOpen(true); }}
@@ -732,7 +722,7 @@ export default function LandingPage() {
                 </li>
                 <li>
                   <button 
-                    onClick={() => { setAboutModalTab('overview'); setAboutModalOpen(true); }}
+                    onClick={() => { setTicketModalTab('raise'); setTicketModalOpen(true); }}
                     className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
                   >
                     Raise a Compliance Clarification Ticket
@@ -740,10 +730,10 @@ export default function LandingPage() {
                 </li>
                 <li>
                   <button 
-                    onClick={() => { setAboutModalTab('gem2_engine'); setAboutModalOpen(true); }}
-                    className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
+                    onClick={() => { setTicketModalTab('track'); setTicketModalOpen(true); }}
+                    className="hover:text-emerald-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
                   >
-                    CAG Cryptographic Audit Verification
+                    Track Live Ticket Status &amp; SLA Resolution
                   </button>
                 </li>
               </ul>
@@ -809,7 +799,7 @@ export default function LandingPage() {
                 <div className="p-3 space-y-1 text-xs">
                   <div className="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center justify-between">
                     <span>Dossier Chapters</span>
-                    <span className="bg-sky-100 text-sky-800 px-1.5 py-0.2 rounded font-mono font-bold text-[9px]">8 Sections</span>
+                    <span className="bg-sky-100 text-sky-800 px-1.5 py-0.2 rounded font-mono font-bold text-[9px]">10 Sections</span>
                   </div>
 
                   <button
@@ -881,6 +871,23 @@ export default function LandingPage() {
                   </button>
 
                   <button
+                    onClick={() => setAboutModalTab('compliance_suite')}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
+                      aboutModalTab === 'compliance_suite'
+                        ? 'bg-[#002855] text-white border-[#002855] shadow-xs ring-1 ring-cyan-400/50'
+                        : 'bg-transparent text-slate-700 hover:bg-slate-200/70 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-microchip ${aboutModalTab === 'compliance_suite' ? 'text-cyan-300' : 'text-blue-600'}`} />
+                      <span className="font-bold">5. GeM 2.0 Compliance Suite</span>
+                    </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-bold ${
+                      aboutModalTab === 'compliance_suite' ? 'bg-cyan-500 text-slate-950' : 'bg-blue-100 text-blue-800'
+                    }`}>Suite</span>
+                  </button>
+
+                  <button
                     onClick={() => setAboutModalTab('gem2_engine')}
                     className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
                       aboutModalTab === 'gem2_engine'
@@ -889,8 +896,8 @@ export default function LandingPage() {
                     }`}
                   >
                     <div className="flex items-center gap-2.5">
-                      <i className={`fa-solid fa-microchip ${aboutModalTab === 'gem2_engine' ? 'text-cyan-300' : 'text-slate-500'}`} />
-                      <span>5. 14 Verification Checks</span>
+                      <i className={`fa-solid fa-list-check ${aboutModalTab === 'gem2_engine' ? 'text-amber-300' : 'text-slate-500'}`} />
+                      <span>6. 14 Verification Checks</span>
                     </div>
                     <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
                       aboutModalTab === 'gem2_engine' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
@@ -907,7 +914,7 @@ export default function LandingPage() {
                   >
                     <div className="flex items-center gap-2.5">
                       <i className={`fa-solid fa-cubes-stacked ${aboutModalTab === 'audit_ledger' ? 'text-amber-400' : 'text-slate-500'}`} />
-                      <span>6. CAG Cryptographic Audit</span>
+                      <span>7. CAG Cryptographic Audit</span>
                     </div>
                     <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
                       aboutModalTab === 'audit_ledger' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
@@ -924,7 +931,7 @@ export default function LandingPage() {
                   >
                     <div className="flex items-center gap-2.5">
                       <i className={`fa-solid fa-shield-check ${aboutModalTab === 'security_cert' ? 'text-emerald-300' : 'text-slate-500'}`} />
-                      <span>7. Security &amp; STQC Audit</span>
+                      <span>8. Security &amp; STQC Audit</span>
                     </div>
                     <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
                       aboutModalTab === 'security_cert' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
@@ -941,11 +948,28 @@ export default function LandingPage() {
                   >
                     <div className="flex items-center gap-2.5">
                       <i className={`fa-solid fa-book-bookmark ${aboutModalTab === 'sector_faq' ? 'text-amber-400' : 'text-slate-500'}`} />
-                      <span>8. Sector Regulatory FAQs</span>
+                      <span>9. Sector Regulatory FAQs</span>
                     </div>
                     <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
                       aboutModalTab === 'sector_faq' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
                     }`}>FAQ</span>
+                  </button>
+
+                  <button
+                    onClick={() => setAboutModalTab('operational_arch')}
+                    className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl font-semibold text-left transition-all cursor-pointer border ${
+                      aboutModalTab === 'operational_arch'
+                        ? 'bg-[#002855] text-white border-[#002855] shadow-xs'
+                        : 'bg-transparent text-slate-700 hover:bg-slate-200/70 border-transparent'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <i className={`fa-solid fa-diagram-project ${aboutModalTab === 'operational_arch' ? 'text-amber-400' : 'text-slate-500'}`} />
+                      <span>10. Operational Architecture</span>
+                    </div>
+                    <span className={`text-[9px] px-1.5 py-0.2 rounded font-mono ${
+                      aboutModalTab === 'operational_arch' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                    }`}>6-Step</span>
                   </button>
                 </div>
 
@@ -1195,11 +1219,206 @@ export default function LandingPage() {
                   </div>
                 )}
 
+                {aboutModalTab === 'compliance_suite' && (
+                  <div className="space-y-6 animate-fadeIn">
+                    {/* Top Hero Banner */}
+                    <div className="bg-gradient-to-r from-[#002855] via-slate-900 to-sky-950 text-white p-6 rounded-2xl border border-sky-800 shadow-xl relative overflow-hidden">
+                      <div className="absolute -top-16 -right-16 w-56 h-56 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+                      <div className="relative z-10">
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-cyan-300 bg-cyan-950/80 px-2.5 py-0.5 rounded border border-cyan-800">
+                            Chapter 5 • Automated Verification Engine
+                          </span>
+                          <span className="text-[10px] uppercase font-bold tracking-wider text-amber-400 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800">
+                            Smart India Hackathon 2026
+                          </span>
+                          <span className="text-[10px] text-slate-300 bg-white/10 px-2 py-0.5 rounded">
+                            SLA: &lt; 50ms Response
+                          </span>
+                        </div>
+                        <h4 className="text-xl sm:text-2xl font-black text-white tracking-tight mb-2">
+                          GeM 2.0 Compliance Engine &amp; Architecture Suite
+                        </h4>
+                        <p className="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-3xl">
+                          The central integrity core of sovereign public procurement. It replaces slow manual scrutiny with real-time API integrations across 7+ Central Sovereign Databases, an AI Discrepancy &amp; Risk Scoring Engine, a Double-Blind Sealed Cryptographic Bid Vault, and an immutable CAG Merkle Audit Ledger.
+                        </p>
+
+                        {/* Direct Action Hub */}
+                        <div className="mt-5 pt-4 border-t border-sky-800/80 flex flex-wrap items-center gap-3">
+                          <Link 
+                            to="/gov/login"
+                            onClick={() => setAboutModalOpen(false)}
+                            className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-lg transition-all shadow hover:scale-105 flex items-center gap-1.5"
+                          >
+                            <i className="fa-solid fa-lock" /> Launch Officer Workspace
+                          </Link>
+                          <Link 
+                            to="/vendor/login"
+                            onClick={() => setAboutModalOpen(false)}
+                            className="bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold px-4 py-2 rounded-lg transition-all shadow hover:scale-105 flex items-center gap-1.5"
+                          >
+                            <i className="fa-solid fa-store" /> Launch Vendor Vault
+                          </Link>
+                          <button
+                            onClick={() => setAboutModalTab('gem2_engine')}
+                            className="bg-white/10 hover:bg-white/20 text-cyan-200 border border-cyan-500/40 text-xs font-bold px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-1.5"
+                          >
+                            <i className="fa-solid fa-list-check" /> View 14 Automated Checks Table
+                          </button>
+                          <button
+                            onClick={() => {
+                              setAboutModalOpen(false);
+                              scrollToSection('architecture');
+                            }}
+                            className="bg-white/10 hover:bg-white/20 text-slate-200 border border-white/20 text-xs font-bold px-4 py-2 rounded-lg transition-all cursor-pointer flex items-center gap-1.5"
+                          >
+                            <i className="fa-solid fa-diagram-project" /> Operational Step-by-Step
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Visual End-to-End Pipeline */}
+                    <div className="bg-slate-900 text-white p-5 rounded-2xl border border-slate-800 shadow-md">
+                      <div className="flex items-center justify-between mb-4">
+                        <span className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-2">
+                          <i className="fa-solid fa-network-wired" /> Automated Compliance Verification Pipeline
+                        </span>
+                        <span className="text-[10px] text-slate-400 font-mono">100% Zero-Touch Scrutiny</span>
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+                        <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex flex-col justify-between">
+                          <div className="text-[10px] text-amber-400 font-bold mb-1">STAGE 01</div>
+                          <div className="font-bold text-white text-xs mb-1">DigiLocker OCR Vault</div>
+                          <p className="text-[11px] text-slate-400">Instant extraction of PAN, Incorporation, MSME &amp; ITR from official lockers.</p>
+                        </div>
+                        <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex flex-col justify-between">
+                          <div className="text-[10px] text-sky-400 font-bold mb-1">STAGE 02</div>
+                          <div className="font-bold text-white text-xs mb-1">7+ Sovereign APIs</div>
+                          <p className="text-[11px] text-slate-400">Live sub-50ms handshakes with GSTN, MCA-21, CBDT, Udyam, EPFO &amp; CPPP.</p>
+                        </div>
+                        <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex flex-col justify-between">
+                          <div className="text-[10px] text-purple-400 font-bold mb-1">STAGE 03</div>
+                          <div className="font-bold text-white text-xs mb-1">AI Discrepancy Engine</div>
+                          <p className="text-[11px] text-slate-400">Cross-checks turnover, flags anomalous bids, and detects cartel rings.</p>
+                        </div>
+                        <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex flex-col justify-between">
+                          <div className="text-[10px] text-emerald-400 font-bold mb-1">STAGE 04</div>
+                          <div className="font-bold text-white text-xs mb-1">Double-Blind Vault</div>
+                          <p className="text-[11px] text-slate-400">Bid sealed under SHA-256; bidder masked as VEN-ANON during tech scoring.</p>
+                        </div>
+                        <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex flex-col justify-between">
+                          <div className="text-[10px] text-rose-400 font-bold mb-1">STAGE 05</div>
+                          <div className="font-bold text-white text-xs mb-1">CAG Merkle Ledger</div>
+                          <p className="text-[11px] text-slate-400">Dual-key unsealing ceremony committed to immutable SHA-256 ledger block.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 4 Deep-Dive Pillars */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                      {/* Pillar 1: 7+ Sovereign Gateways */}
+                      <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                          <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-lg mb-3">
+                            <i className="fa-solid fa-server" />
+                          </div>
+                          <h5 className="font-extrabold text-slate-900 text-sm mb-2">1. Seven Sovereign Database Gateways</h5>
+                          <p className="text-slate-600 leading-relaxed mb-3">
+                            Eliminates paper certificates and fake CA turnover stamps through automated, server-to-server API connections:
+                          </p>
+                          <ul className="space-y-1.5 text-slate-700">
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-emerald-600 mt-0.5" /> <span><strong>GSTN Portal:</strong> Validates active GST status and verifies up-to-date GSTR-3B monthly filings.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-emerald-600 mt-0.5" /> <span><strong>MCA-21:</strong> Verifies Corporate Identity Number (CIN), active company status, and DIN disqualifications.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-emerald-600 mt-0.5" /> <span><strong>CBDT Tax Gateway:</strong> Validates PAN ownership and extracts 3-year verified annual financial turnover.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-emerald-600 mt-0.5" /> <span><strong>MSME Udyam:</strong> Confirms Micro/Small enterprise tier for automatic 25% purchase preference.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-emerald-600 mt-0.5" /> <span><strong>EPFO &amp; ESIC:</strong> Verifies employee statutory contributions and social security compliance.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-emerald-600 mt-0.5" /> <span><strong>CPPP &amp; CVC Debarment:</strong> Real-time cross-check against blacklisted suppliers nationwide.</span></li>
+                          </ul>
+                        </div>
+                        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-blue-700 font-semibold">
+                          <span>⚡ Average Verification Time: 42ms</span>
+                          <span className="bg-blue-50 px-2 py-0.5 rounded">Zero Fake Docs</span>
+                        </div>
+                      </div>
+
+                      {/* Pillar 2: AI Discrepancy & Risk Scoring Engine */}
+                      <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                          <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-lg mb-3">
+                            <i className="fa-solid fa-brain" />
+                          </div>
+                          <h5 className="font-extrabold text-slate-900 text-sm mb-2">2. AI Discrepancy &amp; Risk Scoring Engine</h5>
+                          <p className="text-slate-600 leading-relaxed mb-3">
+                            Autonomous ML algorithms compare multi-source declarations in seconds to identify hidden conflicts and bid manipulation:
+                          </p>
+                          <ul className="space-y-1.5 text-slate-700">
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-purple-600 mt-0.5" /> <span><strong>Turnover Cross-Validation:</strong> Flags any mismatch between vendor-claimed turnover and official ITR filings.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-purple-600 mt-0.5" /> <span><strong>Document Authenticity Scanner:</strong> Inspects uploaded PDF fonts, pixel compression artifacts, and digital signatures.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-purple-600 mt-0.5" /> <span><strong>Cartel &amp; Ring Detection:</strong> Analyzes submission timestamps, IP clustering, and shared director graphs.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-purple-600 mt-0.5" /> <span><strong>Composite Risk Banding:</strong> Computes an objective 0–100 Compliance Score: Low Risk (&ge;80), Moderate (50–79), High Risk (&lt;50).</span></li>
+                          </ul>
+                        </div>
+                        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-purple-700 font-semibold">
+                          <span>🛡️ 99.8% Detection Accuracy</span>
+                          <span className="bg-purple-50 px-2 py-0.5 rounded">Deterministic ML</span>
+                        </div>
+                      </div>
+
+                      {/* Pillar 3: Double-Blind Cryptographic Sealed Bid Vault */}
+                      <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                          <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-lg mb-3">
+                            <i className="fa-solid fa-key" />
+                          </div>
+                          <h5 className="font-extrabold text-slate-900 text-sm mb-2">3. Double-Blind Cryptographic Vault</h5>
+                          <p className="text-slate-600 leading-relaxed mb-3">
+                            Prevents officer bias, vendor favoritism, and price leaks with military-grade asymmetric encryption:
+                          </p>
+                          <ul className="space-y-1.5 text-slate-700">
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-amber-600 mt-0.5" /> <span><strong>Bidder Pseudonymization:</strong> Real identities are encrypted and replaced with masked codes (e.g. <code>VEN-ANON-7741</code>).</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-amber-600 mt-0.5" /> <span><strong>Envelope Encryption:</strong> Technical envelope and financial quote are locked in isolated cryptographic containers.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-amber-600 mt-0.5" /> <span><strong>Zero Price Leakage:</strong> Financial bids cannot be unlocked by anyone before the formal public opening deadline.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-amber-600 mt-0.5" /> <span><strong>Anti-Collusion Guarantee:</strong> Neutralizes cartel coordinators by preventing competitors from discovering participating bidders.</span></li>
+                          </ul>
+                        </div>
+                        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-amber-800 font-semibold">
+                          <span>🔒 AES-256 + SHA-256</span>
+                          <span className="bg-amber-50 px-2 py-0.5 rounded">Zero Identity Bias</span>
+                        </div>
+                      </div>
+
+                      {/* Pillar 4: Dual-Key Ceremony & CAG Audit Ledger */}
+                      <div className="p-5 rounded-2xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                        <div>
+                          <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg mb-3">
+                            <i className="fa-solid fa-link" />
+                          </div>
+                          <h5 className="font-extrabold text-slate-900 text-sm mb-2">4. Dual-Key Ceremony &amp; CAG Merkle Ledger</h5>
+                          <p className="text-slate-600 leading-relaxed mb-3">
+                            Constitutional transparency under Articles 148–151 of the Indian Constitution with immutable blockchain logging:
+                          </p>
+                          <ul className="space-y-1.5 text-slate-700">
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-emerald-600 mt-0.5" /> <span><strong>Two-Man Rule:</strong> Unsealing requires cryptographic key authorization from both the Buyer Officer and Committee Chairman.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-emerald-600 mt-0.5" /> <span><strong>Immutable Merkle Audit Blocks:</strong> Every action generates an append-only cryptographic block with hash verification.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-emerald-600 mt-0.5" /> <span><strong>CAG Portal Integration:</strong> CAG auditors can independently verify that no tender criteria or prices were retroactively altered.</span></li>
+                            <li className="flex items-start gap-1.5"><i className="fa-solid fa-check text-emerald-600 mt-0.5" /> <span><strong>Tamper-Evident Award:</strong> Public contract award certificate stamped with cryptographic ledger block hash.</span></li>
+                          </ul>
+                        </div>
+                        <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-emerald-800 font-semibold">
+                          <span>📜 Article 148-151 Compliant</span>
+                          <span className="bg-emerald-50 px-2 py-0.5 rounded">100% Audit-Proof</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {aboutModalTab === 'gem2_engine' && (
                   <div className="space-y-6 animate-fadeIn">
                     <div className="bg-[#002855] text-white p-5 rounded-2xl border border-sky-900 shadow-md">
                       <div className="flex items-center gap-2 text-amber-400 text-xs font-bold uppercase mb-1">
-                        <i className="fa-solid fa-shield-halved" /> Chapter 5 &bull; Automated Verification
+                        <i className="fa-solid fa-shield-halved" /> Chapter 6 &bull; Automated Verification Checks
                       </div>
                       <h4 className="font-bold text-white text-lg">14 Automated Checks &amp; Implemented Solutions</h4>
                       <p className="text-xs text-slate-200 mt-1 leading-relaxed">
@@ -1289,7 +1508,7 @@ export default function LandingPage() {
                   <div className="space-y-6 animate-fadeIn">
                     <div className="bg-amber-50 border-l-4 border-amber-600 p-4 rounded-r-lg">
                       <div className="text-[10px] uppercase font-bold tracking-wider text-amber-800 mb-1">
-                        Chapter 6 &bull; Immutable Audit Trail
+                        Chapter 7 &bull; Immutable Audit Trail
                       </div>
                       <h4 className="font-bold text-slate-900 text-base mb-1">
                         CAG Cryptographic Audit Ledger &amp; Anti-Cartelization Engine
@@ -1337,7 +1556,7 @@ export default function LandingPage() {
                   <div className="space-y-6 animate-fadeIn">
                     <div className="bg-emerald-50 border-l-4 border-emerald-600 p-4 rounded-r-lg">
                       <div className="text-[10px] uppercase font-bold tracking-wider text-emerald-800 mb-1">
-                        Chapter 7 &bull; Sovereign Security
+                        Chapter 8 &bull; Sovereign Security
                       </div>
                       <h4 className="font-bold text-slate-900 text-base mb-1">
                         STQC, NIC &amp; MeitY Sovereign Cloud Security Compliance
@@ -1375,7 +1594,7 @@ export default function LandingPage() {
                   <div className="space-y-5 animate-fadeIn">
                     <div className="bg-sky-50 border-l-4 border-sky-600 p-4 rounded-r-lg">
                       <div className="text-[10px] uppercase font-bold tracking-wider text-sky-800 mb-1">
-                        Chapter 8 &bull; Comprehensive Regulatory Knowledge Base
+                        Chapter 9 &bull; Comprehensive Regulatory Knowledge Base
                       </div>
                       <h4 className="font-bold text-slate-900 text-base mb-1">
                         Sector-Wise Public Procurement &amp; Statutory Regulatory FAQs
@@ -1386,6 +1605,14 @@ export default function LandingPage() {
                     </div>
 
                     <SectorWiseFaq defaultCategory="ALL" />
+                  </div>
+                )}
+
+                {aboutModalTab === 'operational_arch' && (
+                  <div className="space-y-5 animate-fadeIn">
+                    <OperationalArchitecture
+                      onOpenFaqDossier={() => setAboutModalTab('sector_faq')}
+                    />
                   </div>
                 )}
 
@@ -1412,17 +1639,35 @@ export default function LandingPage() {
                 </Link>
               </div>
 
-              <button 
-                onClick={() => setAboutModalOpen(false)}
-                className="bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold px-4 py-2 rounded-lg transition-colors border-none cursor-pointer"
-              >
-                Close Dossier
-              </button>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => {
+                    setAboutModalOpen(false);
+                    setTicketModalOpen(true);
+                  }}
+                  className="bg-sky-700 hover:bg-sky-600 text-white font-semibold px-3 py-2 rounded-lg transition-colors border-none cursor-pointer inline-flex items-center gap-1.5 shadow-xs"
+                >
+                  <i className="fa-solid fa-ticket" /> Raise Clarification Ticket
+                </button>
+                <button 
+                  onClick={() => setAboutModalOpen(false)}
+                  className="bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold px-4 py-2 rounded-lg transition-colors border-none cursor-pointer"
+                >
+                  Close Dossier
+                </button>
+              </div>
             </div>
 
           </div>
         </div>
       )}
+
+      {/* Compliance Clarification Ticket Modal */}
+      <ComplianceTicketModal
+        isOpen={ticketModalOpen}
+        onClose={() => setTicketModalOpen(false)}
+        initialTab={ticketModalTab}
+      />
     </div>
   );
 }

@@ -22,8 +22,10 @@ import {
   Lock,
   Unlock,
   PlusCircle,
-  ExternalLink
+  ExternalLink,
+  Sparkles
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { UserRole, Tender, OfficerProfile, ActiveTab, ROLE_DEFINITIONS } from '../types/procurement';
 
 export type { ActiveTab };
@@ -146,6 +148,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const visibleEvalNav = evalNavItems.filter(item => allowedTabs.includes(item.id));
   const visibleAuditNav = auditNavItems.filter(item => allowedTabs.includes(item.id));
 
+  // Check for any secondary/prior role dossiers registered under the same officer identity
+  const regOfficers: any[] = JSON.parse(localStorage.getItem('gem_registered_officers') || '[]');
+  const otherDossiers = regOfficers.filter((o: any) => {
+    const emailMatch = o.officer?.email && officerProfile.email && o.officer.email.toLowerCase() === officerProfile.email.toLowerCase();
+    const nameMatch = o.officer?.fullName && officerProfile.fullName && o.officer.fullName.toLowerCase() === officerProfile.fullName.toLowerCase();
+    return (emailMatch || nameMatch) && o.officer?.badgeId !== officerProfile.badgeId;
+  });
+
   return (
     <aside className="w-64 min-w-[16rem] bg-[#08172D] text-slate-200 border-r border-[#1E3A68] flex flex-col justify-between p-3.5 h-[calc(100vh-80px)] overflow-y-auto shrink-0 shadow-lg">
       <div className="flex flex-col gap-3.5">
@@ -185,8 +195,63 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
               <div className="text-[8px] text-slate-400 mt-1 flex items-center gap-1">
                 <Shield className="w-2.5 h-2.5 text-emerald-400" />
-                <span>Assigned at registration &bull; Single-role mandate</span>
+                <span>Single-role mandate &bull; {officerProfile.badgeId}</span>
               </div>
+            </div>
+
+            {/* Exceptional Secondary Role Dossiers & Switcher */}
+            {otherDossiers.length > 0 && (
+              <div className="pt-2 border-t border-[#1E3A68]/60 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1">
+                    <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+                    <span>Dual Role (GFR Exception)</span>
+                  </span>
+                  <span className="text-[8px] font-mono px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">
+                    SEPARATE
+                  </span>
+                </div>
+                {otherDossiers.map((d: any, idx: number) => {
+                  const rKey = (d.officer?.role || 'BUYER_AUTHORITY') as UserRole;
+                  const rDef = ROLE_DEFINITIONS[rKey] || ROLE_DEFINITIONS.BUYER_AUTHORITY;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        localStorage.setItem('gem_gov_auth_session', JSON.stringify(d.officer));
+                        window.location.reload();
+                      }}
+                      className="w-full p-2 bg-[#0B2545] hover:bg-[#1D4ED8]/30 border border-[#1E3A68] hover:border-blue-400 rounded-lg text-left transition-all cursor-pointer group"
+                      title="Switch to this role's isolated dashboard session"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold text-slate-200 group-hover:text-blue-300">
+                          Switch to {rDef.title.split(' ')[0]}
+                        </span>
+                        <span className="text-[8px] font-mono text-sky-300 font-bold">
+                          {d.officer?.badgeId}
+                        </span>
+                      </div>
+                      <div className="text-[8px] text-slate-400 font-mono mt-0.5 truncate">
+                        {rDef.statutoryRule}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Direct Link to Register Exceptional Second Role */}
+            <div className="pt-1.5">
+              <Link
+                to={`/gov/register?secondary=true&email=${encodeURIComponent(officerProfile.email || '')}&name=${encodeURIComponent(officerProfile.fullName || '')}`}
+                className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 bg-[#001D3D] hover:bg-[#002855] border border-dashed border-[#1E3A68] hover:border-amber-400/80 rounded text-[10px] font-bold text-amber-300 hover:text-amber-200 transition-colors no-underline text-center cursor-pointer"
+                title="Register a separate credential dossier for an assigned secondary role under GFR 2017 separation of duties"
+              >
+                <PlusCircle className="w-3 h-3 text-amber-400 shrink-0" />
+                <span>+ Register Exceptional 2nd Role</span>
+              </Link>
             </div>
           </div>
         </div>

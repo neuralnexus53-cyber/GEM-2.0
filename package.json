@@ -5,7 +5,9 @@
   "type": "module",
   "description": "GovVendor AI Sovereign Procurement Suite - SIH 2026",
   "scripts": {
+    "predev": "node scripts/copy-images.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/copy-images.mjs",
     "build": "vite build",
     "typecheck": "tsc -b",
     "preview": "vite preview",
