@@ -18,6 +18,7 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { ROLE_DEFINITIONS, UserRole } from '../gov/types/procurement';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 export default function GovLoginPage() {
   const navigate = useNavigate();
@@ -197,6 +198,7 @@ export default function GovLoginPage() {
         </Link>
 
         <div className="flex items-center gap-3">
+          <LanguageSelector variant="topbar" />
           <Link 
             to="/gov/register" 
             className="text-xs text-blue-400 hover:text-blue-300 font-semibold px-3 py-1.5 rounded-lg border border-blue-500/30 hover:border-blue-400 transition-all"

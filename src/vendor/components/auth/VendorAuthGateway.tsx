@@ -5,25 +5,16 @@ import {
   KeyRound, 
   User, 
   Building2, 
-  Rocket, 
-  HardHat, 
   ArrowRight, 
   RefreshCw, 
   Volume2, 
   AlertTriangle, 
   CheckCircle2, 
   Smartphone, 
-  ShieldAlert, 
-  FileCheck2, 
-  Layers, 
-  Info,
   Eye,
-  EyeOff,
-  Sparkles,
-  ExternalLink,
-  Award
+  EyeOff
 } from 'lucide-react';
-import { useAuth, DEMO_ACCOUNTS_MAP, RegisterVendorPayload } from '../../context/AuthContext';
+import { useAuth, RegisterVendorPayload } from '../../context/AuthContext';
 import { UserRole } from '../../types';
 
 interface VendorAuthGatewayProps {
@@ -40,14 +31,14 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
     registerVendor 
   } = useAuth();
 
-  // Mode: 'LOGIN' | 'OTP_LOGIN' | 'DEMO_SELECT' | 'REGISTER' | 'DSC_LOGIN'
-  const [authMode, setAuthMode] = useState<'LOGIN' | 'OTP_LOGIN' | 'DEMO_SELECT' | 'REGISTER' | 'DSC_LOGIN'>('LOGIN');
+  // Mode: 'LOGIN' | 'OTP_LOGIN' | 'REGISTER'
+  const [authMode, setAuthMode] = useState<'LOGIN' | 'OTP_LOGIN' | 'REGISTER'>('LOGIN');
 
   // Form states
   const [identifier, setIdentifier] = useState('oem@apexpower.com');
   const [password, setPassword] = useState('VendorPass@2026');
   const [showPassword, setShowPassword] = useState(false);
-  const [enableMfa, setEnableMfa] = useState(false);
+  const [enableMfa] = useState(true); // Mandatory under GFR 2017 & GeM 2.0
   const [rememberDevice, setRememberDevice] = useState(true);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -119,6 +110,11 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
     try {
       const res = await login(identifier, password, enableMfa);
       if (res.success) {
+        if (res.requiresMfa) {
+          // Mandatory 2-Step OTP Security: Hold on this screen so the pendingMfa modal is displayed
+          setIsLoading(false);
+          return;
+        }
         if (onClose) onClose();
         else window.location.hash = '#/vendor';
       } else {
@@ -131,21 +127,6 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
     }
   };
 
-  const handleDemoLogin = async (role: UserRole) => {
-    setErrorMsg(null);
-    setIsLoading(true);
-    try {
-      const res = await loginAsDemoVendor(role, enableMfa);
-      if (res.success) {
-        if (onClose) onClose();
-        else window.location.hash = '#/vendor';
-      }
-    } catch (err) {
-      setErrorMsg('Demo sign in failed.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleOtpChange = (index: number, value: string) => {
     if (value.length > 1) {
@@ -171,7 +152,10 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
     e.preventDefault();
     const fullOtp = otpInput.join('');
     const verified = verifyMfa(fullOtp);
-    if (!verified) {
+    if (verified) {
+      if (onClose) onClose();
+      else window.location.hash = '#/vendor';
+    } else {
       setErrorMsg('Invalid OTP. Please enter the 6-digit security code (Demo code: 202688).');
     }
   };
@@ -195,7 +179,10 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
     setIsLoading(true);
     try {
       const res = await registerVendor(regForm);
-      if (!res.success) {
+      if (res.success) {
+        if (onClose) onClose();
+        else window.location.hash = '#/vendor';
+      } else {
         setErrorMsg(res.error || 'Registration failed.');
       }
     } catch (err) {
@@ -229,7 +216,7 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
 
         <div className="glass-panel border-2 border-[#1E3A8A] rounded-2xl shadow-2xl overflow-hidden backdrop-blur-xl">
           
-          <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-[#1E3A8A] bg-[#0A1224]/80 text-xs sm:text-sm font-bold">
+          <div className="grid grid-cols-3 border-b border-[#1E3A8A] bg-[#0A1224]/80 text-xs sm:text-sm font-bold">
             <button
               onClick={() => { setAuthMode('LOGIN'); setErrorMsg(null); }}
               className={`py-3.5 px-4 flex items-center justify-center gap-2 transition-all border-b-2 ${
@@ -251,32 +238,7 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
               }`}
             >
               <Smartphone className="w-4 h-4 text-emerald-400" />
-              <span>Login via OTP</span>
-            </button>
-
-            <button
-              onClick={() => { setAuthMode('DEMO_SELECT'); setErrorMsg(null); }}
-              className={`py-3.5 px-4 flex items-center justify-center gap-2 transition-all border-b-2 ${
-                authMode === 'DEMO_SELECT'
-                  ? 'border-cyan-400 text-white bg-[#0F1D36]'
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-[#0F1D36]/40'
-              }`}
-            >
-              <Award className="w-4 h-4 text-cyan-400" />
-              <span>Verified Accounts</span>
-              <span className="hidden sm:inline text-[10px] px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-300 font-bold border border-emerald-700/50">Demo</span>
-            </button>
-
-            <button
-              onClick={() => { setAuthMode('DSC_LOGIN'); setErrorMsg(null); }}
-              className={`py-3.5 px-4 flex items-center justify-center gap-2 transition-all border-b-2 ${
-                authMode === 'DSC_LOGIN'
-                  ? 'border-cyan-400 text-white bg-[#0F1D36]'
-                  : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-[#0F1D36]/40'
-              }`}
-            >
-              <KeyRound className="w-4 h-4 text-cyan-400" />
-              <span>DSC e-Token</span>
+              <span>Login with OTP</span>
             </button>
 
             <button
@@ -306,68 +268,6 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
                 
                 <form onSubmit={handleLoginSubmit} className="lg:col-span-7 space-y-4" autoComplete="off">
                   
-                  {/* ⚡ Quick 1-Click Demo Persona Picker */}
-                  <div className="p-3 rounded-xl bg-[#08101E] border border-[#1E3A8A]/80 mb-2">
-                    <div className="text-[11px] font-bold text-cyan-400 uppercase tracking-wider flex items-center justify-between mb-2">
-                      <span className="flex items-center gap-1.5">
-                        <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                        <span>⚡ 1-Click Quick Demo Accounts</span>
-                      </span>
-                      <span className="text-[10px] text-slate-400">Click to auto-fill</span>
-                    </div>
-                    <div className="grid grid-cols-3 gap-1.5 text-xs">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIdentifier('oem@apexpower.com');
-                          setPassword('VendorPass@2026');
-                          if (captchaCode) setCaptchaInput(captchaCode);
-                        }}
-                        className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
-                          identifier === 'oem@apexpower.com'
-                            ? 'bg-cyan-500/20 border-cyan-400 text-cyan-200'
-                            : 'bg-[#0F1D36] border-slate-700/60 text-slate-300 hover:border-cyan-500/50'
-                        }`}
-                      >
-                        <div className="font-bold text-[11px] truncate">🏭 OEM Solar</div>
-                        <div className="text-[9px] text-slate-400 truncate">Apex Dynamics</div>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIdentifier('startup@qubitsensors.in');
-                          setPassword('VendorPass@2026');
-                          if (captchaCode) setCaptchaInput(captchaCode);
-                        }}
-                        className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
-                          identifier === 'startup@qubitsensors.in'
-                            ? 'bg-amber-500/20 border-amber-400 text-amber-200'
-                            : 'bg-[#0F1D36] border-slate-700/60 text-slate-300 hover:border-amber-500/50'
-                        }`}
-                      >
-                        <div className="font-bold text-[11px] truncate">🚀 MSME Tech</div>
-                        <div className="text-[9px] text-slate-400 truncate">Novavolt Labs</div>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIdentifier('contractor@bharatcivil.com');
-                          setPassword('VendorPass@2026');
-                          if (captchaCode) setCaptchaInput(captchaCode);
-                        }}
-                        className={`p-2 rounded-lg border text-left transition-all cursor-pointer ${
-                          identifier === 'contractor@bharatcivil.com'
-                            ? 'bg-emerald-500/20 border-emerald-400 text-emerald-200'
-                            : 'bg-[#0F1D36] border-slate-700/60 text-slate-300 hover:border-emerald-500/50'
-                        }`}
-                      >
-                        <div className="font-bold text-[11px] truncate">🏗️ Works / BoQ</div>
-                        <div className="text-[9px] text-slate-400 truncate">Bharat Infra</div>
-                      </button>
-                    </div>
-                  </div>
 
                   <div>
                     <label className="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">
@@ -474,18 +374,26 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
                   </div>
 
                   <div className="space-y-2 pt-1">
-                    <label className="flex items-center gap-2.5 cursor-pointer text-xs text-slate-300">
-                      <input
-                        type="checkbox"
-                        checked={enableMfa}
-                        onChange={(e) => setEnableMfa(e.target.checked)}
-                        className="rounded border-[#1E3A8A] bg-[#08101E] text-cyan-500 focus:ring-cyan-400 w-4 h-4"
-                      />
-                      <span className="flex items-center gap-1.5">
-                        <Smartphone className="w-3.5 h-3.5 text-emerald-400" />
-                        Enable 2-Step OTP Security Verification (Recommended)
-                      </span>
-                    </label>
+                    <div className="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/50 flex items-center justify-between gap-3 text-xs shadow-inner">
+                      <div className="flex items-center gap-2.5 text-emerald-300">
+                        <div className="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center shrink-0">
+                          <Smartphone className="w-4 h-4 text-emerald-400" />
+                        </div>
+                        <div>
+                          <div className="font-bold text-white flex items-center gap-1.5">
+                            <span>2-Step OTP Security Verification</span>
+                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-600/50 font-extrabold uppercase tracking-wider">Mandatory</span>
+                          </div>
+                          <div className="text-[10px] text-emerald-400/90 font-medium">
+                            Enforced under GFR 2017 &amp; GeM 2.0 Sovereign Procurement Norms
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-900/60 px-2 py-1 rounded-md border border-emerald-500/40 shrink-0">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>Active</span>
+                      </div>
+                    </div>
 
                     <label className="flex items-center gap-2.5 cursor-pointer text-xs text-slate-300">
                       <input
@@ -549,14 +457,14 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
 
                   <div className="pt-3 border-t border-[#1E3A8A]">
                     <span className="text-[11px] font-bold text-slate-400 block mb-2">
-                      Need to test without entering credentials?
+                      New enterprise or vendor entity?
                     </span>
                     <button
                       type="button"
-                      onClick={() => setAuthMode('DEMO_SELECT')}
-                      className="w-full py-2 px-3 rounded-lg bg-[#0F1D36] hover:bg-[#1E3A8A] border border-cyan-500/30 text-cyan-300 text-xs font-bold flex items-center justify-between transition-all"
+                      onClick={() => setAuthMode('REGISTER')}
+                      className="w-full py-2 px-3 rounded-lg bg-[#0F1D36] hover:bg-[#1E3A8A] border border-[#FF9933]/40 text-[#FF9933] text-xs font-bold flex items-center justify-between transition-all"
                     >
-                      <span>Explore 3 Verified Enterprise Accounts</span>
+                      <span>Register New Enterprise Account</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
@@ -624,11 +532,15 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
 
                   <button
                     type="button"
-                    onClick={() => {
+                    onClick={async () => {
                       setIsLoading(true);
-                      setTimeout(() => {
+                      setTimeout(async () => {
                         setIsLoading(false);
-                        loginAsDemoVendor('OEM_SELLER');
+                        const res = await loginAsDemoVendor('OEM_SELLER');
+                        if (res.success) {
+                          if (onClose) onClose();
+                          else window.location.hash = '#/vendor';
+                        }
                       }, 700);
                     }}
                     disabled={isLoading}
@@ -649,222 +561,6 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
                 </div>
               </div>
             )}
-
-            {authMode === 'DEMO_SELECT' && (
-              <div className="space-y-6">
-                <div className="text-center max-w-2xl mx-auto space-y-1">
-                  <h3 className="text-lg font-extrabold text-white">
-                    Select a Verified Enterprise Account
-                  </h3>
-                  <p className="text-xs text-slate-300">
-                    Each account loads its own isolated dashboard with specific GSTIN, certificates, turnover, and specialized procurement workflows.
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  
-                  <div className="bg-[#08101E] border border-cyan-500/40 rounded-xl p-5 flex flex-col justify-between hover:border-cyan-400 transition-all shadow-md group">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="px-2.5 py-1 rounded-md bg-cyan-950 text-cyan-300 text-[10px] font-bold border border-cyan-700/50">
-                          OEM MANUFACTURER
-                        </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-violet-900/60 text-violet-200 font-extrabold border border-violet-500/40">
-                          PRO TIER
-                        </span>
-                      </div>
-
-                      <div>
-                        <h4 className="font-extrabold text-white text-sm group-hover:text-cyan-300 transition-colors">
-                          Apex Dynamics & Energy Systems
-                        </h4>
-                        <p className="text-[11px] text-slate-400">
-                          GeM ID: <strong className="text-slate-200">VEND-OEM-8902</strong>
-                        </p>
-                      </div>
-
-                      <div className="space-y-1.5 text-xs text-slate-300 pt-2 border-t border-[#1E3A8A]">
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">GSTIN:</span>
-                          <span className="font-mono text-white">07AAACA4952J1ZM</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Turnover:</span>
-                          <span className="font-bold text-emerald-400">₹ 48.50 Crores</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Compliance:</span>
-                          <span className="text-cyan-300 font-semibold">96% Verified</span>
-                        </div>
-                        <div className="text-[11px] text-slate-400 pt-1">
-                          &bull; BIS IS-16221 &bull; ISO 9001 &bull; 74% MII Local
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleDemoLogin('OEM_SELLER')}
-                      disabled={isLoading}
-                      className="mt-5 w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md"
-                    >
-                      <Building2 className="w-3.5 h-3.5" />
-                      <span>Log In to OEM Dashboard</span>
-                    </button>
-                  </div>
-
-                  <div className="bg-[#08101E] border border-amber-500/40 rounded-xl p-5 flex flex-col justify-between hover:border-amber-400 transition-all shadow-md group">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="px-2.5 py-1 rounded-md bg-amber-950 text-amber-300 text-[10px] font-bold border border-amber-700/50">
-                          MSME & DPIIT STARTUP
-                        </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold border border-slate-600">
-                          FREE TIER
-                        </span>
-                      </div>
-
-                      <div>
-                        <h4 className="font-extrabold text-white text-sm group-hover:text-amber-300 transition-colors">
-                          Novavolt Instruments & Automation
-                        </h4>
-                        <p className="text-[11px] text-slate-400">
-                          GeM ID: <strong className="text-slate-200">VEND-MSME-3412</strong>
-                        </p>
-                      </div>
-
-                      <div className="space-y-1.5 text-xs text-slate-300 pt-2 border-t border-[#1E3A8A]">
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Udyam No:</span>
-                          <span className="font-mono text-white text-[11px]">UDYAM-MH-03-0098412</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Turnover:</span>
-                          <span className="font-bold text-emerald-400">₹ 4.20 Crores</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Benefits:</span>
-                          <span className="text-amber-300 font-bold">100% EMD Waiver</span>
-                        </div>
-                        <div className="text-[11px] text-slate-400 pt-1">
-                          &bull; DPIIT Recognized &bull; Prior Exp Relaxed
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleDemoLogin('AUTHORIZED_RESELLER')}
-                      disabled={isLoading}
-                      className="mt-5 w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md"
-                    >
-                      <Rocket className="w-3.5 h-3.5" />
-                      <span>Log In to Reseller Dashboard</span>
-                    </button>
-                  </div>
-
-                  <div className="bg-[#08101E] border border-emerald-500/40 rounded-xl p-5 flex flex-col justify-between hover:border-emerald-400 transition-all shadow-md group">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="px-2.5 py-1 rounded-md bg-emerald-950 text-emerald-300 text-[10px] font-bold border border-emerald-700/50">
-                          SERVICE PROVIDER (SLAs)
-                        </span>
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-cyan-950 text-cyan-200 font-bold border border-cyan-500/40">
-                          STARTER
-                        </span>
-                      </div>
-
-                      <div>
-                        <h4 className="font-extrabold text-white text-sm group-hover:text-emerald-300 transition-colors">
-                          Bharat Infra-Tech & Integrated Facility Services
-                        </h4>
-                        <p className="text-[11px] text-slate-400">
-                          GeM ID: <strong className="text-slate-200">VEND-SRV-7105</strong>
-                        </p>
-                      </div>
-
-                      <div className="space-y-1.5 text-xs text-slate-300 pt-2 border-t border-[#1E3A8A]">
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Enlistment:</span>
-                          <span className="font-mono text-white text-[11px]">Class-1 Super (CPWD & SLA)</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Turnover:</span>
-                          <span className="font-bold text-emerald-400">₹ 32.80 Crores</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-slate-400">Services:</span>
-                          <span className="text-emerald-300 font-bold">Manpower & Cloud Ready</span>
-                        </div>
-                        <div className="text-[11px] text-slate-400 pt-1">
-                          &bull; NHAI & PWD Qualified &bull; 12 Yrs Exp
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={() => handleDemoLogin('SERVICE_PROVIDER')}
-                      disabled={isLoading}
-                      className="mt-5 w-full py-2.5 px-3 rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer"
-                    >
-                      <HardHat className="w-3.5 h-3.5" />
-                      <span>Log In to Services Dashboard</span>
-                    </button>
-                  </div>
-
-                </div>
-              </div>
-            )}
-
-            {authMode === 'DSC_LOGIN' && (
-              <div className="max-w-xl mx-auto space-y-5 text-center">
-                <div className="w-16 h-16 rounded-full bg-[#002855] text-cyan-400 border-2 border-cyan-500/50 flex items-center justify-center mx-auto shadow-lg shadow-cyan-900/30">
-                  <KeyRound className="w-8 h-8" />
-                </div>
-
-                <div className="space-y-1">
-                  <h3 className="text-base sm:text-lg font-bold text-white">
-                    Digital Signature Certificate (DSC Class-3) e-Sign
-                  </h3>
-                  <p className="text-xs text-slate-300">
-                    Mandatory for high-value tenders (&gt; ₹50 Lakhs) as per GeM & Central Public Procurement Guidelines.
-                  </p>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#08101E] border border-[#1E3A8A] text-left space-y-3 text-xs">
-                  <div className="flex items-center justify-between text-slate-300">
-                    <span>Detected USB Cryptographic Token:</span>
-                    <span className="text-emerald-400 font-bold flex items-center gap-1">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-                      ePass2003Auto (Valid)
-                    </span>
-                  </div>
-
-                  <div className="flex justify-between text-slate-300">
-                    <span>Certificate Holder:</span>
-                    <strong className="text-white">Rajesh Sharma (Apex Dynamics Ltd)</strong>
-                  </div>
-
-                  <div className="flex justify-between text-slate-300">
-                    <span>Issuer CA:</span>
-                    <span className="text-slate-300">e-Mudhra Sub-CA for Class 3 Individual</span>
-                  </div>
-
-                  <div className="flex justify-between text-slate-300">
-                    <span>Expiry Date:</span>
-                    <span className="text-amber-300">31-Dec-2027 (Active)</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => handleDemoLogin('OEM_SELLER')}
-                  disabled={isLoading}
-                  className="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-lg cursor-pointer"
-                >
-                  <KeyRound className="w-4 h-4" />
-                  <span>Verify DSC PIN & Enter Dashboard</span>
-                </button>
-              </div>
-            )}
-
             {authMode === 'REGISTER' && (
               <form onSubmit={handleRegisterSubmit} className="space-y-4">
                 <div className="border-b border-[#1E3A8A] pb-3 mb-2">
@@ -1045,6 +741,20 @@ export const VendorAuthGateway: React.FC<VendorAuthGatewayProps> = ({ onClose })
             </div>
 
             <form onSubmit={handleOtpSubmit} className="space-y-5" autoComplete="off">
+              <div className="flex items-center justify-between px-3.5 py-2 rounded-xl bg-emerald-950/60 border border-emerald-500/40 text-xs text-emerald-300">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Security OTP Code: <strong className="font-mono text-white tracking-wider">202688</strong></span>
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setOtpInput(['2', '0', '2', '6', '8', '8'])}
+                  className="px-2.5 py-1 rounded bg-emerald-700/80 hover:bg-emerald-600 text-white text-[11px] font-bold transition-all cursor-pointer"
+                >
+                  ⚡ Auto-Fill
+                </button>
+              </div>
+
               <div className="flex justify-center gap-2 sm:gap-3">
                 {otpInput.map((digit, idx) => (
                   <input

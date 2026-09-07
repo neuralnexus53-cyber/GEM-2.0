@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { SectorWiseFaq } from '../components/SectorWiseFaq';
 import { OperationalArchitecture } from '../components/OperationalArchitecture';
 import { ComplianceTicketModal } from '../components/ComplianceTicketModal';
+import { LanguageSelector } from '../components/LanguageSelector';
+import { useLanguage } from '../context/LanguageContext';
 const HERO_SLIDES = [
   {
     image: './images/banner1.jpg',
@@ -25,6 +27,7 @@ const HERO_SLIDES = [
 ];
 
 export default function LandingPage() {
+  const { t } = useLanguage();
   // Drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -86,30 +89,31 @@ export default function LandingPage() {
           </button>
           
           <div className="text-amber-400 text-xs font-bold uppercase tracking-widest mb-2">Government of India • Ministry of Commerce & Industry</div>
-          <h3 className="text-xl font-bold text-white mb-6">GeM 2.0 Compliance Portal Navigation</h3>
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 px-6 text-center max-w-4xl">
-            <Link to="/" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">Home</Link>
-            <Link to="/gov/login" onClick={() => setDrawerOpen(false)} className="hover:text-blue-400 transition-colors text-sm font-bold text-blue-400">Officer Login</Link>
-            <Link to="/gov/register" onClick={() => setDrawerOpen(false)} className="hover:text-blue-400 transition-colors text-sm font-bold text-blue-400">Officer Registration</Link>
-            <Link to="/vendor/login" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold text-amber-400">Vendor Login</Link>
-            <Link to="/vendor/register" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold text-amber-400">Vendor Registration</Link>
+          <h3 className="text-xl font-bold text-white mb-4">GeM 2.0 Compliance Portal Navigation</h3>
+          
+          <div className="mb-6 flex items-center justify-center">
+            <LanguageSelector variant="navbar" />
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 px-6 text-center max-w-4xl">
+            <Link to="/" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold">{t('nav.home')}</Link>
+            <Link to="/gov/login" onClick={() => setDrawerOpen(false)} className="hover:text-blue-400 transition-colors text-sm font-bold text-blue-400">{t('nav.officer_login')}</Link>
+            <Link to="/gov/register" onClick={() => setDrawerOpen(false)} className="hover:text-blue-400 transition-colors text-sm font-bold text-blue-400">{t('nav.officer_register')}</Link>
+            <Link to="/vendor/login" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold text-amber-400">{t('nav.vendor_login')}</Link>
+            <Link to="/vendor/register" onClick={() => setDrawerOpen(false)} className="hover:text-amber-400 transition-colors text-sm font-bold text-amber-400">{t('nav.vendor_register')}</Link>
             <button 
               onClick={() => scrollToSection('architecture')} 
               className="bg-transparent border-none text-amber-300 hover:text-amber-200 transition-colors text-sm font-bold cursor-pointer flex items-center gap-1.5"
             >
               <i className="fa-solid fa-diagram-project text-xs" />
-              <span>Operational Architecture</span>
+              <span>{t('nav.operational_arch')}</span>
             </button>
             <button 
-              onClick={() => {
-                setDrawerOpen(false);
-                setAboutModalTab('sector_faq');
-                setAboutModalOpen(true);
-              }} 
+              onClick={() => scrollToSection('faq')} 
               className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer flex items-center gap-1.5"
             >
               <i className="fa-solid fa-book-bookmark text-xs" />
-              <span>Sector Regulatory Dossier</span>
+              <span>{t('nav.regulatory_faq')}</span>
             </button>
             <button 
               onClick={() => {
@@ -169,38 +173,41 @@ export default function LandingPage() {
             </Link>
           </div>
 
-          <div className="flex items-center space-x-2 sm:space-x-4 text-xs font-semibold">
-            <nav className="hidden lg:flex items-center space-x-3">
+          <div className="flex items-center space-x-2 sm:space-x-3 text-xs font-semibold">
+            {/* 10-Language Selector */}
+            <LanguageSelector variant="topbar" />
+
+            <nav className="hidden lg:flex items-center space-x-2.5">
               <Link 
                 to="/gov/login" 
-                className="hover:text-blue-700 transition-colors px-2 py-1 rounded"
+                className="hover:text-blue-400 transition-colors px-2 py-1 rounded text-slate-200"
               >
-                Officer Login
+                {t('nav.officer_login')}
               </Link>
               <Link 
                 to="/gov/register" 
                 className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5"
               >
                 <i className="fa-solid fa-building-columns text-[10px]" />
-                Officer Registration
+                {t('nav.officer_register')}
               </Link>
               <Link 
                 to="/vendor/login" 
-                className="hover:text-amber-600 transition-colors px-2 py-1 rounded"
+                className="hover:text-amber-400 transition-colors px-2 py-1 rounded text-slate-200"
               >
-                Vendor Login
+                {t('nav.vendor_login')}
               </Link>
               <Link 
                 to="/vendor/register" 
                 className="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-3 py-1.5 rounded-full transition-colors"
               >
-                Vendor Registration
+                {t('nav.vendor_register')}
               </Link>
             </nav>
 
             <div className="md:hidden flex items-center gap-1.5">
-              <Link to="/gov/login" className="bg-blue-600 text-white font-bold px-2.5 py-1 rounded-full text-xs">Officer</Link>
-              <Link to="/vendor/login" className="bg-amber-500 text-slate-900 font-bold px-2.5 py-1 rounded-full text-xs">Vendor</Link>
+              <Link to="/gov/login" className="bg-blue-600 text-white font-bold px-2 py-1 rounded-full text-xs">Officer</Link>
+              <Link to="/vendor/login" className="bg-amber-500 text-slate-900 font-bold px-2 py-1 rounded-full text-xs">Vendor</Link>
             </div>
           </div>
 
@@ -218,10 +225,7 @@ export default function LandingPage() {
                 <span>Operational Architecture</span>
               </button>
               <button 
-                onClick={() => {
-                  setAboutModalTab('sector_faq');
-                  setAboutModalOpen(true);
-                }} 
+                onClick={() => scrollToSection('faq')} 
                 className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer flex items-center gap-1.5"
               >
                 <i className="fa-solid fa-book-bookmark text-[10px]" />
@@ -275,25 +279,25 @@ export default function LandingPage() {
                         to="/gov/login" 
                         className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
                       >
-                        <i className="fa-solid fa-lock" /> Officer Login
+                        <i className="fa-solid fa-lock" /> {t('nav.officer_login')}
                       </Link>
                       <Link 
                         to="/gov/register" 
                         className="bg-slate-900/90 hover:bg-slate-800 text-blue-300 border border-blue-500/40 font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
                       >
-                        <i className="fa-solid fa-building-columns" /> Officer Registration
+                        <i className="fa-solid fa-building-columns" /> {t('nav.officer_register')}
                       </Link>
                       <Link 
                         to="/vendor/login" 
                         className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
                       >
-                        <i className="fa-solid fa-right-to-bracket" /> Vendor Login
+                        <i className="fa-solid fa-right-to-bracket" /> {t('nav.vendor_login')}
                       </Link>
                       <Link 
                         to="/vendor/register" 
                         className="bg-slate-900/90 hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
                       >
-                        <i className="fa-solid fa-user-plus" /> Vendor Registration
+                        <i className="fa-solid fa-user-plus" /> {t('nav.vendor_register')}
                       </Link>
                     </div>
                   </div>
@@ -535,13 +539,13 @@ export default function LandingPage() {
                   to="/vendor/register" 
                   className="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-4 rounded-xl text-center text-xs uppercase tracking-wider transition-all"
                 >
-                  Vendor Registration
+                  {t('nav.vendor_register')}
                 </Link>
                 <Link 
                   to="/vendor/login" 
                   className="border border-slate-600 hover:border-amber-400 text-slate-200 hover:text-amber-400 font-semibold py-3 px-4 rounded-xl text-center text-xs uppercase tracking-wider transition-all"
                 >
-                  Vendor Login
+                  {t('nav.vendor_login')}
                 </Link>
               </div>
             </div>
@@ -568,13 +572,13 @@ export default function LandingPage() {
                   to="/gov/register" 
                   className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl text-center text-xs uppercase tracking-wider transition-all"
                 >
-                  Officer Registration
+                  {t('nav.officer_register')}
                 </Link>
                 <Link 
                   to="/gov/login" 
                   className="border border-blue-800 hover:border-blue-400 text-slate-200 hover:text-blue-400 font-semibold py-3 px-4 rounded-xl text-center text-xs uppercase tracking-wider transition-all"
                 >
-                  Officer Login
+                  {t('nav.officer_login')}
                 </Link>
               </div>
             </div>
@@ -595,8 +599,12 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Alias anchor for backward compatibility */}
-        <div id="faq" />
+        {/* Comprehensive Sector-Wise FAQ & Regulatory Knowledge Base */}
+        <section id="faq" className="py-16 bg-white border-t border-slate-200 scroll-mt-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SectorWiseFaq defaultCategory="ALL" />
+          </div>
+        </section>
 
       </main>
 

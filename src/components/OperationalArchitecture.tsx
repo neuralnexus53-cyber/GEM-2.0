@@ -212,38 +212,38 @@ const OPERATIONAL_STEPS: StepItem[] = [
   {
     id: 6,
     stepNumber: '06',
-    title: 'Fair Dual-Key Unsealing & Immutable CAG Audit Trail',
-    subtitle: 'Bids unsealed under dual supervision; every action recorded in Merkle ledger',
-    actor: 'Tender Committee & CAG Oversight',
+    title: 'Commercial Vault Unsealing, CFA Award & CAG Audit Trail',
+    subtitle: 'Commercial vault unsealed by Buyer Authority; final award decision signed under GFR Rule 160 & Merkle audit ledger',
+    actor: 'Competent Financial Authority (CFA) & CAG Oversight',
     actorBadgeColor: 'bg-rose-100 text-rose-900 border-rose-200',
     actorIcon: 'fa-solid fa-stamp',
     image: './images/operational/step6.jpg',
-    imageAlt: 'Formal government tender award committee reviewing official CAG cryptographic audit certificate',
+    imageAlt: 'Competent Financial Authority (CFA) approving final tender award with CAG cryptographic audit certificate',
     simpleExplanation:
-      'Once technical evaluations are locked, financial bids are unsealed using an electronic dual-key ceremony requiring two authorized officers to sign simultaneously. The lowest qualified bidder (L1) wins the contract. Crucially, every click, score, and decision is permanently recorded in a tamper-proof cryptographic Merkle audit ledger that CAG auditors or citizens can inspect anytime.',
+      'Once technical evaluations are locked and recommended by the Tender Evaluation Committee (TEC), the Competent Financial Authority (CFA) / Buyer Authority unseals the commercial double-blind vault using the sovereign key. The CFA reviews composite QCBS/L1 rankings and takes the final statutory decision to sign and award the contract to the winning bidder. Every click, score, and award action is permanently chained into the tamper-proof CAG Merkle audit ledger.',
     whyItMatters:
-      'Guarantees 100% accountability: no decision can be deleted, backdated, or hidden after the fact.',
+      'Guarantees constitutional separation of powers: TEC only recommends, while the designated Competent Financial Authority makes the legally binding award decision.',
     keyPoints: [
       {
-        title: 'Dual-Key Electronic Unsealing',
-        desc: 'Requires two independent officer digital certificates to unlock sealed financial bids.',
+        title: 'CFA Statutory Award Authority',
+        desc: 'Under GFR Rule 160 & DFPR, only the Competent Financial Authority can formally award the contract.',
+        icon: 'fa-solid fa-gavel',
+      },
+      {
+        title: 'Double-Blind Commercial Vault Unmasking',
+        desc: 'Buyer Authority unmasks pricing only after all technical qualifications are irreversibly locked.',
         icon: 'fa-solid fa-key',
       },
       {
         title: 'Immutable SHA-256 Merkle Ledger',
-        desc: 'Every bid hash, evaluation mark, and contract decision is mathematically chained together.',
+        desc: 'Every bid hash, score, and award timestamp is mathematically sealed against retrospective tampering.',
         icon: 'fa-solid fa-link',
-      },
-      {
-        title: 'CAG-Ready Cryptographic Certificate',
-        desc: 'Generates an official audit trail document with verifiable root hash for external oversight.',
-        icon: 'fa-solid fa-certificate',
       },
     ],
     example:
-      'Example: Contract is awarded with certificate CAG/CAD/2026/0912; its SHA-256 Merkle root proves no bid prices were altered after submission.',
-    outcomeBadge: 'Outcome: 100% Audit-Proof, Tamper-Evident Public Procurement',
-    statutoryRule: 'Article 148-151 of Constitution (CAG) • GFR Rule 160',
+      'Example: Joint Secretary (CFA) approves ₹4.5 Crore award to L1 bidder under certificate CAG/CAD/2026/0912; its Merkle hash verifies zero bid alterations.',
+    outcomeBadge: 'Outcome: Legally Sound CFA Award with 100% Cryptographic Audit Integrity',
+    statutoryRule: 'GFR Rule 160 & 173 • DFPR 1978 • Constitution Art. 148-151',
     accentColor: 'from-rose-600 to-slate-800',
   },
 ];

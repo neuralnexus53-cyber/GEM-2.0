@@ -309,13 +309,13 @@ export const GovOfficerProfileView: React.FC<GovOfficerProfileViewProps> = ({
                     </div>
                     <div>
                       <h4 className="font-extrabold text-sm text-slate-900">
-                        {ROLE_DEFINITIONS[profile.role]?.title || profile.role}
+                        {ROLE_DEFINITIONS[(profile.role || 'TEC_MEMBER') as UserRole]?.title || profile.role}
                       </h4>
                       <div className="text-xs text-emerald-800 font-semibold mt-0.5">
-                        {ROLE_DEFINITIONS[profile.role]?.statutoryRule}
+                        {ROLE_DEFINITIONS[(profile.role || 'TEC_MEMBER') as UserRole]?.statutoryRule}
                       </div>
                       <p className="text-[11px] text-slate-600 mt-1 leading-normal">
-                        {ROLE_DEFINITIONS[profile.role]?.summary}
+                        {ROLE_DEFINITIONS[(profile.role || 'TEC_MEMBER') as UserRole]?.summary}
                       </p>
                     </div>
                     <div className="pt-2 border-t border-emerald-200/60 flex items-center justify-between text-[11px] font-mono text-emerald-900">

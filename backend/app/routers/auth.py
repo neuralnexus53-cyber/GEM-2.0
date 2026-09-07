@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from datetime import datetime, timedelta
 from typing import Optional
 import hashlib
+import secrets
 from jose import jwt
-from passlib.context import CryptContext
 from ..models import (
     UserRegisterRequest, 
     UserLoginRequest, 
@@ -29,7 +29,11 @@ from ..database import (
 from ..middleware.tier_gating import get_current_user, JWT_SECRET, JWT_ALGORITHM
 
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+def hash_password(password: str) -> str:
+    salt = secrets.token_hex(16)
+    key = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt.encode('utf-8'), 100000)
+    return f"pbkdf2_sha256${salt}${key.hex()}"
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
@@ -45,7 +49,7 @@ def register_vendor(payload: UserRegisterRequest):
 
     user_id = f"usr-{len(db_users) + 1}"
     vendor_id = f"VEND-{payload.role[:3]}-{len(db_vendors) * 100 + 88}"
-    hashed_pwd = pwd_context.hash(payload.password)
+    hashed_pwd = hash_password(payload.password)
 
     new_user = {
         "id": user_id,
@@ -156,7 +160,7 @@ def register_officer(payload: GovOfficerRegisterRequest):
     dept_prefix = "".join([w[0] for w in payload.department.split() if w[0].isalpha()]).upper()[:5] or "GOV"
     badge_id = payload.badge_id or f"PO-{dept_prefix}-2026-{len(db_officers) * 100 + 44}"
     officer_id = f"off-{len(db_officers) + 1}"
-    hashed_pwd = pwd_context.hash(payload.password)
+    hashed_pwd = hash_password(payload.password)
 
     new_officer = {
         "id": officer_id,

@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { UserRole, Tender, OfficerProfile, ActiveTab, ROLE_DEFINITIONS } from '../types/procurement';
+import { LanguageSelector } from '../../components/LanguageSelector';
 
 export type { ActiveTab };
 
@@ -367,6 +368,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       <div className="mt-4 pt-3 border-t border-[#1E3A68] space-y-2">
+        
+        <div className="flex items-center justify-between px-2 py-1 bg-[#051124] rounded border border-[#1E3A68]">
+          <span className="text-[10px] text-slate-300 font-semibold">Portal Language:</span>
+          <LanguageSelector variant="topbar" />
+        </div>
         
         {roleConfig.canUnmaskVault && (
           <div className="bg-[#051124] p-2 rounded-lg border border-[#1E3A68]">

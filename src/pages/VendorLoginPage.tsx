@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthProvider } from '../vendor/context/AuthContext';
 import { VendorAuthGateway } from '../vendor/components/auth/VendorAuthGateway';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 function VendorLoginBody() {
   const navigate = useNavigate();
@@ -39,6 +40,7 @@ export default function VendorLoginPage() {
           </Link>
 
           <div className="flex items-center gap-3">
+            <LanguageSelector variant="topbar" />
             <Link 
               to="/vendor/register" 
               className="text-xs text-amber-400 hover:text-amber-300 font-semibold px-3 py-1.5 rounded-lg border border-amber-500/30 hover:border-amber-400 transition-all"

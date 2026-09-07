@@ -35,8 +35,8 @@ export const HeaderStats: React.FC<HeaderStatsProps> = ({ profile, currentRole }
         </div>
         <div className="text-sm sm:text-base font-extrabold text-white truncate">
           {currentRole === 'OEM_SELLER' && 'OEM Direct Manufacturer'}
-          {currentRole === 'AUTHORIZED_RESELLER' && 'Authorized GeM Reseller (MAF Active)'}
-          {currentRole === 'SERVICE_PROVIDER' && 'Registered Service Provider (SLAs)'}
+          {(currentRole === 'AUTHORIZED_RESELLER' || currentRole === 'MSME_STARTUP') && 'Authorized GeM Reseller & MSME'}
+          {(currentRole === 'SERVICE_PROVIDER' || currentRole === 'WORKS_CONTRACTOR') && 'Works Contractor & Services'}
         </div>
         <div className="text-[11px] text-cyan-300 font-mono font-medium flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>

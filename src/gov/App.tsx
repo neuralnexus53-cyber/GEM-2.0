@@ -471,7 +471,13 @@ export const App: React.FC = () => {
         <OfficerProfileModal 
           profile={officerProfile}
           onClose={() => setShowOfficerProfileModal(false)}
-          onLogout={() => setShowOfficerProfileModal(false)}
+          onLogout={() => {
+            setShowOfficerProfileModal(false);
+            if (window.confirm('Are you sure you want to securely terminate this authenticated procurement officer session?')) {
+              localStorage.removeItem('gem_gov_auth_session');
+              window.location.href = '#/gov/login';
+            }
+          }}
         />
       )}
     </div>

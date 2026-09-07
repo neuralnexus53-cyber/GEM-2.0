@@ -19,7 +19,8 @@ import {
   Activity,
   Sparkles,
   History,
-  ArrowRight
+  ArrowRight,
+  Lock
 } from 'lucide-react';
 import { UserRole, VendorProfile } from './types';
 import { SubscriptionState } from './types/auth_billing';
@@ -48,6 +49,7 @@ import { WorksContractorPortal } from './components/segmentation/WorksContractor
 // Blind Evaluation & Cryptographic Vault
 import { BlindTokenManager } from './components/vault/BlindTokenManager';
 import { EvaluationArchiveView } from './components/vault/EvaluationArchiveView';
+import { RoleAuthorityGuard } from './components/auth/RoleAuthorityGuard';
 
 // Marketplace & Pricing Advisors
 import { TenderMatching } from './components/marketplace/TenderMatching';
@@ -68,7 +70,7 @@ import { DigiLockerModal } from './components/digilocker/DigiLockerModal';
 import { DigiLockerVaultView } from './components/digilocker/DigiLockerVaultView';
 
 export const App: React.FC = () => {
-  const { profile: authProfile, updateProfile } = useAuth();
+  const { user, profile: authProfile, updateProfile } = useAuth();
 
   const [currentRole, setCurrentRole] = useState<UserRole>('OEM_SELLER');
   const [activeProfile, setActiveProfile] = useState<VendorProfile>(authProfile || mockProfiles.OEM_SELLER);
@@ -98,18 +100,24 @@ export const App: React.FC = () => {
   const [isDigiLockerModalOpen, setIsDigiLockerModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
+    // If vendor has no session, route to vendor login
+    if (!user && !localStorage.getItem('gem_vendor_auth_session')) {
+      window.location.hash = '#/vendor/login';
+      return;
+    }
+
     if (authProfile) {
       setActiveProfile(authProfile);
       const userRole = authProfile.role || 'OEM_SELLER';
       setCurrentRole(userRole);
       // Dynamic role-based routing: default desk based on vendors.role
       if (activeTab === 'OEM_PORTAL' || activeTab === 'MSME_PORTAL' || activeTab === 'WORKS_PORTAL') {
-        if (userRole === 'AUTHORIZED_RESELLER') setActiveTab('MSME_PORTAL');
-        else if (userRole === 'SERVICE_PROVIDER') setActiveTab('WORKS_PORTAL');
+        if (userRole === 'AUTHORIZED_RESELLER' || userRole === 'MSME_STARTUP') setActiveTab('MSME_PORTAL');
+        else if (userRole === 'SERVICE_PROVIDER' || userRole === 'WORKS_CONTRACTOR') setActiveTab('WORKS_PORTAL');
         else setActiveTab('OEM_PORTAL');
       }
     }
-  }, [authProfile]);
+  }, [authProfile, user]);
 
   const handleRoleChange = (role: UserRole) => {
     setCurrentRole(role);
@@ -117,9 +125,9 @@ export const App: React.FC = () => {
       setActiveProfile(mockProfiles[role]);
     }
     // Dynamic role-based routing
-    if (role === 'AUTHORIZED_RESELLER') {
+    if (role === 'AUTHORIZED_RESELLER' || role === 'MSME_STARTUP') {
       setActiveTab('MSME_PORTAL');
-    } else if (role === 'SERVICE_PROVIDER') {
+    } else if (role === 'SERVICE_PROVIDER' || role === 'WORKS_CONTRACTOR') {
       setActiveTab('WORKS_PORTAL');
     } else if (role === 'OEM_SELLER') {
       setActiveTab('OEM_PORTAL');
@@ -163,7 +171,7 @@ export const App: React.FC = () => {
       case 'DISCREPANCY_WIZARD':
         return 'Discrepancy Remediation & Re-scoring Wizard';
       case 'BLIND_VAULT':
-        return 'Cryptographic Blind Evaluation Token Manager (anon_token)';
+        return 'Double-Blind Cryptographic Vault (Anti-Collusion & Zero-Bias)';
       case 'EVALUATION_ARCHIVE':
         return 'Historical Evaluation Archive & Merkle-Tree Audit Vault';
       case 'PRICING_ADVISOR':
@@ -486,7 +494,7 @@ export const App: React.FC = () => {
                               </div>
                               <div>
                                 <div className="font-bold text-white text-xs sm:text-sm">
-                                  Cryptographic Blind Evaluation Token (anon_token)
+                                  Double-Blind Cryptographic Vault (Anti-Bias Shield)
                                 </div>
                                 <div className="text-[10px] text-slate-400 font-mono">
                                   MODULE: VAULT-ANON-05 &bull; Double-Blind Isolation
@@ -498,8 +506,9 @@ export const App: React.FC = () => {
                             <div className="text-slate-200 text-xs font-medium">
                               Double-Blind Technical Scrutiny &bull; Officer Identity Masking
                             </div>
-                            <div className="text-[10px] text-indigo-300 font-mono mt-0.5">
-                              Active HMAC: ANON-2026-8849-F3E1 &bull; CAG Sync
+                            <div className="text-[10px] text-emerald-400 font-mono mt-0.5 flex items-center gap-1">
+                              <Lock className="w-3 h-3 text-emerald-400 inline" />
+                              <span>Anti-Bias Status: 🔒 Sealed in Sovereign Vault (Hidden from Bidder)</span>
                             </div>
                           </td>
                           <td className="text-center">
@@ -621,19 +630,64 @@ export const App: React.FC = () => {
 
             {activeTab === 'OEM_PORTAL' && (
               <div className="space-y-4">
-                <OemPortal profile={activeProfile} />
+                {activeProfile.role === 'OEM_SELLER' ? (
+                  <OemPortal profile={activeProfile} />
+                ) : (
+                  <RoleAuthorityGuard 
+                    requiredRole="OEM_SELLER"
+                    currentProfile={activeProfile}
+                    onNavigateToAllowedDesk={() => {
+                      if (activeProfile.role === 'AUTHORIZED_RESELLER' || activeProfile.role === 'MSME_STARTUP') {
+                        handleTabChange('MSME_PORTAL');
+                      } else {
+                        handleTabChange('WORKS_PORTAL');
+                      }
+                    }}
+                    onNavigateToOverview={() => handleTabChange('OVERVIEW')}
+                  />
+                )}
               </div>
             )}
 
             {activeTab === 'MSME_PORTAL' && (
               <div className="space-y-4">
-                <MsmeStartupPortal profile={activeProfile} />
+                {(activeProfile.role === 'AUTHORIZED_RESELLER' || activeProfile.role === 'MSME_STARTUP') ? (
+                  <MsmeStartupPortal profile={activeProfile} />
+                ) : (
+                  <RoleAuthorityGuard 
+                    requiredRole="MSME_STARTUP"
+                    currentProfile={activeProfile}
+                    onNavigateToAllowedDesk={() => {
+                      if (activeProfile.role === 'OEM_SELLER') {
+                        handleTabChange('OEM_PORTAL');
+                      } else {
+                        handleTabChange('WORKS_PORTAL');
+                      }
+                    }}
+                    onNavigateToOverview={() => handleTabChange('OVERVIEW')}
+                  />
+                )}
               </div>
             )}
 
             {activeTab === 'WORKS_PORTAL' && (
               <div className="space-y-4">
-                <WorksContractorPortal profile={activeProfile} />
+                {(activeProfile.role === 'SERVICE_PROVIDER' || activeProfile.role === 'WORKS_CONTRACTOR') ? (
+                  <WorksContractorPortal profile={activeProfile} />
+                ) : (
+                  <RoleAuthorityGuard 
+                    requiredRole="WORKS_CONTRACTOR"
+                    currentProfile={activeProfile}
+                    onNavigateToAllowedDesk={() => {
+                      if (activeProfile.role === 'OEM_SELLER') {
+                        handleTabChange('OEM_PORTAL');
+                      } else {
+                        handleTabChange('MSME_PORTAL');
+                      }
+                    }}
+                    onNavigateToOverview={() => handleTabChange('OVERVIEW')}
+                  />
+                )}
               </div>
             )}
 

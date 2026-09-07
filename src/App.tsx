@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from "react";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
+import { LanguageProvider } from "./context/LanguageContext";
 
 // Lazy load portals and auth pages for optimal chunking
 const VendorPortal = lazy(() => import("./vendor/index"));
@@ -39,7 +40,8 @@ function LoadingScreen({ label }: { label: string }) {
 
 export default function App() {
   return (
-    <HashRouter>
+    <LanguageProvider>
+      <HashRouter>
       <Routes>
         
         <Route path="/" element={<LandingPage />} />
@@ -102,6 +104,7 @@ export default function App() {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </HashRouter>
+      </HashRouter>
+    </LanguageProvider>
   );
 }

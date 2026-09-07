@@ -50,8 +50,8 @@ export const PortalWelcomeBanner: React.FC<PortalWelcomeBannerProps> = ({
 
         <p className="text-xs text-slate-200">
           {currentRole === 'OEM_SELLER' && 'OEM Direct Manufacturer Desk • Brand & Catalog Registered on GeM'}
-          {currentRole === 'AUTHORIZED_RESELLER' && 'Authorized Reseller Desk • Back-to-Back OEM MAF & MSE Preferences'}
-          {currentRole === 'SERVICE_PROVIDER' && 'Service Provider Desk • Manpower, Cloud, Facility & Works EPC SLAs'}
+          {(currentRole === 'AUTHORIZED_RESELLER' || currentRole === 'MSME_STARTUP') && 'MSME & Authorized Reseller Desk • Back-to-Back OEM MAF & MSE Preferences'}
+          {(currentRole === 'SERVICE_PROVIDER' || currentRole === 'WORKS_CONTRACTOR') && 'Works & Infrastructure Desk • Joint Ventures, Solvency & CPWD SLAs'}
         </p>
       </div>
 

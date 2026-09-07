@@ -388,8 +388,9 @@ export const EvaluationArchiveView: React.FC<EvaluationArchiveViewProps> = ({ pr
                     </div>
                   </div>
 
-                  <div className="text-[10px] font-mono text-indigo-300 bg-indigo-950/60 px-2 py-0.5 rounded border border-indigo-700/50">
-                    Token: {record.anonToken}
+                  <div className="text-[10px] font-mono text-emerald-300 bg-emerald-950/70 px-2 py-0.5 rounded border border-emerald-700/60 flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-emerald-400" />
+                    <span>Anti-Bias Vault: Sealed</span>
                   </div>
                 </div>
               </div>
@@ -540,8 +541,11 @@ export const EvaluationArchiveView: React.FC<EvaluationArchiveViewProps> = ({ pr
                     <span className="text-white font-bold">{selectedRecord.tenderId}</span>
                   </div>
                   <div>
-                    <span className="text-slate-400 block text-[10px] uppercase">Double-Blind Token:</span>
-                    <span className="text-indigo-300 font-bold">{selectedRecord.anonToken}</span>
+                    <span className="text-slate-400 block text-[10px] uppercase">Double-Blind Anti-Bias Shield:</span>
+                    <span className="text-emerald-400 font-bold flex items-center gap-1">
+                      <Lock className="w-3 h-3 text-emerald-400" />
+                      <span>[SEALED IN HSM VAULT • ZERO-KNOWLEDGE ENFORCED]</span>
+                    </span>
                   </div>
                   <div>
                     <span className="text-slate-400 block text-[10px] uppercase">Audit Sequence / Block:</span>

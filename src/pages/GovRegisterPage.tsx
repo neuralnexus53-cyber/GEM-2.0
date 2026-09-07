@@ -15,6 +15,7 @@ import {
   Briefcase,
   AlertTriangle
 } from 'lucide-react';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 const DEFAULT_OFFICER_PHOTO = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80';
 
@@ -207,6 +208,7 @@ export default function GovRegisterPage() {
         </Link>
 
         <div className="flex items-center gap-3">
+          <LanguageSelector variant="topbar" />
           <Link 
             to="/gov/login" 
             className="text-xs text-blue-400 hover:text-blue-300 font-semibold px-3 py-1.5 rounded-lg border border-blue-500/30 hover:border-blue-400 transition-all"

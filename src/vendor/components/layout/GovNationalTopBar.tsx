@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, Globe, HelpCircle, ShieldCheck, Clock, Accessibility } from 'lucide-react';
+import { LanguageSelector } from '../../../components/LanguageSelector';
 
 interface GovNationalTopBarProps {
   onOpenGuide: () => void;
@@ -114,13 +115,8 @@ export const GovNationalTopBar: React.FC<GovNationalTopBarProps> = ({ onOpenGuid
 
           <span className="text-slate-700">|</span>
 
-          <button
-            onClick={() => setLang(lang === 'EN' ? 'HI' : 'EN')}
-            className="flex items-center gap-1 px-2 py-0.5 rounded bg-[#00244D] hover:bg-[#003366] border border-[#1E3A68] text-slate-200 font-semibold text-[10px]"
-          >
-            <Globe className="w-2.5 h-2.5 text-amber-400" />
-            <span>{lang === 'EN' ? 'हिन्दी' : 'English'}</span>
-          </button>
+          {/* 10-Language Selector */}
+          <LanguageSelector variant="topbar" />
 
         </div>
 

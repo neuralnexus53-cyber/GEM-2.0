@@ -42,7 +42,7 @@ interface AuthContextType {
   profile: VendorProfile;
   isAuthenticated: boolean;
   pendingMfa: PendingMfaState | null;
-  login: (identifier: string, password: string) => Promise<{ success: boolean; requiresMfa?: boolean; error?: string }>;
+  login: (identifier: string, password: string, enableMfa?: boolean) => Promise<{ success: boolean; requiresMfa?: boolean; error?: string }>;
   loginAsDemoVendor: (role: UserRole) => Promise<{ success: boolean; requiresMfa?: boolean }>;
   loginWithMicrosoftAuthenticator: (role?: UserRole) => Promise<{ success: boolean; requiresMfa?: boolean }>;
   verifyMfa: (otp: string) => boolean;
@@ -51,6 +51,7 @@ interface AuthContextType {
   logout: () => void;
   updateProfile: (updated: Partial<VendorProfile>) => void;
   switchProfile: (newRole: UserRole) => void;
+  switchDossier: (vendorId: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -191,6 +192,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(sessionData);
     setProfile(demo.profile);
     setPendingMfa(null);
+    try {
+      localStorage.setItem('gem_vendor_auth_session', JSON.stringify(sessionData));
+    } catch (e) {}
     return { success: true, requiresMfa: false };
   };
 
@@ -204,10 +208,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(sessionData);
     setProfile(demo.profile);
     setPendingMfa(null);
+    try {
+      localStorage.setItem('gem_vendor_auth_session', JSON.stringify(sessionData));
+    } catch (e) {}
     return { success: true, requiresMfa: false };
   };
 
-  const login = async (identifier: string, password: string) => {
+  const login = async (identifier: string, password: string, enableMfa: boolean = true) => {
     const cleanId = identifier.trim().toLowerCase();
 
     // Check custom registered users first
@@ -231,9 +238,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             loginTimestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' IST'
           };
 
+          if (enableMfa) {
+            setPendingMfa({
+              session: sessionData,
+              profile: match.profile,
+              otp: '202688',
+              mobileLast4: '7731',
+              email: sessionData.email
+            });
+            return { success: true, requiresMfa: true };
+          }
+
           setUser(sessionData);
           setProfile(match.profile);
           setPendingMfa(null);
+          try {
+            localStorage.setItem('gem_vendor_auth_session', JSON.stringify(sessionData));
+          } catch (e) {}
           return { success: true, requiresMfa: false };
         }
       } catch (e) {}
@@ -248,6 +269,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         demo.session.gstin.toLowerCase() === cleanId ||
         cleanId.includes(role.toLowerCase().substring(0, 3))
       ) {
+        if (enableMfa) {
+          const sessionData: UserSession = {
+            ...demo.session,
+            loginTimestamp: new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' IST'
+          };
+          setPendingMfa({
+            session: sessionData,
+            profile: demo.profile,
+            otp: '202688',
+            mobileLast4: '7731',
+            email: demo.session.email
+          });
+          return { success: true, requiresMfa: true };
+        }
         return loginAsDemoVendor(role);
       }
     }
@@ -298,6 +333,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setUser(fallbackSession);
     setProfile(fallbackProfile);
+    try {
+      localStorage.setItem('gem_vendor_auth_session', JSON.stringify(fallbackSession));
+    } catch (e) {}
     return { success: true, requiresMfa: false };
   };
 
@@ -307,6 +345,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (otp.length === 6) {
       setUser(pendingMfa.session);
       setProfile(pendingMfa.profile);
+      try {
+        localStorage.setItem('gem_vendor_auth_session', JSON.stringify(pendingMfa.session));
+      } catch (e) {}
       setPendingMfa(null);
       return true;
     }
@@ -422,6 +463,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     setUser(newSession);
     setProfile(newProfile);
+    try {
+      localStorage.setItem('gem_vendor_auth_session', JSON.stringify(newSession));
+    } catch (e) {}
     return { success: true };
   };
 
@@ -429,6 +473,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     setPendingMfa(null);
     localStorage.removeItem('gem_vendor_auth_session');
+    window.location.hash = '#/';
   };
 
   const updateProfile = async (updated: Partial<VendorProfile>) => {
@@ -454,6 +499,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     loginAsDemoVendor(newRole, false);
   };
 
+  const switchDossier = (vendorId: string): boolean => {
+    const raw = localStorage.getItem('gem_registered_vendors');
+    if (raw) {
+      try {
+        const list = JSON.parse(raw);
+        const match = list.find((item: any) => item.session?.vendorId === vendorId || item.profile?.id === vendorId);
+        if (match) {
+          setUser(match.session);
+          setProfile(match.profile);
+          localStorage.setItem('gem_vendor_auth_session', JSON.stringify(match.session));
+          return true;
+        }
+      } catch (e) {}
+    }
+    // Check demo accounts
+    for (const r of Object.keys(DEMO_ACCOUNTS_MAP) as UserRole[]) {
+      if (DEMO_ACCOUNTS_MAP[r].session.vendorId === vendorId) {
+        setUser(DEMO_ACCOUNTS_MAP[r].session);
+        setProfile(DEMO_ACCOUNTS_MAP[r].profile);
+        localStorage.setItem('gem_vendor_auth_session', JSON.stringify(DEMO_ACCOUNTS_MAP[r].session));
+        return true;
+      }
+    }
+    return false;
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -468,7 +539,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       registerVendor,
       logout,
       updateProfile,
-      switchProfile
+      switchProfile,
+      switchDossier
     }}>
       {children}
     </AuthContext.Provider>

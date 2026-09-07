@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { 
   Globe, 
   ShieldCheck, 
@@ -12,11 +11,12 @@ import {
   Lock,
   LogOut,
   Building2,
-  ChevronDown,
-  ArrowRightLeft
+  ChevronDown
 } from 'lucide-react';
 import { Tender, UserRole, OfficerProfile } from '../types/procurement';
 import { ActiveTab } from './Sidebar';
+import { LanguageSelector } from '../../components/LanguageSelector';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface NavbarProps {
   selectedTender: Tender;
@@ -39,6 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   officerProfile,
   onOpenOfficerProfile,
 }) => {
+  const { t } = useLanguage();
   const [istTime, setIstTime] = useState<string>('');
   const [showTenderMenu, setShowTenderMenu] = useState<boolean>(false);
 
@@ -75,10 +76,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const handleLogout = () => {
-    if (window.confirm('Are you sure you want to securely terminate this authenticated procurement officer session?')) {
-      localStorage.removeItem('gem_gov_auth_session');
-      window.location.href = '#/gov/login';
-    }
+    localStorage.removeItem('gem_gov_auth_session');
+    window.location.hash = '#/';
   };
 
   return (
@@ -113,12 +112,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <span className="text-white/20">|</span>
 
-          <div className="flex items-center gap-1 text-[11px]">
-            <Globe className="w-3.5 h-3.5 text-sky-400" />
-            <span className="text-white font-bold">ENG</span>
-            <span className="text-slate-500">/</span>
-            <span className="text-slate-400 hover:text-white cursor-pointer">हिंदी</span>
-          </div>
+          {/* 10-Language Official Portal Selector */}
+          <LanguageSelector variant="topbar" />
 
           <span className="text-white/20 hidden sm:inline">|</span>
           <span className="text-emerald-400 font-bold text-[10px] hidden sm:inline">NIC Cloud Gate-4</span>
@@ -199,14 +194,6 @@ export const Navbar: React.FC<NavbarProps> = ({
             )}
           </div>
 
-          <Link
-            to="/vendor"
-            className="flex items-center gap-1.5 bg-[#001D3D] hover:bg-[#001833] border border-[#1E3A68] hover:border-[#FF9933] px-3 py-1.5 rounded-lg text-xs font-bold text-slate-200 hover:text-amber-400 transition-all shadow-sm"
-            title="Switch to Vendor Compliance Portal"
-          >
-            <ArrowRightLeft className="w-3.5 h-3.5 text-[#FF9933]" />
-            <span className="hidden sm:inline">Vendor Portal</span>
-          </Link>
 
           <button
             onClick={onOpenOfficerProfile}

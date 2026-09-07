@@ -45,6 +45,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   const handleSignOut = () => {
     logout();
     onClose();
+    window.location.hash = '#/';
   };
 
   return (

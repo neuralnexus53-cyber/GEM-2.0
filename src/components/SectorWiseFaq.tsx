@@ -103,6 +103,18 @@ export const SECTOR_FAQS: FaqItem[] = [
     tags: ['MAF', 'Reseller Authorization', 'Warranty Guarantee', 'OEM Verification']
   },
 
+  {
+    id: 'FAQ-OEM-04',
+    category: 'OEM',
+    categoryLabel: 'OEMs & Manufacturers',
+    sectorIcon: Factory,
+    question: 'If a vendor registers or logs in as an OEM Manufacturer, how are their dashboard features and account permissions restricted?',
+    shortAnswer: 'OEM Manufacturer accounts are strictly bound to OEM-exclusive privileges (MII local content declarations, factory audits, BoM breakdown). Accessing Reseller or Service features requires dedicated registration.',
+    detailedAnswer: 'To maintain regulatory integrity and prevent conflicting bids, GeM 2.0 enforces strict account-type segregation. An OEM Manufacturer account receives specialized capabilities—including direct Make in India Class-I local content certification, Bill of Materials (BOM) value-addition computation, factory geo-tagged inspection uploads, and MAF issuance. Under GFR separation-of-roles mandates, if an enterprise also operates as a third-party Reseller or Service Contractor, they cannot mix these features in one session and must register a dedicated credential dossier for that specific entity role.',
+    legalReference: 'GFR 2017 Rule 153 • PPP-MII Order 2017 • GeM Vendor Governance Policy',
+    tags: ['OEM Role', 'Account Isolation', 'Role Segregation', 'Make in India', 'BOM Breakdown']
+  },
+
   // 3. CIVIL & WORKS CONTRACTORS
   {
     id: 'FAQ-WORKS-01',
@@ -161,6 +173,39 @@ export const SECTOR_FAQS: FaqItem[] = [
     legalReference: 'GFR 2017 Rule 160(xiv) (Two-Bid System Commercial Opening)',
     tags: ['Vault Unmasking', 'Two-Bid System', 'Class-3 DSC', 'Financial Stage']
   },
+  {
+    id: 'FAQ-OFFICER-04',
+    category: 'OFFICER',
+    categoryLabel: 'Procurement Officers & Buyers',
+    sectorIcon: Landmark,
+    question: 'Which Government Officer holds the final statutory authority to award the tender to the winning bidder?',
+    shortAnswer: 'The Competent Financial Authority (CFA) / Competent Buyer Authority under GFR Rule 160 & DFPR holds exclusive sovereign authority to accept recommendations and award the contract.',
+    detailedAnswer: 'Under GFR 2017 Rule 160, Rule 173(xxii), and the Delegation of Financial Power Rules (DFPR), the Tender Evaluation Committee (TEC) only performs double-blind technical evaluation and submits recommendations. The Competent Financial Authority (CFA) / Buyer Authority (such as the Joint Secretary, Head of Department, or Director) holds the exclusive statutory authority to authorize double-blind commercial vault unmasking, finalize the QCBS/L1 ranking, and formally approve and sign the award of contract / Letter of Acceptance (LoA) to the winning bidder.',
+    legalReference: 'GFR 2017 Rule 160, Rule 173(xxii) • DFPR 1978 • GeM Procurement Manual 2024',
+    tags: ['Tender Award', 'Competent Financial Authority', 'Buyer Authority', 'GFR Rule 160', 'Final Decision', 'TEC vs CFA']
+  },
+  {
+    id: 'FAQ-OFFICER-05',
+    category: 'OFFICER',
+    categoryLabel: 'Procurement Officers & Buyers',
+    sectorIcon: Landmark,
+    question: 'Why were cross-portal "Switch to Vendor Portal" or "Switch to Officer Dashboard" options removed from all portals?',
+    shortAnswer: 'To enforce strict statutory separation of duties between public buyers and private suppliers, preventing unauthorized privilege escalation.',
+    detailedAnswer: 'Under Central Vigilance Commission (CVC) rules and GFR 2017 conflict-of-interest principles, Government Procurement Officers and commercial Vendors must operate in completely insulated, cryptographic environments. Providing direct "Switch Here" shortcuts within active sessions posed a compliance risk. Each role is strictly bounded to its designated sovereign domain, and officers or sellers must explicitly log out and authenticate with verified credentials to enter their respective environments.',
+    legalReference: 'CVC Guidelines on Conflict of Interest (O.M. No. 005/CRD/19) • GFR 2017 Rule 175',
+    tags: ['Separation of Duties', 'CVC Conflict of Interest', 'Portal Isolation', 'No Cross Switching']
+  },
+  {
+    id: 'FAQ-OFFICER-06',
+    category: 'OFFICER',
+    categoryLabel: 'Procurement Officers & Buyers',
+    sectorIcon: Landmark,
+    question: 'How does GeM 2.0 compartmentalize officer duties across Scrutiny, TEC, Buyer, and CAG Auditor roles?',
+    shortAnswer: 'Each officer account is permanently bound to a single GFR 2017 role with hardware DSC token enforcement, preventing combined or overlapping evaluation powers.',
+    detailedAnswer: 'Under GFR 2017 Rules 164, 189, and 160, separation of duties is strictly enforced:\n• Preliminary Scrutiny Officer: Validates 7 sovereign registries (GSTN, MCA, EPFO, CBDT) and PQC eligibility. Issues 48h discrepancy notices. Cannot assign technical scores or unmask commercial vaults.\n• TEC Member: Blindly scores technical criteria (/100) and Make-in-India compliance. Cannot create tenders or unmask commercial vaults.\n• Competent Buyer Authority: Publishes tenders, sets QCBS weights, holds the vault key, and awards the contract.\n• CAG Auditor: Independent read-only vigilance inspection and cryptographic ledger auditing.',
+    legalReference: 'GFR 2017 Rules 160, 164, 189 • CAG Act 1971 (Section 14)',
+    tags: ['Role Separation', 'Scrutiny Officer', 'TEC Member', 'Buyer Authority', 'CAG Auditor']
+  },
 
   // 5. STATUTORY & TAX COMPLIANCE
   {
@@ -185,6 +230,39 @@ export const SECTOR_FAQS: FaqItem[] = [
     legalReference: 'Contract Labour Act, 1970 • EPF & MP Act 1952 • Shram Suvidha National Portal',
     tags: ['EPFO ECR', 'ESIC Pehchan', 'Social Security', 'Labor Welfare']
   },
+  {
+    id: 'FAQ-STATUTORY-03',
+    category: 'STATUTORY',
+    categoryLabel: 'Tax & Statutory Gateways',
+    sectorIcon: Receipt,
+    question: 'Why is 2-Step OTP Security Verification strictly mandatory for all Vendor and Officer portal logins?',
+    shortAnswer: 'Statutory 2-Factor Authentication (Aadhaar/Mobile OTP + Password/DSC) is mandatory under GFR 2017 & GeM 2.0 Security Guidelines to prevent session hijacking and bid tampering.',
+    detailedAnswer: 'In compliance with National Informatics Centre (NIC) and CERT-In sovereign cybersecurity directives, dual-factor authentication is no longer optional. Every vendor sign-in requires an instantaneous 6-digit OTP dispatched to the registered mobile/email alongside password credentials. Government procurement officers must authenticate via dual-factor Aadhaar OTP and Class-3 PKCS#11 Hardware Token DSC to access tender evaluation consoles.',
+    legalReference: 'CERT-In Cyber Security Directions 2022 • GFR 2017 Chapter 2 • Information Technology Rules',
+    tags: ['2-Step OTP', 'Mandatory 2FA', 'CERT-In Compliance', 'Session Security', 'Aadhaar OTP']
+  },
+  {
+    id: 'FAQ-STATUTORY-04',
+    category: 'STATUTORY',
+    categoryLabel: 'Tax & Statutory Gateways',
+    sectorIcon: Receipt,
+    question: 'Which languages are supported across the GeM 2.0 portals, and how does multilingual accessibility work?',
+    shortAnswer: 'Minimum 10 official Indian languages (English, हिन्दी, मराठी, தமிழ், తెలుగు, বাংলা, ગુજરાતી, ಕನ್ನಡ, മലയാളം, ਪੰਜਾਬੀ) are natively integrated across all portals.',
+    detailedAnswer: 'In line with the Digital India Bhashini initiative and Eighth Schedule to the Constitution of India, GeM 2.0 provides native multilingual support across the Landing Page, Vendor Portal, Procurement Officer Portal, and Authentication Gateways. Users can switch between 10 official Indian languages in real time with persistent browser preferences, ensuring Micro, Small, Rural, and Tribal artisans and suppliers from every state can seamlessly participate in national procurement without linguistic barriers.',
+    legalReference: 'Official Languages Act, 1963 • Digital India Bhashini Mission • GeM Inclusivity Directives',
+    tags: ['Language Support', '10 Indian Languages', 'Bhashini', 'Linguistic Inclusivity', 'Multilingual Portal']
+  },
+  {
+    id: 'FAQ-STATUTORY-05',
+    category: 'STATUTORY',
+    categoryLabel: 'Tax & Statutory Gateways',
+    sectorIcon: Receipt,
+    question: 'What are the streamlined authentication methods available on the Vendor Sign-In Gateway?',
+    shortAnswer: 'Vendors can authenticate directly via: 1) Login with OTP, 2) Vendor Sign-In (Password + Mandatory OTP), or 3) New Registration.',
+    detailedAnswer: 'To ensure rapid, tamper-resistant access for both seasoned enterprises and first-time rural sellers, the login gateway has been streamlined into three clear, standardized pathways: direct OTP login to verified mobile numbers, standard credential sign-in enforced with mandatory 2-step OTP, and unified registration connected to DigiLocker and Udyam databases.',
+    legalReference: 'GeM Seller Onboarding Standards 2025 • IT Act 2000',
+    tags: ['Vendor Sign-In', 'Login with OTP', 'Streamlined Auth', 'New Registration']
+  },
 
   // 6. INTEGRITY & CAG AUDIT
   {
@@ -208,6 +286,17 @@ export const SECTOR_FAQS: FaqItem[] = [
     detailedAnswer: 'The GeM 2.0 AI Compliance Engine runs automated heuristic and semantic checks across multiple data dimensions:\n1. Central Debarment Watch: Real-time queries to CPPP, GeM Incident Management, and CVC debarment databases.\n2. Cartel & Common Ownership: Cross-checks Director Identification Numbers (DIN) via MCA-21 to identify shadow subsidiaries.\n3. Document Forensic OCR: Detects font mismatches, copy-pasted seals, and invalid UDIN formats in CA certificates.',
     legalReference: 'Competition Act, 2002 (Section 3 - Anti-Competitive Agreements) • GeM Incident Management Policy',
     tags: ['Anti-Cartel', 'Bid Rigging', 'CPPP Blacklist', 'Forensic OCR', 'DIN Cross-Check']
+  },
+  {
+    id: 'FAQ-AUDIT-03',
+    category: 'AUDIT',
+    categoryLabel: 'CAG Audit & Anti-Cartelization',
+    sectorIcon: ShieldCheck,
+    question: 'Why is the cryptographic token number concealed/masked in the Vendor Portal during technical evaluation?',
+    shortAnswer: 'To eliminate external token correlation, insider bias, and potential collusion during the double-blind evaluation phase.',
+    detailedAnswer: 'In traditional procurement systems, static token identifiers or serial numbers can inadvertently be shared or cross-referenced between bidders and evaluation officers, introducing subtle bias. Under GeM 2.0\'s enhanced zero-bias architecture, raw token numbers and corporate identifiers (PAN, GSTIN, legal names) are strictly concealed from open views. Officers evaluate technical submissions against anonymous ephemeral tags (e.g. VEN-ANON-XXXX) within a sealed cryptographic vault, guaranteeing 100% impartial merit-based scoring.',
+    legalReference: 'CVC Zero-Bias Procurement Guidelines • IT Act 2000 (Section 43A) • GFR Rule 160(xiv)',
+    tags: ['Token Masking', 'Zero Bias', 'Double Blind Vault', 'Collusion Defense', 'Anti-Corruption']
   }
 ];
 

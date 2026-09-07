@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { 
   Menu, 
   ShieldCheck, 
@@ -12,12 +11,13 @@ import {
   CheckCircle2,
   Star,
   ChevronDown,
-  ArrowRightLeft
+  Building2
 } from 'lucide-react';
 import { UserRole, VendorProfile } from '../../types';
 import { SubscriptionState } from '../../types/auth_billing';
 import { useAuth } from '../../context/AuthContext';
 import { mockProfiles } from '../../data/mockData';
+import { LanguageSelector } from '../../../components/LanguageSelector';
 
 interface TopHeaderProps {
   currentRole: UserRole;
@@ -38,17 +38,48 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   onToggleMobileSidebar,
   onSelectRole
 }) => {
-  const { user, logout, switchProfile } = useAuth();
+  const { user, logout, switchDossier } = useAuth();
 
-  const handleRoleChange = (role: UserRole) => {
-    if (onSelectRole) onSelectRole(role);
-    switchProfile(role);
+  // Read other registered vendor dossiers
+  const otherRegisteredAccounts = React.useMemo(() => {
+    try {
+      const raw = localStorage.getItem('gem_registered_vendors');
+      if (!raw) return [];
+      const list = JSON.parse(raw);
+      if (!Array.isArray(list)) return [];
+      return list.filter((item: any) => {
+        const id = item.session?.vendorId || item.profile?.id;
+        return id && id !== profile.id && id !== user?.vendorId;
+      });
+    } catch (e) {
+      return [];
+    }
+  }, [profile.id, user?.vendorId]);
+
+  const handleAccountSelect = (val: string) => {
+    if (val === '__REGISTER_OEM__') {
+      window.location.hash = '#/vendor/register?role=OEM_SELLER';
+      return;
+    }
+    if (val === '__REGISTER_MSME__') {
+      window.location.hash = '#/vendor/register?role=MSME_STARTUP';
+      return;
+    }
+    if (val === '__REGISTER_WORKS__') {
+      window.location.hash = '#/vendor/register?role=WORKS_CONTRACTOR';
+      return;
+    }
+    if (val.startsWith('DOSSIER:')) {
+      const vendorId = val.replace('DOSSIER:', '');
+      switchDossier(vendorId);
+      window.location.reload();
+      return;
+    }
   };
 
   const handleLogout = () => {
-    if (window.confirm('Are you sure you want to securely terminate this authenticated vendor procurement session?')) {
-      logout();
-    }
+    logout();
+    window.location.hash = '#/';
   };
 
   return (
@@ -112,17 +143,50 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
 
       <div className="flex items-center gap-2 sm:gap-3 justify-between sm:justify-end">
         
+        {/* Active Vendor Entity & Account Selector */}
         <div className="flex items-center gap-1.5 bg-[#001833] px-2 py-1 rounded border border-[#1E3A68] text-xs">
-          <ArrowRightLeft className="w-3 h-3 text-amber-400 shrink-0" />
+          <Building2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
           <span className="text-[10px] text-slate-400 font-medium hidden md:inline">Account:</span>
           <select
-            value={currentRole}
-            onChange={e => handleRoleChange(e.target.value as UserRole)}
-            className="bg-transparent text-slate-100 font-semibold text-[11px] focus:outline-none cursor-pointer pr-1"
+            value="CURRENT"
+            onChange={e => handleAccountSelect(e.target.value)}
+            className="bg-transparent text-slate-100 font-semibold text-[11px] focus:outline-none cursor-pointer pr-1 max-w-[210px] truncate"
           >
-            <option value="OEM_SELLER" className="bg-[#002855] text-white">Apex Dynamics (OEM Manufacturer)</option>
-            <option value="AUTHORIZED_RESELLER" className="bg-[#002855] text-white">Novavolt Solutions (Authorized Reseller)</option>
-            <option value="SERVICE_PROVIDER" className="bg-[#002855] text-white">Bharat Infra-Tech (Service Provider)</option>
+            <option value="CURRENT" className="bg-[#002855] text-white">
+              {profile.name} ({profile.role === 'OEM_SELLER' ? 'OEM Manufacturer' : profile.role === 'AUTHORIZED_RESELLER' || profile.role === 'MSME_STARTUP' ? 'MSME / Reseller' : 'Works Contractor'})
+            </option>
+
+            {otherRegisteredAccounts.length > 0 && (
+              <optgroup label="Registered Vendor Accounts" className="bg-[#001833] text-cyan-300">
+                {otherRegisteredAccounts.map((acc: any, i: number) => {
+                  const r = acc.profile?.role || acc.session?.role;
+                  const roleLabel = r === 'OEM_SELLER' ? 'OEM' : r === 'MSME_STARTUP' || r === 'AUTHORIZED_RESELLER' ? 'MSME' : 'Works';
+                  return (
+                    <option key={i} value={`DOSSIER:${acc.session?.vendorId || acc.profile?.id}`} className="bg-[#002855] text-white">
+                      {acc.profile?.name || acc.session?.fullName} ({roleLabel})
+                    </option>
+                  );
+                })}
+              </optgroup>
+            )}
+
+            <optgroup label="+ Register for Another Role" className="bg-[#001833] text-amber-300">
+              {profile.role !== 'OEM_SELLER' && (
+                <option value="__REGISTER_OEM__" className="bg-[#002855] text-amber-300">
+                  + Sign Up as OEM Manufacturer
+                </option>
+              )}
+              {profile.role !== 'MSME_STARTUP' && profile.role !== 'AUTHORIZED_RESELLER' && (
+                <option value="__REGISTER_MSME__" className="bg-[#002855] text-amber-300">
+                  + Sign Up as MSME / Startup
+                </option>
+              )}
+              {profile.role !== 'WORKS_CONTRACTOR' && profile.role !== 'SERVICE_PROVIDER' && (
+                <option value="__REGISTER_WORKS__" className="bg-[#002855] text-amber-300">
+                  + Sign Up as Works Contractor
+                </option>
+              )}
+            </optgroup>
           </select>
         </div>
 
@@ -137,6 +201,8 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
           </span>
         </div>
 
+
+        <LanguageSelector variant="topbar" />
 
         <button
           onClick={onOpenPricingModal}

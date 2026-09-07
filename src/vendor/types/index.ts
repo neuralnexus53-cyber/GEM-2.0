@@ -1,4 +1,4 @@
-export type UserRole = 'OEM_SELLER' | 'AUTHORIZED_RESELLER' | 'SERVICE_PROVIDER';
+export type UserRole = 'OEM_SELLER' | 'AUTHORIZED_RESELLER' | 'SERVICE_PROVIDER' | 'MSME_STARTUP' | 'WORKS_CONTRACTOR';
 
 export interface VendorProfile {
   id: string;

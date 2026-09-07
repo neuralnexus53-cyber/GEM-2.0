@@ -16,11 +16,15 @@ import {
   Wrench,
   CreditCard,
   Sparkles,
-  History
+  History,
+  Lock,
+  UserPlus,
+  LogOut
 } from 'lucide-react';
 import { UserRole, VendorProfile } from '../../types';
 import { SubscriptionState } from '../../types/auth_billing';
 import { useAuth } from '../../context/AuthContext';
+import { LanguageSelector } from '../../../components/LanguageSelector';
 
 interface SidebarProps {
   currentRole: UserRole;
@@ -53,6 +57,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
   isOpenMobile,
   setIsOpenMobile
 }) => {
+  const { user, switchDossier, logout } = useAuth();
+
+  const isOemRole = profile.role === 'OEM_SELLER';
+  const isMsmeRole = profile.role === 'AUTHORIZED_RESELLER' || profile.role === 'MSME_STARTUP';
+  const isWorksRole = profile.role === 'SERVICE_PROVIDER' || profile.role === 'WORKS_CONTRACTOR';
+
+  const otherRegisteredDossiers = React.useMemo(() => {
+    try {
+      const raw = localStorage.getItem('gem_registered_vendors');
+      if (!raw) return [];
+      const list = JSON.parse(raw);
+      if (!Array.isArray(list)) return [];
+      return list.filter((item: any) => {
+        const id = item.session?.vendorId || item.profile?.id;
+        return id && id !== profile.id && id !== user?.vendorId;
+      });
+    } catch (e) {
+      return [];
+    }
+  }, [profile.id, user?.vendorId]);
+
   const handleNavClick = (tab: string) => {
     setActiveTab(tab);
     setIsOpenMobile(false);
@@ -230,11 +255,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <KeyRound className={`w-4 h-4 ${activeTab === 'BLIND_VAULT' ? 'text-cyan-300' : 'text-indigo-400'}`} />
-                <span>Blind Evaluation Token</span>
+                <KeyRound className={`w-4 h-4 ${activeTab === 'BLIND_VAULT' ? 'text-emerald-300' : 'text-emerald-400'}`} />
+                <span>Double-Blind Vault</span>
               </div>
-              <span className="text-[9px] px-1.5 py-0.5 rounded bg-indigo-950 text-indigo-300 font-mono font-bold border border-indigo-600/70">
-                anon_token
+              <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono font-bold border border-emerald-600/70">
+                SEALED
               </span>
             </button>
 
@@ -285,71 +310,152 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           {/* Section 5: Specialized Vendor Desks */}
           <div className="space-y-1">
-            <div className="px-2 mb-1">
+            <div className="px-2 mb-1 flex items-center justify-between">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                 Specialized Vendor Desks
               </span>
+              <span className="text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-300 font-mono">
+                RBAC
+              </span>
             </div>
 
+            {/* 1. OEM Desk */}
             <button
-              onClick={() => {
-                setCurrentRole('OEM_SELLER');
-                handleNavClick('OEM_PORTAL');
-              }}
+              onClick={() => handleNavClick('OEM_PORTAL')}
               className={`w-full flex items-center justify-between px-3 py-2 rounded-lg font-bold transition-all cursor-pointer text-xs ${
                 activeTab === 'OEM_PORTAL'
                   ? 'bg-gradient-to-r from-[#0284C7]/30 to-[#0284C7]/10 text-white border-l-4 border-[#38BDF8] shadow-sm'
-                  : 'text-slate-300 hover:bg-[#132540] hover:text-white'
+                  : isOemRole 
+                  ? 'text-slate-300 hover:bg-[#132540] hover:text-white' 
+                  : 'text-slate-400 hover:bg-[#132540]/60 opacity-80'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <Building2 className={`w-4 h-4 ${activeTab === 'OEM_PORTAL' ? 'text-cyan-300' : 'text-sky-400'}`} />
-                <span>OEM Catalog &amp; MAF Issuer</span>
+                <Building2 className={`w-4 h-4 ${activeTab === 'OEM_PORTAL' ? 'text-cyan-300' : isOemRole ? 'text-sky-400' : 'text-slate-500'}`} />
+                <div className="text-left">
+                  <span>OEM Catalog &amp; MAF</span>
+                  {!isOemRole && (
+                    <div className="text-[9px] text-rose-400/80 font-normal">Locked for non-OEM</div>
+                  )}
+                </div>
               </div>
-              <span className="text-[9px] px-1.5 py-0.5 rounded bg-sky-950 text-sky-300 font-mono font-bold border border-sky-600/70">
-                MII 74%
-              </span>
+              {isOemRole ? (
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-sky-950 text-sky-300 font-mono font-bold border border-sky-600/70">
+                  MII 74%
+                </span>
+              ) : (
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-rose-950/80 text-rose-300 font-mono font-bold border border-rose-600/60 flex items-center gap-1">
+                  <Lock className="w-2.5 h-2.5" /> OEM ONLY
+                </span>
+              )}
             </button>
 
+            {/* 2. MSME Desk */}
             <button
-              onClick={() => {
-                setCurrentRole('AUTHORIZED_RESELLER');
-                handleNavClick('MSME_PORTAL');
-              }}
+              onClick={() => handleNavClick('MSME_PORTAL')}
               className={`w-full flex items-center justify-between px-3 py-2 rounded-lg font-bold transition-all cursor-pointer text-xs ${
                 activeTab === 'MSME_PORTAL'
                   ? 'bg-gradient-to-r from-[#0284C7]/30 to-[#0284C7]/10 text-white border-l-4 border-[#38BDF8] shadow-sm'
-                  : 'text-slate-300 hover:bg-[#132540] hover:text-white'
+                  : isMsmeRole 
+                  ? 'text-slate-300 hover:bg-[#132540] hover:text-white' 
+                  : 'text-slate-400 hover:bg-[#132540]/60 opacity-80'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <Rocket className={`w-4 h-4 ${activeTab === 'MSME_PORTAL' ? 'text-cyan-300' : 'text-amber-400'}`} />
-                <span>Authorized Reseller &amp; MAF</span>
+                <Rocket className={`w-4 h-4 ${activeTab === 'MSME_PORTAL' ? 'text-cyan-300' : isMsmeRole ? 'text-amber-400' : 'text-slate-500'}`} />
+                <div className="text-left">
+                  <span>MSME Exemption &amp; MAF</span>
+                  {!isMsmeRole && (
+                    <div className="text-[9px] text-amber-400/80 font-normal">Requires MSME Role</div>
+                  )}
+                </div>
               </div>
-              <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 font-mono font-bold border border-amber-600/70">
-                MAF Valid
-              </span>
+              {isMsmeRole ? (
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-950 text-amber-300 font-mono font-bold border border-amber-600/70">
+                  MAF Valid
+                </span>
+              ) : (
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-amber-950/80 text-amber-300 font-mono font-bold border border-amber-600/60 flex items-center gap-1">
+                  <Lock className="w-2.5 h-2.5" /> MSME ONLY
+                </span>
+              )}
             </button>
 
+            {/* 3. Works Desk */}
             <button
-              onClick={() => {
-                setCurrentRole('SERVICE_PROVIDER');
-                handleNavClick('WORKS_PORTAL');
-              }}
+              onClick={() => handleNavClick('WORKS_PORTAL')}
               className={`w-full flex items-center justify-between px-3 py-2 rounded-lg font-bold transition-all cursor-pointer text-xs ${
                 activeTab === 'WORKS_PORTAL'
                   ? 'bg-gradient-to-r from-[#0284C7]/30 to-[#0284C7]/10 text-white border-l-4 border-[#38BDF8] shadow-sm'
-                  : 'text-slate-300 hover:bg-[#132540] hover:text-white'
+                  : isWorksRole 
+                  ? 'text-slate-300 hover:bg-[#132540] hover:text-white' 
+                  : 'text-slate-400 hover:bg-[#132540]/60 opacity-80'
               }`}
             >
               <div className="flex items-center gap-2.5">
-                <HardHat className={`w-4 h-4 ${activeTab === 'WORKS_PORTAL' ? 'text-cyan-300' : 'text-emerald-400'}`} />
-                <span>Service Provider &amp; SLAs</span>
+                <HardHat className={`w-4 h-4 ${activeTab === 'WORKS_PORTAL' ? 'text-cyan-300' : isWorksRole ? 'text-emerald-400' : 'text-slate-500'}`} />
+                <div className="text-left">
+                  <span>Works &amp; Infrastructure</span>
+                  {!isWorksRole && (
+                    <div className="text-[9px] text-emerald-400/80 font-normal">Requires Works Role</div>
+                  )}
+                </div>
               </div>
-              <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono font-bold border border-emerald-600/70">
-                Services
-              </span>
+              {isWorksRole ? (
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-300 font-mono font-bold border border-emerald-600/70">
+                  Services
+                </span>
+              ) : (
+                <span className="text-[9px] px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 font-mono font-bold border border-emerald-600/60 flex items-center gap-1">
+                  <Lock className="w-2.5 h-2.5" /> WORKS ONLY
+                </span>
+              )}
             </button>
+
+            {/* Role Segregation Guidance Card & Sign Up Action */}
+            <div className="mt-2 p-2.5 rounded-lg bg-[#071322] border border-[#1E3A68] space-y-2">
+              <div className="text-[10px] text-slate-300 leading-tight">
+                <span className="text-amber-400 font-bold">Role Limitation:</span> Logged in as <strong className="text-white">{isOemRole ? 'OEM Manufacturer' : isMsmeRole ? 'MSME Enterprise' : 'Works Contractor'}</strong>.
+              </div>
+
+              {otherRegisteredDossiers.length > 0 && (
+                <div className="pt-1 border-t border-[#1E3A68] space-y-1">
+                  <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block">
+                    Your Registered Dossiers:
+                  </span>
+                  {otherRegisteredDossiers.map((acc: any, i: number) => {
+                    const r = acc.profile?.role || acc.session?.role;
+                    const rLabel = r === 'OEM_SELLER' ? 'OEM' : r === 'MSME_STARTUP' || r === 'AUTHORIZED_RESELLER' ? 'MSME' : 'Works';
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          switchDossier(acc.session?.vendorId || acc.profile?.id);
+                          window.location.reload();
+                        }}
+                        className="w-full flex items-center justify-between p-1.5 rounded bg-[#0F1D36] hover:bg-[#193256] text-[10px] text-slate-200 transition-all text-left cursor-pointer"
+                      >
+                        <span className="truncate font-medium">{acc.profile?.name || acc.session?.fullName}</span>
+                        <span className="text-[8px] px-1 rounded bg-cyan-950 text-cyan-300 border border-cyan-700/60 font-mono shrink-0 ml-1">
+                          {rLabel} &bull; Load
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
+              <button
+                onClick={() => {
+                  window.location.hash = '#/vendor/register';
+                }}
+                className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded bg-gradient-to-r from-amber-600/30 to-amber-700/20 hover:from-amber-600/40 hover:to-amber-700/30 border border-amber-500/40 text-amber-300 hover:text-white text-[10px] font-bold transition-all cursor-pointer shadow-xs"
+              >
+                <UserPlus className="w-3 h-3 text-amber-400" />
+                <span>+ Sign Up for Another Role</span>
+              </button>
+            </div>
+
           </div>
 
           {/* Section 6: SaaS Subscription & Tracker */}
@@ -415,9 +521,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </span>
           </button>
 
+          <div className="flex items-center justify-between px-2 py-1 bg-[#0A192F] rounded border border-[#1E3A68]">
+            <span className="text-[10px] text-slate-300 font-semibold">Portal Language:</span>
+            <LanguageSelector variant="topbar" />
+          </div>
+
           <div className="px-2 py-1 bg-[#132540] rounded text-[9px] text-slate-300 border border-[#23436E] leading-tight shadow-xs">
             <span className="text-sky-300 font-bold">NIC Security Certified:</span> Verified under GFR 2017 &amp; Public Procurement Policy.
           </div>
+
+          <button
+            onClick={() => {
+              logout();
+              window.location.hash = '#/';
+            }}
+            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-lg bg-rose-950/50 hover:bg-rose-900/80 text-rose-300 border border-rose-800/60 font-bold text-xs transition-all cursor-pointer shadow-xs"
+          >
+            <LogOut className="w-3.5 h-3.5 text-rose-400" />
+            <span>Sign Out &amp; Exit to Home</span>
+          </button>
         </div>
 
       </aside>

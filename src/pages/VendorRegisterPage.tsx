@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { AuthProvider, useAuth } from '../vendor/context/AuthContext';
 import { api } from '../vendor/services/api';
+import { LanguageSelector } from '../components/LanguageSelector';
 
 const PRESET_AVATARS = [
   { label: 'Industrial Tech', url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&auto=format&fit=crop&q=80' },
@@ -38,11 +39,25 @@ function VendorRegisterForm() {
   const [success, setSuccess] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string>(PRESET_AVATARS[0].url);
 
+  // Read initial role from URL query param if present
+  const getInitialRole = (): 'OEM_SELLER' | 'MSME_STARTUP' | 'WORKS_CONTRACTOR' => {
+    try {
+      const hash = window.location.hash || '';
+      const queryPart = hash.includes('?') ? hash.split('?')[1] : window.location.search.replace(/^\?/, '');
+      const params = new URLSearchParams(queryPart);
+      const r = params.get('role');
+      if (r === 'MSME_STARTUP' || r === 'AUTHORIZED_RESELLER') return 'MSME_STARTUP';
+      if (r === 'WORKS_CONTRACTOR' || r === 'SERVICE_PROVIDER') return 'WORKS_CONTRACTOR';
+      if (r === 'OEM_SELLER') return 'OEM_SELLER';
+    } catch (e) {}
+    return 'OEM_SELLER';
+  };
+
   // Form data
   const [formData, setFormData] = useState({
     businessName: '',
     authorizedSignatory: '',
-    role: 'OEM_SELLER' as 'OEM_SELLER' | 'MSME_STARTUP' | 'WORKS_CONTRACTOR',
+    role: getInitialRole(),
     gstin: '',
     pan: '',
     udyamNumber: '',
@@ -166,6 +181,7 @@ function VendorRegisterForm() {
         </Link>
 
         <div className="flex items-center gap-3">
+          <LanguageSelector variant="topbar" />
           <Link 
             to="/vendor/login" 
             className="text-xs text-slate-300 hover:text-white px-3 py-1.5 rounded-lg border border-slate-700 transition-all"

@@ -4,7 +4,6 @@ import {
   Key, 
   Lock, 
   Eye, 
-  EyeOff, 
   RefreshCw, 
   Copy, 
   Check, 
@@ -94,33 +93,37 @@ export const BlindTokenManager: React.FC<BlindTokenManagerProps> = ({ profile })
         <div className="lg:col-span-2 gov-card p-5 space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-[#23436E]">
             <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
-              <Lock className="w-4 h-4 text-amber-400" />
-              Active Sovereign Blind Identity (`anon_token`)
+              <Lock className="w-4 h-4 text-emerald-400" />
+              Double-Blind Anti-Collusion Vault (Zero-Knowledge Shield)
             </span>
-            <span className="text-[10px] text-slate-400 font-mono">
-              Algorithm: SHA-256 HMAC Vault
+            <span className="text-[10px] text-emerald-400 font-mono font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700">
+              ANTI-BIAS ACTIVE
             </span>
           </div>
 
           <div className="p-4 bg-[#0B192C] rounded-lg border border-[#23436E] space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                Cryptographic Token String
+              <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+                <span>Zero-Knowledge Evaluation Identifier</span>
               </span>
-              <span className="text-[10px] px-2 py-0.5 rounded bg-sky-950 text-sky-300 font-mono font-bold border border-sky-700">
-                Live Tender Hash
+              <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-300 font-mono font-bold border border-amber-600">
+                WITHHELD FROM BIDDER
               </span>
             </div>
 
-            <div className="flex items-center justify-between gap-2 p-3 bg-[#071322] rounded border border-[#1E3A68] font-mono text-sm text-cyan-300 overflow-x-auto">
-              <span className="select-all font-bold tracking-wider">{currentToken}</span>
-              <button
-                onClick={handleCopy}
-                className="p-1.5 rounded hover:bg-[#132540] text-slate-300 hover:text-white transition-colors cursor-pointer shrink-0"
-                title="Copy Blind Token"
-              >
-                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-              </button>
+            <div className="p-3.5 bg-[#071322] rounded border border-emerald-500/30 space-y-2">
+              <div className="flex items-center justify-between gap-2 font-mono text-xs text-slate-400">
+                <span className="tracking-widest text-emerald-400 font-bold">
+                  •••• •••• •••• •••• [CONCEALED ANTI-COLLUSION SHIELD]
+                </span>
+                <span className="text-[10px] text-emerald-400 font-semibold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-600/50">
+                  🔒 Sealed in HSM Vault
+                </span>
+              </div>
+              <p className="text-[11px] text-slate-300 leading-relaxed">
+                Under <strong>CVC Anti-Cartel Directives</strong> and <strong>GFR 2017 rules</strong>, plain evaluation token numbers are <strong>strictly withheld from vendors</strong>. This guarantees that neither vendors nor third parties can communicate bid identifiers to evaluation officers, eliminating any possibility of bias or offline collusion.
+              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs pt-1">
@@ -140,48 +143,30 @@ export const BlindTokenManager: React.FC<BlindTokenManagerProps> = ({ profile })
             </div>
           </div>
 
-          {/* Blind Projection Visualizer */}
+          {/* Vendor Cryptographic Protection Panel */}
           <div className="space-y-2 pt-2">
             <div className="text-xs font-bold text-slate-300 uppercase tracking-wide">
-              Double-Blind Scrutiny Projection (Vendor vs. Officer View)
+              Vendor Cryptographic Protection &amp; Zero-Knowledge Isolation
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-              
-              {/* Vendor View */}
-              <div className="p-3.5 bg-[#0E2038] rounded-lg border border-[#23436E] space-y-2">
-                <div className="flex items-center justify-between pb-1.5 border-b border-[#23436E]">
-                  <span className="font-bold text-white flex items-center gap-1.5 text-xs">
-                    <Eye className="w-3.5 h-3.5 text-sky-400" />
-                    Your Dashboard (Real Identity)
-                  </span>
-                  <span className="text-[9px] px-1.5 rounded bg-sky-900 text-sky-200 font-bold">INTERNAL</span>
-                </div>
-                <div className="space-y-1 text-slate-300 text-[11px]">
-                  <div><strong>Legal Entity:</strong> <span className="text-white">{profile.name}</span></div>
-                  <div><strong>GSTIN:</strong> <span className="font-mono text-cyan-300">{profile.gstin}</span></div>
-                  <div><strong>PAN:</strong> <span className="font-mono text-slate-300">{profile.pan}</span></div>
-                  <div><strong>Turnover:</strong> <span className="text-amber-400 font-bold">₹ {profile.turnoverCr} Cr</span></div>
-                </div>
+            <div className="p-4 bg-[#0E2038] rounded-lg border border-[#23436E] space-y-3 text-xs">
+              <div className="flex items-center justify-between pb-2 border-b border-[#23436E]">
+                <span className="font-bold text-white flex items-center gap-1.5 text-xs">
+                  <Eye className="w-3.5 h-3.5 text-sky-400" />
+                  Authenticated Vendor Dossier (Internal Shielded Record)
+                </span>
+                <span className="text-[9px] px-2 py-0.5 rounded bg-sky-900 text-sky-200 font-bold border border-sky-700">
+                  INTERNAL ONLY • ISOLATED
+                </span>
               </div>
-
-              {/* Officer View */}
-              <div className="p-3.5 bg-[#0B1E38] rounded-lg border border-[#0284C7] space-y-2">
-                <div className="flex items-center justify-between pb-1.5 border-b border-[#23436E]">
-                  <span className="font-bold text-cyan-300 flex items-center gap-1.5 text-xs">
-                    <EyeOff className="w-3.5 h-3.5 text-amber-400" />
-                    Gov Officer Portal (Masked Blind ID)
-                  </span>
-                  <span className="text-[9px] px-1.5 rounded bg-emerald-900 text-emerald-200 font-bold">PROTECTED</span>
-                </div>
-                <div className="space-y-1 text-slate-300 text-[11px]">
-                  <div><strong>Masked Alias:</strong> <span className="font-bold text-white">Bidder #{profile.id.replace(/\D/g, '') || '4'} (Class-I MSE)</span></div>
-                  <div><strong>GSTIN / PAN:</strong> <span className="font-mono text-slate-400">[MASKED IN VAULT]</span></div>
-                  <div><strong>Evaluation Token:</strong> <span className="font-mono text-cyan-300 font-bold">{currentToken.substring(0, 14)}...</span></div>
-                  <div><strong>Verified Compliance:</strong> <span className="text-emerald-400 font-bold">{profile.complianceScore}% PQC Pass</span></div>
-                </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-slate-300 text-[11px]">
+                <div><strong>Legal Entity:</strong> <span className="text-white ml-1">{profile.name}</span></div>
+                <div><strong>GSTIN:</strong> <span className="font-mono text-cyan-300 ml-1">{profile.gstin}</span></div>
+                <div><strong>PAN:</strong> <span className="font-mono text-slate-300 ml-1">{profile.pan}</span></div>
+                <div><strong>Audited Turnover:</strong> <span className="text-amber-400 font-bold ml-1">₹ {profile.turnoverCr} Cr</span></div>
+                <div><strong>Zero-Knowledge Identity Shield:</strong> <span className="text-emerald-400 font-semibold ml-1">Active (GFR 2017 Rule 173)</span></div>
+                <div><strong>CAG Escrow Status:</strong> <span className="text-sky-300 font-mono ml-1">Dual-Key Sealed</span></div>
               </div>
-
             </div>
           </div>
         </div>
