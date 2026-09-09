@@ -13,11 +13,11 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   className = '',
   dark = false
 }) => {
-  const { currentLanguage, setLanguage } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const activeLang = SUPPORTED_LANGUAGES.find(l => l.code === currentLanguage) || SUPPORTED_LANGUAGES[0];
+  const activeLang = SUPPORTED_LANGUAGES.find(l => l.code === language) || SUPPORTED_LANGUAGES[0];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -96,7 +96,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           {/* Language Options Grid */}
           <div className="max-h-72 overflow-y-auto py-1 divide-y divide-slate-800/40">
             {SUPPORTED_LANGUAGES.map((lang) => {
-              const isSelected = lang.code === currentLanguage;
+              const isSelected = lang.code === language;
               return (
                 <button
                   key={lang.code}

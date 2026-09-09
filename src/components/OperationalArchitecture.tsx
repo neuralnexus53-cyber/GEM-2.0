@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
+import { SectorWiseFaq } from './SectorWiseFaq';
 
 export interface OperationalArchitectureProps {
-  onOpenFaqDossier?: () => void;
+  onOpenFaqDossier?: (category?: string) => void;
 }
 
 interface StepItem {
@@ -252,11 +254,32 @@ export const OperationalArchitecture: React.FC<OperationalArchitectureProps> = (
   onOpenFaqDossier,
 }) => {
   const [activeStep, setActiveStep] = useState<number>(1);
+  const [showFaq, setShowFaq] = useState<boolean>(false);
+  const [faqCategory, setFaqCategory] = useState<string>('ALL');
+
+  const openFaq = (category: string = 'ALL') => {
+    setFaqCategory(category);
+    if (onOpenFaqDossier) {
+      onOpenFaqDossier(category);
+    } else {
+      setShowFaq(true);
+    }
+  };
+
+  // ESC key to close local FAQ modal
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showFaq) setShowFaq(false);
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [showFaq]);
 
   const currentStep = OPERATIONAL_STEPS.find((s) => s.id === activeStep) || OPERATIONAL_STEPS[0];
 
   return (
-    <div className="w-full text-slate-800">
+    <>
+      <div className="w-full text-slate-800">
       {/* Top Section Header */}
       <div className="text-center max-w-4xl mx-auto mb-10">
         <div className="inline-flex items-center gap-2 text-xs font-bold text-sky-800 uppercase tracking-widest bg-sky-100 px-4 py-1.5 rounded-full border border-sky-300 shadow-xs mb-3">
@@ -477,9 +500,9 @@ export const OperationalArchitecture: React.FC<OperationalArchitectureProps> = (
       </div>
 
       {/* Statutory Dossier & Regulatory FAQ Callout Banner */}
-      <div className="max-w-6xl mx-auto mt-10">
-        <div className="bg-gradient-to-r from-slate-900 via-sky-950 to-[#002855] rounded-2xl p-6 sm:p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 border border-sky-900 shadow-lg">
-          <div className="space-y-2 text-center md:text-left">
+      <div id="faq" className="max-w-6xl mx-auto mt-10 scroll-mt-20">
+        <div className="bg-gradient-to-r from-slate-900 via-sky-950 to-[#002855] rounded-2xl p-6 sm:p-8 text-white flex flex-col lg:flex-row items-center justify-between gap-6 border border-sky-900 shadow-xl relative overflow-hidden">
+          <div className="space-y-3 text-center lg:text-left relative z-10">
             <div className="inline-flex items-center gap-2 text-[10px] font-bold text-amber-400 uppercase tracking-widest bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/30">
               <i className="fa-solid fa-book-bookmark text-amber-400" />
               <span>Statutory Compliance Library &amp; Legal Citations</span>
@@ -490,22 +513,122 @@ export const OperationalArchitecture: React.FC<OperationalArchitectureProps> = (
             <p className="text-xs sm:text-sm text-slate-300 max-w-2xl leading-relaxed">
               Access official GFR 2017 citations, 25% MSME quota policies, OEM authorization mandates, civil contractor capacity formulas, and CAG anti-cartel vigilance guidelines in our interactive legal dossier.
             </p>
+
+            {/* Quick Sector Filter Buttons */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => openFaq('MSME')}
+                className="bg-white/10 hover:bg-amber-400/20 text-slate-200 hover:text-amber-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/20 hover:border-amber-400/40 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <i className="fa-solid fa-building text-amber-400 text-[11px]" />
+                <span>MSME 25% Quota</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => openFaq('OEM')}
+                className="bg-white/10 hover:bg-sky-400/20 text-slate-200 hover:text-sky-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/20 hover:border-sky-400/40 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <i className="fa-solid fa-industry text-sky-400 text-[11px]" />
+                <span>OEM &amp; Make-in-India</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => openFaq('WORKS')}
+                className="bg-white/10 hover:bg-emerald-400/20 text-slate-200 hover:text-emerald-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/20 hover:border-emerald-400/40 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <i className="fa-solid fa-helmet-safety text-emerald-400 text-[11px]" />
+                <span>Civil &amp; Works</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => openFaq('OFFICER')}
+                className="bg-white/10 hover:bg-purple-400/20 text-slate-200 hover:text-purple-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/20 hover:border-purple-400/40 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <i className="fa-solid fa-landmark text-purple-400 text-[11px]" />
+                <span>GFR 160 &amp; CFA</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => openFaq('AUDIT')}
+                className="bg-white/10 hover:bg-rose-400/20 text-slate-200 hover:text-rose-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-white/20 hover:border-rose-400/40 transition-all flex items-center gap-1.5 cursor-pointer"
+              >
+                <i className="fa-solid fa-shield-halved text-rose-400 text-[11px]" />
+                <span>CAG &amp; Anti-Cartel</span>
+              </button>
+            </div>
           </div>
 
-          <div className="shrink-0 flex flex-col sm:flex-row items-center gap-3">
-            {onOpenFaqDossier && (
-              <button
-                onClick={onOpenFaqDossier}
-                className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold px-6 py-3 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer"
-              >
-                <i className="fa-solid fa-folder-open text-sm" />
-                <span>Open Regulatory FAQ Dossier</span>
-                <i className="fa-solid fa-arrow-right text-[10px]" />
-              </button>
-            )}
+          <div className="shrink-0 flex flex-col items-center gap-2 relative z-10">
+            <button
+              type="button"
+              onClick={() => openFaq('ALL')}
+              className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider transition-all shadow-md hover:shadow-lg flex items-center gap-2 cursor-pointer hover:scale-105"
+            >
+              <i className="fa-solid fa-folder-open text-sm" />
+              <span>Open Full Legal Dossier</span>
+              <i className="fa-solid fa-arrow-right text-[10px]" />
+            </button>
+            <span className="text-[10px] text-slate-400 font-mono">50+ Categorized Statutory FAQs</span>
           </div>
         </div>
       </div>
     </div>
+
+    {/* Self-contained FAQ Modal via Portal — renders at document.body, no z-index issues */}
+    {showFaq && createPortal(
+      <div
+        style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', flexDirection: 'column', background: 'rgba(2,8,23,0.92)', backdropFilter: 'blur(8px)' }}
+        onClick={() => setShowFaq(false)}
+      >
+        <div
+          style={{ display: 'flex', flexDirection: 'column', flex: 1, maxWidth: '1280px', width: '100%', margin: '24px auto', background: '#fff', borderRadius: '16px', overflow: 'hidden', boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Tiranga accent */}
+          <div style={{ height: '4px', background: 'linear-gradient(90deg,#ff9933 33.3%,#fff 33.3%,#fff 66.6%,#138808 66.6%)' }} />
+          {/* Header */}
+          <div style={{ background: '#002855', color: '#fff', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0, borderBottom: '1px solid rgba(56,189,248,0.3)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <div style={{ width: 40, height: 40, borderRadius: 10, background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <i className="fa-solid fa-book-bookmark" style={{ color: '#fbbf24', fontSize: 18 }} />
+              </div>
+              <div>
+                <div style={{ fontSize: 10, fontWeight: 800, color: '#fbbf24', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Sovereign Legal Dossier</div>
+                <div style={{ fontSize: 14, fontWeight: 900, color: '#fff', marginTop: 2 }}>Public Procurement Regulatory FAQ &amp; Legal Knowledge Base</div>
+                <div style={{ fontSize: 10, color: '#94a3b8', marginTop: 1 }}>GFR 2017 • PPP-MII 2017 • MSMED Act 2006 • CVC Directives</div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowFaq(false)}
+              style={{ padding: '8px 14px', background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 8, color: '#cbd5e1', cursor: 'pointer', fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6 }}
+            >
+              <i className="fa-solid fa-xmark" /> Close (ESC)
+            </button>
+          </div>
+          {/* Body */}
+          <div style={{ flex: 1, overflowY: 'auto', padding: '24px', background: '#f8fafc' }}>
+            <SectorWiseFaq defaultCategory={faqCategory} layout="two-column" />
+          </div>
+          {/* Footer */}
+          <div style={{ background: '#fff', borderTop: '1px solid #e2e8f0', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
+            <div style={{ fontSize: 11, color: '#475569', fontWeight: 600 }}>
+              <span style={{ display: 'inline-block', width: 8, height: 8, borderRadius: '50%', background: '#22c55e', marginRight: 6 }} />
+              Official Regulatory Guidance • Binding Indian Public Procurement Law
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowFaq(false)}
+              style={{ padding: '8px 20px', background: '#e2e8f0', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 700, fontSize: 12 }}
+            >
+              Close Dossier
+            </button>
+          </div>
+        </div>
+      </div>,
+      document.body
+    )}
+    </>
   );
 };

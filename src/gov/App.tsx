@@ -18,19 +18,19 @@ import { VendorIntakeSimulatorModal } from './components/views/VendorIntakeSimul
 import { GovHeaderStats } from './components/GovHeaderStats';
 import { GovFooter } from './components/GovFooter';
 
-import { 
-  UserRole, 
-  Tender, 
-  MaskedSubmission, 
-  AuditLedgerBlock, 
+import {
+  UserRole,
+  Tender,
+  MaskedSubmission,
+  AuditLedgerBlock,
   OfficerScoreEntry,
   OfficerProfile,
   UpstreamIntakeDocket,
   ROLE_DEFINITIONS
 } from './types/procurement';
-import { 
-  INITIAL_TENDERS, 
-  INITIAL_SUBMISSIONS, 
+import {
+  INITIAL_TENDERS,
+  INITIAL_SUBMISSIONS,
   INITIAL_AUDIT_LEDGER,
   CURRENT_OFFICER
 } from './services/mockData';
@@ -42,13 +42,13 @@ export const App: React.FC = () => {
   const [selectedTenderId, setSelectedTenderId] = useState<string>(INITIAL_TENDERS[0].id);
   const [submissions, setSubmissions] = useState<MaskedSubmission[]>(INITIAL_SUBMISSIONS);
   const [auditLedger, setAuditLedger] = useState<AuditLedgerBlock[]>(INITIAL_AUDIT_LEDGER);
-  
+
   const [officerProfile, setOfficerProfile] = useState<OfficerProfile>(() => {
     const saved = localStorage.getItem('gem_gov_auth_session');
     if (saved) {
       try {
         return JSON.parse(saved);
-      } catch (e) {}
+      } catch (e) { }
     }
     return CURRENT_OFFICER;
   });
@@ -69,7 +69,7 @@ export const App: React.FC = () => {
       setActiveTab(allowedTabs[0]);
     }
   }, [currentRole, activeTab, allowedTabs]);
-  
+
   const [activeGradingSubmission, setActiveGradingSubmission] = useState<MaskedSubmission | null>(null);
   const [showExportModal, setShowExportModal] = useState<boolean>(false);
   const [showOfficerProfileModal, setShowOfficerProfileModal] = useState<boolean>(false);
@@ -233,7 +233,7 @@ export const App: React.FC = () => {
       try {
         const liveSubs = await govApi.getSubmissions(undefined, false);
         if (liveSubs) setSubmissions(liveSubs);
-      } catch (e) {}
+      } catch (e) { }
     }
   };
 
@@ -277,7 +277,7 @@ export const App: React.FC = () => {
     switch (activeTab) {
       case 'TENDERS':
         return (
-          <TenderManagementView 
+          <TenderManagementView
             tenders={tenders}
             activeTender={activeTender}
             onSelectTender={(id) => setSelectedTenderId(id)}
@@ -287,7 +287,7 @@ export const App: React.FC = () => {
         );
       case 'EVAL_QUEUE':
         return (
-          <EvaluationQueueView 
+          <EvaluationQueueView
             submissions={submissions.filter(s => s.tenderId === selectedTenderId || !s.tenderId)}
             currentRole={currentRole}
             isVaultUnmasked={isVaultUnmasked}
@@ -298,25 +298,25 @@ export const App: React.FC = () => {
         );
       case 'STATUTORY':
         return (
-          <StatutoryRegistryView 
+          <StatutoryRegistryView
             submissions={submissions.filter(s => s.tenderId === selectedTenderId || !s.tenderId)}
           />
         );
       case 'AI_SCORECARD':
         return (
-          <AIScorecardView 
+          <AIScorecardView
             submissions={submissions.filter(s => s.tenderId === selectedTenderId || !s.tenderId)}
           />
         );
       case 'MII_AUDIT':
         return (
-          <MIIAuditView 
+          <MIIAuditView
             submissions={submissions.filter(s => s.tenderId === selectedTenderId || !s.tenderId)}
           />
         );
       case 'COMPOSITE_MATRIX':
         return (
-          <ScoreMatrixView 
+          <ScoreMatrixView
             tender={activeTender}
             submissions={submissions.filter(s => s.tenderId === selectedTenderId || !s.tenderId)}
             currentRole={currentRole}
@@ -326,7 +326,7 @@ export const App: React.FC = () => {
         );
       case 'CAG_LEDGER':
         return (
-          <CAGLedgerView 
+          <CAGLedgerView
             ledgerBlocks={auditLedger}
             tender={activeTender}
             onOpenExportModal={() => setShowExportModal(true)}
@@ -334,7 +334,7 @@ export const App: React.FC = () => {
         );
       case 'OFFICER_PROFILE':
         return (
-          <GovOfficerProfileView 
+          <GovOfficerProfileView
             profile={officerProfile}
             onProfileUpdated={(updated) => setOfficerProfile(updated)}
           />
@@ -346,8 +346,8 @@ export const App: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#070F1E] text-slate-100 font-sans">
-      
-      <Navbar 
+
+      <Navbar
         selectedTender={activeTender}
         allTenders={tenders}
         onSelectTender={(id) => setSelectedTenderId(id)}
@@ -359,8 +359,8 @@ export const App: React.FC = () => {
       />
 
       <div className="flex flex-1 overflow-hidden">
-        
-        <Sidebar 
+
+        <Sidebar
           activeTab={activeTab}
           setActiveTab={(tab) => setActiveTab(tab)}
           pendingCount={pendingCount}
@@ -379,8 +379,8 @@ export const App: React.FC = () => {
         />
 
         <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-h-[calc(100vh-80px)] space-y-5">
-          
-          <GovHeaderStats 
+
+          <GovHeaderStats
             tender={activeTender}
             currentRole={currentRole}
             officerProfile={officerProfile}
@@ -403,7 +403,7 @@ export const App: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2.5 w-full sm:w-auto justify-between sm:justify-end">
-              <button 
+              <button
                 onClick={refreshLiveState}
                 className="px-3 py-1.5 rounded-lg bg-[#001D3D] hover:bg-[#002855] border border-[#1E3A68] text-sky-400 hover:text-white text-xs font-bold transition-colors inline-flex items-center gap-1.5 cursor-pointer shadow-sm"
                 title="Synchronize live bids with shared database"
@@ -411,8 +411,8 @@ export const App: React.FC = () => {
                 <span>🔄 Sync State</span>
               </button>
 
-              <select 
-                value={selectedTenderId} 
+              <select
+                value={selectedTenderId}
                 onChange={(e) => setSelectedTenderId(e.target.value)}
                 className="bg-[#091528] text-slate-200 border border-[#1E3A68] rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-sky-400"
               >
@@ -434,7 +434,7 @@ export const App: React.FC = () => {
       <GovFooter />
 
       {activeGradingSubmission && (
-        <BlindGradingModal 
+        <BlindGradingModal
           submission={activeGradingSubmission}
           currentRole={currentRole}
           isVaultUnmasked={isVaultUnmasked}
@@ -445,21 +445,21 @@ export const App: React.FC = () => {
       )}
 
       {activeDiscrepancySubmission && (
-        <DiscrepancyInspectorModal 
+        <DiscrepancyInspectorModal
           submission={activeDiscrepancySubmission}
           onClose={() => setActiveDiscrepancySubmission(null)}
         />
       )}
 
       {showVendorIntakeModal && (
-        <VendorIntakeSimulatorModal 
+        <VendorIntakeSimulatorModal
           onClose={() => setShowVendorIntakeModal(false)}
           onIngestDocket={handleIngestUpstreamDocket}
         />
       )}
 
       {showExportModal && (
-        <CAGExportModal 
+        <CAGExportModal
           tender={activeTender}
           submissions={submissions}
           ledgerBlocks={auditLedger}
@@ -468,7 +468,7 @@ export const App: React.FC = () => {
       )}
 
       {showOfficerProfileModal && (
-        <OfficerProfileModal 
+        <OfficerProfileModal
           profile={officerProfile}
           onClose={() => setShowOfficerProfileModal(false)}
           onLogout={() => {

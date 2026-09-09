@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Globe, 
-  ShieldCheck, 
-  Clock, 
-  Eye, 
-  KeyRound, 
-  CheckCircle2, 
+import {
+  Globe,
+  ShieldCheck,
+  Clock,
+  Eye,
+  KeyRound,
+  CheckCircle2,
   Landmark,
   Award,
   Lock,
   LogOut,
   Building2,
-  ChevronDown
+  ChevronDown,
+  BookOpen
 } from 'lucide-react';
 import { Tender, UserRole, OfficerProfile } from '../types/procurement';
 import { ActiveTab } from './Sidebar';
@@ -46,15 +47,15 @@ export const Navbar: React.FC<NavbarProps> = ({
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      setIstTime(now.toLocaleString('en-IN', { 
+      setIstTime(now.toLocaleString('en-IN', {
         timeZone: 'Asia/Kolkata',
-        day: '2-digit', 
-        month: 'short', 
-        year: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit', 
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
         second: '2-digit',
-        hour12: true 
+        hour12: true
       }));
     };
     updateTime();
@@ -82,7 +83,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 w-full shadow-lg">
-      
+
       <div className="tricolor-strip" />
 
       <div className="gov-top-access-bar px-3 sm:px-6 py-1.5">
@@ -121,10 +122,10 @@ export const Navbar: React.FC<NavbarProps> = ({
       </div>
 
       <div className="w-full bg-[#002855] text-white border-b-2 border-[#E65100] px-3 sm:px-6 lg:px-8 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
-        
+
         <div className="flex items-center justify-between sm:justify-start gap-3">
           <div className="flex items-center gap-3">
-            
+
             <div className="w-10 h-10 rounded-full bg-[#001833] border border-[#FF9933]/70 flex items-center justify-center p-1.5 shrink-0 shadow-inner">
               <svg viewBox="0 0 24 24" className="w-7 h-7 text-[#FF9933] fill-current">
                 <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" fill="none" />
@@ -159,7 +160,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
 
         <div className="flex items-center flex-wrap gap-2.5">
-          
+
           <div className="relative">
             <button
               onClick={() => setShowTenderMenu(!showTenderMenu)}
@@ -182,9 +183,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                       if (onSelectTender) onSelectTender(t.id);
                       setShowTenderMenu(false);
                     }}
-                    className={`w-full text-left px-3 py-2 text-xs hover:bg-[#002855] transition-colors border-none cursor-pointer flex flex-col ${
-                      t.id === selectedTender.id ? 'bg-[#002855] text-amber-400 font-bold' : 'text-slate-300'
-                    }`}
+                    className={`w-full text-left px-3 py-2 text-xs hover:bg-[#002855] transition-colors border-none cursor-pointer flex flex-col ${t.id === selectedTender.id ? 'bg-[#002855] text-amber-400 font-bold' : 'text-slate-300'
+                      }`}
                   >
                     <span className="font-mono text-[11px]">{t.tenderNumber}</span>
                     <span className="text-[10px] text-slate-400 truncate">{t.title}</span>

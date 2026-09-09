@@ -3,12 +3,177 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>GEM 2.0 COMPLIANCE PORTAL — Sovereign Procurement & Verification Suite | SIH 2026</title>
+    <title>GEM 2.0 COMPLIANCE PORTAL — Sovereign Procurement &amp; Verification Suite | SIH 2026</title>
     <meta name="description" content="AI-enabled integrated platform for automated verification of bidder compliance in GeM public procurement. Features 14-point statutory verification, double-blind vault, and CAG Merkle audit ledger." />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+    <style>
+      /* Sovereign multi-language styling: complete suppression of Google Translate top banner, toolbar, and popups */
+      html, body {
+        top: 0px !important;
+        position: static !important;
+        margin-top: 0px !important;
+      }
+
+      /* Prevent any layout shift when page is translated */
+      html.translated-ltr,
+      html.translated-rtl,
+      html.translated-ltr body,
+      html.translated-rtl body {
+        top: 0px !important;
+        position: static !important;
+        margin-top: 0px !important;
+      }
+
+      /* Hide Google Translate banner container injected at top of body */
+      body > .skiptranslate,
+      body > div.skiptranslate,
+      body > div[class*="skiptranslate"],
+      .skiptranslate:not(#google_translate_element) {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0px !important;
+        max-height: 0px !important;
+        width: 0px !important;
+        overflow: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+      }
+
+      /* Hide all Google Translate iframes (banner, container, dialog, balloon) */
+      .goog-te-banner-frame,
+      iframe.goog-te-banner-frame,
+      iframe[class*="goog-te-banner-frame"],
+      iframe[id^=":"],
+      iframe[id*=".container"],
+      iframe[src*="translate.google"],
+      iframe.VIpgJd-ZVi9od-ORHb-Oxf5Fd,
+      .VIpgJd-ZVi9od-ORHb-Oxf5Fd,
+      .VIpgJd-ZVi9od-aZ2wEe-wOHMy,
+      .VIpgJd-ZVi9od-aZ2wEe-Oxf5Fd,
+      .VIpgJd-ZVi9od-xl07Ob-Oxf5Fd,
+      .VIpgJd-ZVi9od-vH1Gmf,
+      .VIpgJd-yAWNEb-VIpgJd-fmcmS-sn54Q {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0px !important;
+        width: 0px !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+        border: none !important;
+      }
+
+      /* Hide Google Translate tooltip, hover balloons, and spinner */
+      #goog-gt-tt,
+      .goog-te-balloon-frame,
+      .goog-tooltip,
+      .goog-tooltip:hover,
+      .goog-te-spinner-pos {
+        display: none !important;
+        visibility: hidden !important;
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
+      /* Prevent Google text-highlight on hover */
+      .goog-text-highlight {
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+
+      /* Position Google Translate element off-screen without display:none so script initializes combo */
+      #google_translate_element {
+        position: absolute !important;
+        top: -9999px !important;
+        left: -9999px !important;
+        width: 1px !important;
+        height: 1px !important;
+        overflow: hidden !important;
+        opacity: 0.001 !important;
+        pointer-events: none !important;
+        z-index: -9999 !important;
+      }
+
+      .goog-te-gadget,
+      .goog-te-gadget-simple {
+        font-size: 0px !important;
+        color: transparent !important;
+        border: none !important;
+        background: transparent !important;
+      }
+      .goog-te-gadget > span,
+      .goog-te-gadget .VIpgJd-ZVi9od-l4eHX-hSRGPd {
+        display: none !important;
+      }
+    </style>
   </head>
   <body>
+    <div id="google_translate_element"></div>
     <div id="root"></div>
+    <script type="text/javascript">
+      // Active watchdog to continuously suppress Google Translate banner and prevent body shift
+      function suppressGoogleTranslateBanner() {
+        if (document.body) {
+          if (document.body.style.top && document.body.style.top !== '0px') {
+            document.body.style.setProperty('top', '0px', 'important');
+          }
+          if (document.body.style.position === 'relative') {
+            document.body.style.setProperty('position', 'static', 'important');
+          }
+        }
+        var banners = document.querySelectorAll('body > .skiptranslate, iframe.goog-te-banner-frame, iframe[id^=":"]');
+        for (var i = 0; i < banners.length; i++) {
+          banners[i].style.setProperty('display', 'none', 'important');
+          banners[i].style.setProperty('visibility', 'hidden', 'important');
+          banners[i].style.setProperty('height', '0px', 'important');
+        }
+      }
+
+      var bannerObserver = new MutationObserver(suppressGoogleTranslateBanner);
+      bannerObserver.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['style', 'class']
+      });
+
+      window.googleTranslateElementInit = function() {
+        if (window.google && window.google.translate) {
+          try {
+            new window.google.translate.TranslateElement({
+              pageLanguage: 'en',
+              includedLanguages: 'en,hi,or,mr,ta,te,bn,gu,kn,ml,pa',
+              layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
+              autoDisplay: false
+            }, 'google_translate_element');
+
+            // Trigger translation if language is already chosen
+            var saved = localStorage.getItem('gem_portal_language');
+            if (saved && saved !== 'en') {
+              var attempts = 0;
+              var poll = setInterval(function() {
+                attempts++;
+                var select = document.querySelector('.goog-te-combo');
+                if (select) {
+                  clearInterval(poll);
+                  select.value = saved;
+                  select.dispatchEvent(new Event('change', { bubbles: true }));
+                  suppressGoogleTranslateBanner();
+                } else if (attempts > 40) {
+                  clearInterval(poll);
+                }
+              }, 100);
+            }
+          } catch(e) {}
+        }
+      };
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
+

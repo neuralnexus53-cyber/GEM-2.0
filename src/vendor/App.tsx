@@ -98,6 +98,7 @@ export const App: React.FC = () => {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState<boolean>(false);
   const [isQuotaModalOpen, setIsQuotaModalOpen] = useState<boolean>(false);
   const [isDigiLockerModalOpen, setIsDigiLockerModalOpen] = useState<boolean>(false);
+  const [isFaqModalOpen, setIsFaqModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     // If vendor has no session, route to vendor login
@@ -202,6 +203,7 @@ export const App: React.FC = () => {
         onOpenGuide={() => setIsGuideOpen(true)}
         onToggleMobileSidebar={() => setIsOpenMobile(!isOpenMobile)}
         onSelectRole={handleRoleChange}
+        onOpenFaqDossier={() => setIsFaqModalOpen(true)}
       />
 
       <div className="flex-1 flex">
@@ -767,6 +769,36 @@ export const App: React.FC = () => {
         }}
         reason="QUOTA_EXCEEDED"
       />
+
+      {/* Vendor Portal: Regulatory FAQ Dossier Modal */}
+      {isFaqModalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col bg-[#070F1E]/96 backdrop-blur-md animate-fadeIn"
+          onClick={(e) => { if (e.target === e.currentTarget) setIsFaqModalOpen(false); }}
+        >
+          <div className="flex items-center justify-between px-5 py-3 bg-[#002855] border-b border-sky-900 shrink-0">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
+                <i className="fa-solid fa-book-bookmark text-amber-400 text-sm" />
+              </div>
+              <div>
+                <span className="text-white font-bold text-sm">Regulatory FAQ Dossier</span>
+                <p className="text-slate-400 text-[10px] hidden sm:block">GFR 2017 • PPP-MII 2017 • MSMED Act • CVC Directives</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setIsFaqModalOpen(false)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-red-900/60 text-slate-300 hover:text-white transition-colors text-xs font-bold cursor-pointer border border-white/10"
+              title="Close FAQ Dossier (ESC)"
+            >
+              ✕ Close
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto p-3 sm:p-6 bg-slate-50">
+            <SectorWiseFaq defaultCategory="ALL" layout="two-column" />
+          </div>
+        </div>
+      )}
 
     </div>
   );

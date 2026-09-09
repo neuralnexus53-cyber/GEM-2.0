@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { SectorWiseFaq } from '../components/SectorWiseFaq';
 import { OperationalArchitecture } from '../components/OperationalArchitecture';
 import { ComplianceTicketModal } from '../components/ComplianceTicketModal';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { useLanguage } from '../context/LanguageContext';
+
+export interface LandingPageProps {
+  initialFaqOpen?: boolean;
+  initialAboutOpen?: boolean;
+}
+
 const HERO_SLIDES = [
   {
     image: './images/banner1.jpg',
@@ -26,7 +32,7 @@ const HERO_SLIDES = [
   },
 ];
 
-export default function LandingPage() {
+export default function LandingPage({ initialFaqOpen = false, initialAboutOpen = false }: LandingPageProps = {}) {
   const { t } = useLanguage();
   // Drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -37,13 +43,35 @@ export default function LandingPage() {
   // Live Stats Drawer state
   const [statsOpen, setStatsOpen] = useState(false);
 
-  // About GeM Public Procurement Details Modal
-  const [aboutModalOpen, setAboutModalOpen] = useState(false);
+  // Dedicated Regulatory FAQ Dossier Modal state
+  const [faqModalOpen, setFaqModalOpen] = useState(initialFaqOpen);
+  const [faqInitialCategory, setFaqInitialCategory] = useState<string>('ALL');
+
+  // About GeM Public Procurement Details Modal (10 Chapters)
+  const [aboutModalOpen, setAboutModalOpen] = useState(initialAboutOpen);
   const [aboutModalTab, setAboutModalTab] = useState<'overview' | 'gfr_rules' | 'procurement_modes' | 'msme_mii' | 'compliance_suite' | 'gem2_engine' | 'audit_ledger' | 'security_cert' | 'sector_faq' | 'operational_arch'>('overview');
+  const modalContentRef = useRef<HTMLDivElement>(null);
 
   // Compliance Clarification Ticket Modal
   const [ticketModalOpen, setTicketModalOpen] = useState(false);
   const [ticketModalTab, setTicketModalTab] = useState<'raise' | 'track'>('raise');
+
+  const openFaqModal = (category: string = 'ALL') => {
+    setFaqInitialCategory(category);
+    setFaqModalOpen(true);
+  };
+
+  const closeFaqModal = () => {
+    setFaqModalOpen(false);
+  };
+
+  const openAboutModal = (tab: typeof aboutModalTab = 'overview') => {
+    setAboutModalTab(tab);
+    setAboutModalOpen(true);
+    setTimeout(() => {
+      modalContentRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 50);
+  };
 
 
   // Auto-advance hero carousel
@@ -53,6 +81,50 @@ export default function LandingPage() {
     }, 5500);
     return () => clearInterval(id);
   }, []);
+
+  // Synchronize URL hash with FAQ / Dossier modal state
+  useEffect(() => {
+    const handleHashAndParams = () => {
+      const hash = window.location.hash.toLowerCase();
+      if (
+        hash.includes('/faq') || 
+        hash.includes('regulatory-faq') || 
+        hash.includes('faq-dossier') || 
+        hash === '#faq' ||
+        initialFaqOpen
+      ) {
+        if (hash.includes('msme')) setFaqInitialCategory('MSME');
+        else if (hash.includes('oem')) setFaqInitialCategory('OEM');
+        else if (hash.includes('work')) setFaqInitialCategory('WORKS');
+        else if (hash.includes('officer')) setFaqInitialCategory('OFFICER');
+        else if (hash.includes('audit')) setFaqInitialCategory('AUDIT');
+        else if (hash.includes('statutory')) setFaqInitialCategory('STATUTORY');
+        else setFaqInitialCategory('ALL');
+
+        setFaqModalOpen(true);
+      } else if (hash.includes('/dossier') || initialAboutOpen) {
+        setAboutModalOpen(true);
+      }
+    };
+
+    handleHashAndParams();
+    window.addEventListener('hashchange', handleHashAndParams);
+    return () => window.removeEventListener('hashchange', handleHashAndParams);
+  }, [initialFaqOpen, initialAboutOpen]);
+
+  // ESC key listener to close open modals
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (faqModalOpen) closeFaqModal();
+        if (aboutModalOpen) setAboutModalOpen(false);
+        if (ticketModalOpen) setTicketModalOpen(false);
+        if (drawerOpen) setDrawerOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [faqModalOpen, aboutModalOpen, ticketModalOpen, drawerOpen]);
 
   const isLocal = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
   const apiBase = isLocal
@@ -88,8 +160,8 @@ export default function LandingPage() {
             <i className="fa-solid fa-xmark text-3xl" />
           </button>
           
-          <div className="text-amber-400 text-xs font-bold uppercase tracking-widest mb-2">Government of India • Ministry of Commerce & Industry</div>
-          <h3 className="text-xl font-bold text-white mb-4">GeM 2.0 Compliance Portal Navigation</h3>
+          <div className="text-amber-400 text-xs font-bold uppercase tracking-widest mb-2">{t('Government of India')} • {t('Ministry of Commerce & Industry')}</div>
+          <h3 className="text-xl font-bold text-white mb-4">{t('GeM 2.0 Compliance Portal Navigation', 'GeM 2.0 Compliance Portal Navigation')}</h3>
           
           <div className="mb-6 flex items-center justify-center">
             <LanguageSelector variant="navbar" />
@@ -109,13 +181,6 @@ export default function LandingPage() {
               <span>{t('nav.operational_arch')}</span>
             </button>
             <button 
-              onClick={() => scrollToSection('faq')} 
-              className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer flex items-center gap-1.5"
-            >
-              <i className="fa-solid fa-book-bookmark text-xs" />
-              <span>{t('nav.regulatory_faq')}</span>
-            </button>
-            <button 
               onClick={() => {
                 setDrawerOpen(false);
                 setTicketModalTab('raise');
@@ -124,10 +189,10 @@ export default function LandingPage() {
               className="bg-transparent border-none text-emerald-300 hover:text-emerald-200 transition-colors text-sm font-bold cursor-pointer flex items-center gap-1.5"
             >
               <i className="fa-solid fa-ticket text-xs" />
-              <span>Clarification Ticket</span>
+              <span>{t('Clarification Ticket')}</span>
             </button>
-            <button onClick={() => scrollToSection('initiatives')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">Our Initiatives</button>
-            <button onClick={() => scrollToSection('statistics')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">Live Statistics</button>
+            <button onClick={() => scrollToSection('initiatives')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">{t('Our Initiatives')}</button>
+            <button onClick={() => scrollToSection('statistics')} className="bg-transparent border-none text-white hover:text-amber-400 transition-colors text-sm font-bold cursor-pointer">{t('Live Statistics')}</button>
           </div>
         </div>
       </div>
@@ -148,7 +213,7 @@ export default function LandingPage() {
               <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
                 <path d="M4 6h16M4 12h16M4 18h16" />
               </svg>
-              <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider text-slate-300">Menu</span>
+              <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider text-slate-300">{t('Menu')}</span>
             </button>
 
             <div className="h-6 w-[1px] bg-slate-700 hidden sm:block" />
@@ -164,17 +229,17 @@ export default function LandingPage() {
               />
               <div className="flex flex-col">
                 <span className="font-extrabold text-sm sm:text-base text-white tracking-tight leading-tight whitespace-nowrap">
-                  GEM 2.0 COMPLIANCE PORTAL
+                  {t('GEM 2.0 COMPLIANCE PORTAL')}
                 </span>
                 <span className="text-[10px] text-amber-400 font-medium tracking-wider whitespace-nowrap hidden sm:inline">
-                  Automated Bidder Compliance &amp; Verification Suite
+                  {t('Automated Bidder Compliance & Verification Suite')}
                 </span>
               </div>
             </Link>
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3 text-xs font-semibold">
-            {/* 10-Language Selector */}
+            {/* 11-Language Selector */}
             <LanguageSelector variant="topbar" />
 
             <nav className="hidden lg:flex items-center space-x-2.5">
@@ -199,7 +264,7 @@ export default function LandingPage() {
               </Link>
               <Link 
                 to="/vendor/register" 
-                className="bg-amber-500 hover:bg-amber-400 text-slate-900 font-bold px-3 py-1.5 rounded-full transition-colors"
+                className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-full transition-colors"
               >
                 {t('nav.vendor_register')}
               </Link>
@@ -216,24 +281,17 @@ export default function LandingPage() {
         <div className="bg-[#002855] border-t border-sky-900/60">
           <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-[11px] font-bold tracking-wider text-slate-100 uppercase">
             <div className="flex items-center space-x-6 overflow-x-auto py-1">
-              <Link to="/" className="hover:text-amber-400 transition-colors text-amber-400">Home</Link>
+              <Link to="/" className="hover:text-amber-400 transition-colors text-amber-400">{t('Home')}</Link>
               <button 
                 onClick={() => scrollToSection('architecture')} 
                 className="bg-transparent border-none text-amber-300 hover:text-amber-200 transition-colors uppercase font-bold text-[11px] cursor-pointer flex items-center gap-1.5"
               >
                 <i className="fa-solid fa-diagram-project text-[10px]" />
-                <span>Operational Architecture</span>
+                <span>{t('Operational Architecture')}</span>
               </button>
-              <button 
-                onClick={() => scrollToSection('faq')} 
-                className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer flex items-center gap-1.5"
-              >
-                <i className="fa-solid fa-book-bookmark text-[10px]" />
-                <span>Regulatory FAQ Dossier</span>
-              </button>
-              <button onClick={() => scrollToSection('initiatives')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">Our Initiatives</button>
-              <button onClick={() => scrollToSection('portals')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">Portals Gateway</button>
-              <button onClick={() => scrollToSection('statistics')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">Statistics</button>
+              <button onClick={() => scrollToSection('initiatives')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">{t('Our Initiatives')}</button>
+              <button onClick={() => scrollToSection('portals')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">{t('Portals Gateway')}</button>
+              <button onClick={() => scrollToSection('statistics')} className="bg-transparent border-none text-slate-100 hover:text-amber-400 transition-colors uppercase font-bold text-[11px] cursor-pointer">{t('Live Statistics')}</button>
             </div>
           </div>
         </div>
@@ -266,13 +324,13 @@ export default function LandingPage() {
                 <div className="max-w-7xl mx-auto px-6 sm:px-12 w-full">
                   <div className="max-w-xl pb-10 sm:pb-12">
                     <span className="bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full mb-4 inline-block">
-                      {slide.tag}
+                      {t(slide.tag)}
                     </span>
                     <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white leading-tight mb-4 drop-shadow-md">
-                      {slide.title}
+                      {t(slide.title)}
                     </h1>
                     <p className="text-slate-200 text-xs sm:text-sm md:text-base leading-relaxed mb-6 drop-shadow">
-                      {slide.desc}
+                      {t(slide.desc)}
                     </p>
                     <div className="flex flex-wrap gap-2.5 sm:gap-3">
                       <Link 
@@ -355,18 +413,18 @@ export default function LandingPage() {
                 <div className="w-11 h-11 bg-amber-500/10 rounded-xl flex items-center justify-center text-amber-600 mb-4 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors duration-300">
                   <i className="fa-solid fa-circle-info text-lg" />
                 </div>
-                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">About GeM Public Procurement</h2>
+                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">{t('About GeM Public Procurement')}</h2>
                 <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                  Government e-Marketplace (GeM) is the National Public Procurement Portal of India, facilitating transparent, GFR-compliant online procurement for Ministries &amp; PSUs.
+                  {t('Government e-Marketplace (GeM) is the National Public Procurement Portal of India, facilitating transparent, GFR-compliant online procurement for Ministries & PSUs.', 'Government e-Marketplace (GeM) is the National Public Procurement Portal of India, facilitating transparent, GFR-compliant online procurement for Ministries & PSUs.')}
                 </p>
                 <div className="flex flex-wrap gap-1.5 text-[11px] font-semibold text-slate-500 mb-2">
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> Transparent</span>
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> GFR 144</span>
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> All-India</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> {t('Transparent', 'Transparent')}</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> {t('GFR 144', 'GFR 144')}</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> {t('All-India', 'All-India')}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-xs font-bold text-amber-600 group-hover:text-amber-700 transition-colors pt-3 border-t border-slate-100 mt-2">
-                LEARN MORE <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
+                {t('LEARN MORE')} <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
@@ -381,18 +439,18 @@ export default function LandingPage() {
                 <div className="w-11 h-11 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-600 mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
                   <i className="fa-solid fa-laptop-code text-lg" />
                 </div>
-                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">GeM 2.0 Compliance Engine</h2>
+                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">{t('GeM 2.0 Compliance Engine')}</h2>
                 <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                  Automated multi-portal verification: direct API handshakes with GSTN, MCA-21, CBDT, MSME Udyam, EPFO, and CPPP to eliminate tender fraud and bid collusion.
+                  {t('Automated multi-portal verification: direct API handshakes with GSTN, MCA-21, CBDT, MSME Udyam, EPFO, and CPPP to eliminate tender fraud and bid collusion.', 'Automated multi-portal verification: direct API handshakes with GSTN, MCA-21, CBDT, MSME Udyam, EPFO, and CPPP to eliminate tender fraud and bid collusion.')}
                 </p>
                 <div className="flex flex-wrap gap-1.5 text-[11px] font-semibold text-slate-500 mb-2">
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-blue-500 mr-1" /> 7+ Gateways</span>
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-blue-500 mr-1" /> AI Scanner</span>
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-blue-500 mr-1" /> CAG Ledger</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-blue-500 mr-1" /> {t('7+ Gateways', '7+ Gateways')}</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-blue-500 mr-1" /> {t('AI Scanner', 'AI Scanner')}</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-blue-500 mr-1" /> {t('CAG Ledger', 'CAG Ledger')}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-xs font-bold text-blue-600 group-hover:text-blue-700 transition-colors pt-3 border-t border-slate-100 mt-2">
-                EXPLORE SUITE <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
+                {t('EXPLORE SUITE')} <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
@@ -407,18 +465,18 @@ export default function LandingPage() {
                 <div className="w-11 h-11 bg-emerald-500/10 rounded-xl flex items-center justify-center text-emerald-600 mb-4 group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300">
                   <i className="fa-solid fa-lightbulb text-lg" />
                 </div>
-                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">Sovereign Initiatives &amp; MSME</h2>
+                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">{t('Sovereign Initiatives & MSME')}</h2>
                 <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                  Supporting Micro &amp; Small Enterprises via mandatory 25% public procurement quota, Start-up Runway innovations, and Make-in-India Class-I preferences.
+                  {t('Supporting Micro & Small Enterprises via mandatory 25% public procurement quota, Start-up Runway innovations, and Make-in-India Class-I preferences.', 'Supporting Micro & Small Enterprises via mandatory 25% public procurement quota, Start-up Runway innovations, and Make-in-India Class-I preferences.')}
                 </p>
                 <div className="flex flex-wrap gap-1.5 text-[11px] font-semibold text-slate-500 mb-2">
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> 25% MSME</span>
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> MII Class-I</span>
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> Startups</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> {t('25% MSME', '25% MSME')}</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> {t('MII Class-I', 'MII Class-I')}</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-emerald-500 mr-1" /> {t('Startups', 'Startups')}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-xs font-bold text-emerald-600 group-hover:text-emerald-700 transition-colors pt-3 border-t border-slate-100 mt-2">
-                VIEW POLICIES <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
+                {t('VIEW POLICIES')} <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
@@ -432,18 +490,18 @@ export default function LandingPage() {
                 <div className="w-11 h-11 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-600 mb-4 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
                   <i className="fa-solid fa-shield-halved text-lg" />
                 </div>
-                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">14-Point Automated Framework</h2>
+                <h2 className="text-lg font-extrabold text-slate-900 mb-2 tracking-tight leading-snug">{t('14-Point Automated Framework')}</h2>
                 <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                  Automated checks for Tax (GST), Company (MCA), PAN, MSME, EPFO/ESI, Local Content, Document Authenticity, and Fair Double-Blind Grading.
+                  {t('Automated checks for Tax (GST), Company (MCA), PAN, MSME, EPFO/ESI, Local Content, Document Authenticity, and Fair Double-Blind Grading.', 'Automated checks for Tax (GST), Company (MCA), PAN, MSME, EPFO/ESI, Local Content, Document Authenticity, and Fair Double-Blind Grading.')}
                 </p>
                 <div className="flex flex-wrap gap-1.5 text-[11px] font-semibold text-slate-500 mb-2">
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-purple-500 mr-1" /> 14 Checks</span>
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-purple-500 mr-1" /> Double-Blind</span>
-                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-purple-500 mr-1" /> 0 Bias</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-purple-500 mr-1" /> {t('14 Checks', '14 Checks')}</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-purple-500 mr-1" /> {t('Double-Blind', 'Double-Blind')}</span>
+                  <span className="bg-slate-100 px-2 py-0.5 rounded"><i className="fa-solid fa-check text-purple-500 mr-1" /> {t('0 Bias', '0 Bias')}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-xs font-bold text-purple-600 group-hover:text-purple-700 transition-colors pt-3 border-t border-slate-100 mt-2">
-                VIEW ALL CHECKS <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
+                {t('VIEW ALL CHECKS')} <i className="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
 
@@ -457,41 +515,41 @@ export default function LandingPage() {
 
             <div className="relative z-10 max-w-3xl mx-auto">
               <span className="text-amber-400 font-bold text-xs uppercase tracking-widest mb-3 block">
-                GeM 2.0 National Procurement Intelligence
+                {t('GeM 2.0 National Procurement Intelligence')}
               </span>
               <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-4 tracking-tight">
-                Live Sovereign Platform Telemetry
+                {t('Live Sovereign Platform Telemetry')}
               </h2>
               <p className="text-slate-400 text-sm mb-8 leading-relaxed">
-                Real-time tracking of procurement volume, transaction speeds, registered buyers, verified sellers, and statutory audit integrity. Click below to inspect the live metrics.
+                {t('Real-time tracking of procurement volume, transaction speeds, registered buyers, verified sellers, and statutory audit integrity. Click below to inspect the live metrics.', 'Real-time tracking of procurement volume, transaction speeds, registered buyers, verified sellers, and statutory audit integrity. Click below to inspect the live metrics.')}
               </p>
               
               <button 
                 onClick={() => setStatsOpen(o => !o)} 
                 className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-8 py-3 rounded-full text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 cursor-pointer border-none focus:outline-none"
               >
-                {statsOpen ? 'Hide Live Statistics Drawer' : 'View Live Platform Statistics'}
+                {statsOpen ? t('Hide Live Statistics Drawer') : t('View Live Platform Statistics')}
               </button>
 
               {statsOpen && (
                 <div className="mt-8 pt-8 border-t border-slate-800 grid grid-cols-2 md:grid-cols-4 gap-6 text-left animate-fadeIn">
                   <div className="bg-slate-950/70 p-4 rounded-xl border border-slate-800">
-                    <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">Total Transaction Value</span>
+                    <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">{t('Total Transaction Value')}</span>
                     <span className="text-lg sm:text-xl font-extrabold text-amber-400 block mt-1">₹ 8,42,105 Cr</span>
                     <span className="text-[10px] text-emerald-400">100% verified via PFMS</span>
                   </div>
                   <div className="bg-slate-950/70 p-4 rounded-xl border border-slate-800">
-                    <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">Registered Sellers</span>
+                    <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">{t('Registered Sellers')}</span>
                     <span className="text-lg sm:text-xl font-extrabold text-blue-400 block mt-1">1.82 Million</span>
                     <span className="text-[10px] text-slate-400">GSTN &amp; PAN verified</span>
                   </div>
                   <div className="bg-slate-950/70 p-4 rounded-xl border border-slate-800">
-                    <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">Registered Buyers</span>
+                    <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">{t('Registered Buyers')}</span>
                     <span className="text-lg sm:text-xl font-extrabold text-emerald-400 block mt-1">74,200+ PSUs</span>
                     <span className="text-[10px] text-slate-400">Central &amp; State depts</span>
                   </div>
                   <div className="bg-slate-950/70 p-4 rounded-xl border border-slate-800">
-                    <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">Audit Ledger Blocks</span>
+                    <span className="text-slate-400 text-[10px] uppercase font-bold block mb-1">{t('Audit Ledger Blocks')}</span>
                     <span className="text-lg sm:text-xl font-extrabold text-purple-400 block mt-1">3.4M+ Merkle Blocks</span>
                     <span className="text-[10px] text-purple-300">Immutable SHA-256</span>
                   </div>
@@ -505,13 +563,13 @@ export default function LandingPage() {
         <section id="portals" className="max-w-7xl mx-auto px-4 py-12 md:py-16 text-slate-800">
           <div className="text-center mb-10">
             <span className="text-amber-500 font-bold text-xs uppercase tracking-widest mb-2 block">
-              Unified Role-Based Architecture
+              {t('Unified Role-Based Architecture')}
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 mb-3 tracking-tight">
-              Choose Your Portal
+              {t('Choose Your Portal')}
             </h2>
             <p className="text-slate-500 text-sm max-w-xl mx-auto">
-              Vendors submit sealed compliance bids and track BoQ milestones. The Procurement Officer conducts 14-point automated verifications and audit signs.
+              {t('Vendors submit sealed compliance bids and track BoQ milestones. The Procurement Officer conducts 14-point automated verifications and audit signs.', 'Vendors submit sealed compliance bids and track BoQ milestones. The Procurement Officer conducts 14-point automated verifications and audit signs.')}
             </p>
           </div>
 
@@ -523,7 +581,7 @@ export default function LandingPage() {
                 <div className="w-14 h-14 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-400 mb-6 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors duration-300">
                   <i className="fa-solid fa-store text-2xl" />
                 </div>
-                <h3 className="text-xl font-extrabold text-white mb-3">Vendor / Seller Portal</h3>
+                <h3 className="text-xl font-extrabold text-white mb-3">{t('Vendor / Seller Portal')}</h3>
                 <p className="text-slate-300 text-sm leading-relaxed mb-5">
                   OCR document vault, AI PQC pre-qualification checker, sealed bid submission to Double-Blind Vault, optimal pricing advisor, and BoQ milestone tracker.
                 </p>
@@ -556,7 +614,7 @@ export default function LandingPage() {
                 <div className="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
                   <i className="fa-solid fa-building-columns text-2xl" />
                 </div>
-                <h3 className="text-xl font-extrabold text-white mb-3">Procurement Officer Suite</h3>
+                <h3 className="text-xl font-extrabold text-white mb-3">{t('Procurement Officer Suite')}</h3>
                 <p className="text-slate-300 text-sm leading-relaxed mb-5">
                   Single unified command for tender publishing, 14-point automated compliance verification, AI Risk Level evaluation, and CAG cryptographic Merkle ledger.
                 </p>
@@ -591,18 +649,10 @@ export default function LandingPage() {
         <section id="architecture" className="py-16 bg-slate-50 border-t border-slate-200 scroll-mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <OperationalArchitecture
-              onOpenFaqDossier={() => {
-                setAboutModalTab('sector_faq');
-                setAboutModalOpen(true);
+              onOpenFaqDossier={(category = 'ALL') => {
+                openFaqModal(category);
               }}
             />
-          </div>
-        </section>
-
-        {/* Comprehensive Sector-Wise FAQ & Regulatory Knowledge Base */}
-        <section id="faq" className="py-16 bg-white border-t border-slate-200 scroll-mt-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <SectorWiseFaq defaultCategory="ALL" />
           </div>
         </section>
 
@@ -722,7 +772,7 @@ export default function LandingPage() {
                 </li>
                 <li>
                   <button 
-                    onClick={() => { setAboutModalTab('sector_faq'); setAboutModalOpen(true); }}
+                    onClick={() => openFaqModal('ALL')}
                     className="hover:text-amber-400 transition-colors bg-transparent border-none text-slate-300 cursor-pointer p-0 text-xs"
                   >
                     Sector-Wise Regulatory FAQs &amp; Knowledge Base
@@ -763,7 +813,10 @@ export default function LandingPage() {
       </footer>
 
        {aboutModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-y-auto animate-fadeIn">
+        <div 
+          className="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-y-auto animate-fadeIn"
+          onClick={() => setAboutModalOpen(false)}
+        >
           <div 
             className="bg-white text-slate-900 w-full max-w-6xl rounded-2xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col h-[90vh] my-auto relative"
             onClick={(e) => e.stopPropagation()}
@@ -993,7 +1046,7 @@ export default function LandingPage() {
               </aside>
 
               {/* Right Content Area */}
-              <div className="flex-1 p-5 sm:p-7 overflow-y-auto bg-white text-sm leading-relaxed">
+              <div ref={modalContentRef} className="flex-1 p-5 sm:p-7 overflow-y-auto bg-white text-sm leading-relaxed">
                 
                 {aboutModalTab === 'overview' && (
                   <div className="space-y-6 animate-fadeIn">
@@ -1600,26 +1653,42 @@ export default function LandingPage() {
 
                 {aboutModalTab === 'sector_faq' && (
                   <div className="space-y-5 animate-fadeIn">
-                    <div className="bg-sky-50 border-l-4 border-sky-600 p-4 rounded-r-lg">
-                      <div className="text-[10px] uppercase font-bold tracking-wider text-sky-800 mb-1">
-                        Chapter 9 &bull; Comprehensive Regulatory Knowledge Base
+                    <div className="bg-sky-50 border-l-4 border-sky-600 p-4 rounded-r-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                      <div>
+                        <div className="text-[10px] uppercase font-bold tracking-wider text-sky-800 mb-1">
+                          Chapter 9 &bull; Comprehensive Regulatory Knowledge Base
+                        </div>
+                        <h4 className="font-bold text-slate-900 text-base mb-1">
+                          Sector-Wise Public Procurement &amp; Statutory Regulatory FAQs
+                        </h4>
+                        <p className="text-xs text-slate-600">
+                          Official statutory answers, legal citations (GFR 2017, PPP-MII 2017, MSMED Act 2006, CVC Directives), and compliance guidelines categorized for all public procurement sectors.
+                        </p>
                       </div>
-                      <h4 className="font-bold text-slate-900 text-base mb-1">
-                        Sector-Wise Public Procurement &amp; Statutory Regulatory FAQs
-                      </h4>
-                      <p className="text-xs text-slate-600">
-                        Official statutory answers, legal citations (GFR 2017, PPP-MII 2017, MSMED Act 2006, CVC Directives), and compliance guidelines categorized for all public procurement sectors.
-                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAboutModalOpen(false);
+                          openFaqModal(faqInitialCategory);
+                        }}
+                        className="bg-[#002855] hover:bg-[#003875] text-amber-300 border border-amber-400/40 text-xs font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5 shrink-0 shadow-xs cursor-pointer"
+                      >
+                        <i className="fa-solid fa-up-right-and-down-left-from-center text-xs" />
+                        <span>Dedicated Fullscreen View</span>
+                      </button>
                     </div>
 
-                    <SectorWiseFaq defaultCategory="ALL" />
+                    <SectorWiseFaq defaultCategory={faqInitialCategory || "ALL"} layout="two-column" />
                   </div>
                 )}
 
                 {aboutModalTab === 'operational_arch' && (
                   <div className="space-y-5 animate-fadeIn">
                     <OperationalArchitecture
-                      onOpenFaqDossier={() => setAboutModalTab('sector_faq')}
+                      onOpenFaqDossier={(category = 'ALL') => {
+                        setAboutModalOpen(false);
+                        openFaqModal(category);
+                      }}
                     />
                   </div>
                 )}
@@ -1660,6 +1729,101 @@ export default function LandingPage() {
                 <button 
                   onClick={() => setAboutModalOpen(false)}
                   className="bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold px-4 py-2 rounded-lg transition-colors border-none cursor-pointer"
+                >
+                  Close Dossier
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* Dedicated Sector-Wise Regulatory FAQ & Statutory Legal Dossier Modal */}
+      {faqModalOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex flex-col bg-slate-950/90 backdrop-blur-md animate-fadeIn"
+          onClick={closeFaqModal}
+        >
+          <div 
+            className="relative flex flex-col w-full h-full max-w-7xl mx-auto my-4 sm:my-6 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Tiranga Top Accent */}
+            <div style={{ height: '4px', background: 'linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%)' }} />
+
+            {/* Modal Header */}
+            <div className="bg-[#002855] text-white px-5 sm:px-7 py-4 flex items-center justify-between border-b border-sky-900/60 shrink-0">
+              <div className="flex items-center gap-3.5">
+                <div className="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0 shadow-inner">
+                  <i className="fa-solid fa-book-bookmark text-xl" />
+                </div>
+                <div>
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[10px] uppercase font-extrabold tracking-widest text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded border border-amber-500/20">
+                      Sovereign Legal Dossier
+                    </span>
+                    <span className="text-[10px] text-slate-300 font-medium">
+                      GFR 2017 &bull; PPP-MII 2017 &bull; MSMED Act 2006 &bull; CVC Directives
+                    </span>
+                  </div>
+                  <h3 className="text-base sm:text-xl font-black text-white leading-tight mt-0.5">
+                    Public Procurement Sector-Wise Regulatory FAQ &amp; Legal Knowledge Base
+                  </h3>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    closeFaqModal();
+                    setTicketModalTab('raise');
+                    setTicketModalOpen(true);
+                  }}
+                  className="hidden md:inline-flex items-center gap-1.5 bg-sky-800/80 hover:bg-sky-700 text-sky-200 border border-sky-600/40 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+                >
+                  <i className="fa-solid fa-ticket text-xs text-amber-400" />
+                  <span>Raise Clarification</span>
+                </button>
+                <button 
+                  onClick={closeFaqModal}
+                  className="text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 p-2 sm:px-3 sm:py-2 rounded-lg transition-colors border-none cursor-pointer flex items-center justify-center gap-1.5"
+                  aria-label="Close FAQ Dossier"
+                >
+                  <i className="fa-solid fa-xmark text-lg" />
+                  <span className="hidden sm:inline text-xs font-bold">Close</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body: Direct SectorWiseFaq */}
+            <div className="flex-1 overflow-y-auto p-3 sm:p-6 bg-slate-50">
+              <SectorWiseFaq defaultCategory={faqInitialCategory || "ALL"} layout="two-column" />
+            </div>
+
+            {/* Modal Footer */}
+            <div className="bg-white border-t border-slate-200 px-5 sm:px-7 py-3.5 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+                <span className="text-slate-600 font-semibold text-[11px]">
+                  Official Regulatory Guidance • Binding Indian Public Procurement Law
+                </span>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => {
+                    closeFaqModal();
+                    setTicketModalOpen(true);
+                  }}
+                  className="bg-sky-700 hover:bg-sky-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors border-none cursor-pointer inline-flex items-center gap-1.5 shadow-xs"
+                >
+                  <i className="fa-solid fa-ticket" /> Raise Clarification Ticket
+                </button>
+                <button 
+                  onClick={closeFaqModal}
+                  className="bg-slate-200 hover:bg-slate-300 text-slate-800 font-semibold px-4 py-1.5 rounded-lg transition-colors border-none cursor-pointer"
                 >
                   Close Dossier
                 </button>

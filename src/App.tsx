@@ -45,6 +45,10 @@ export default function App() {
       <Routes>
         
         <Route path="/" element={<LandingPage />} />
+        <Route path="/faq" element={<LandingPage initialFaqOpen={true} />} />
+        <Route path="/regulatory-faq" element={<LandingPage initialFaqOpen={true} />} />
+        <Route path="/faq-dossier" element={<LandingPage initialFaqOpen={true} />} />
+        <Route path="/dossier" element={<LandingPage initialAboutOpen={true} />} />
 
         <Route
           path="/vendor/login"

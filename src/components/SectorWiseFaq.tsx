@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   HelpCircle, 
   Search, 
@@ -305,27 +305,54 @@ export interface SectorWiseFaqProps {
   defaultCategory?: SectorCategory | string;
   title?: string;
   subtitle?: string;
+  layout?: 'two-column' | 'single-column';
+  hideHeader?: boolean;
 }
 
 export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
   initialSector,
   defaultCategory = 'ALL',
   title = 'Comprehensive Sector-Wise Public Procurement FAQ & Legal Knowledge Base',
-  subtitle = 'Statutory guidelines, GFR 2017 rules, Make-in-India policies, and automated compliance answers across all public procurement domains.'
+  subtitle = 'Statutory guidelines, GFR 2017 rules, Make-in-India policies, and automated compliance answers across all public procurement domains.',
+  layout = 'two-column',
+  hideHeader = false
 }) => {
   const initial = (initialSector || defaultCategory || 'ALL') as SectorCategory;
   const [selectedCategory, setSelectedCategory] = useState<SectorCategory>(initial);
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(SECTOR_FAQS[0]?.id || null);
 
-  const categories: { id: SectorCategory; label: string; icon: any; count: number }[] = [
-    { id: 'ALL', label: 'All Sectors', icon: BookOpen, count: SECTOR_FAQS.length },
-    { id: 'MSME', label: 'MSME & Startups', icon: Building2, count: SECTOR_FAQS.filter(f => f.category === 'MSME').length },
-    { id: 'OEM', label: 'OEMs & Manufacturers', icon: Factory, count: SECTOR_FAQS.filter(f => f.category === 'OEM').length },
-    { id: 'WORKS', label: 'Civil & Works', icon: HardHat, count: SECTOR_FAQS.filter(f => f.category === 'WORKS').length },
-    { id: 'OFFICER', label: 'Procurement Officers', icon: Landmark, count: SECTOR_FAQS.filter(f => f.category === 'OFFICER').length },
-    { id: 'STATUTORY', label: 'Tax & Statutory', icon: Receipt, count: SECTOR_FAQS.filter(f => f.category === 'STATUTORY').length },
-    { id: 'AUDIT', label: 'CAG & Anti-Cartel', icon: ShieldCheck, count: SECTOR_FAQS.filter(f => f.category === 'AUDIT').length }
+  const handleCategorySelect = (catId: SectorCategory) => {
+    setSelectedCategory(catId);
+    if (catId === 'ALL') {
+      setExpandedId(SECTOR_FAQS[0]?.id || null);
+    } else {
+      const firstInCat = SECTOR_FAQS.find(f => f.category === catId);
+      setExpandedId(firstInCat?.id || null);
+    }
+  };
+
+  useEffect(() => {
+    if (defaultCategory) {
+      const cat = defaultCategory as SectorCategory;
+      setSelectedCategory(cat);
+      if (cat === 'ALL') {
+        setExpandedId(SECTOR_FAQS[0]?.id || null);
+      } else {
+        const firstInCat = SECTOR_FAQS.find(f => f.category === cat);
+        setExpandedId(firstInCat?.id || null);
+      }
+    }
+  }, [defaultCategory]);
+
+  const categories: { id: SectorCategory; label: string; icon: any; count: number; desc: string }[] = [
+    { id: 'ALL', label: 'All Sectors', icon: BookOpen, count: SECTOR_FAQS.length, desc: 'Complete master database of 50+ statutory procurement rules' },
+    { id: 'MSME', label: 'MSME & Startups', icon: Building2, count: SECTOR_FAQS.filter(f => f.category === 'MSME').length, desc: '25% quota, EMD waivers, Turnover relaxations' },
+    { id: 'OEM', label: 'OEMs & Manufacturers', icon: Factory, count: SECTOR_FAQS.filter(f => f.category === 'OEM').length, desc: 'Class-I/II local content, Brand ownership, DPIIT' },
+    { id: 'WORKS', label: 'Civil & Works', icon: HardHat, count: SECTOR_FAQS.filter(f => f.category === 'WORKS').length, desc: 'CPWD norms, 2AN-B capacity formula, BoQ locking' },
+    { id: 'OFFICER', label: 'Procurement Officers', icon: Landmark, count: SECTOR_FAQS.filter(f => f.category === 'OFFICER').length, desc: 'GFR Rule 160, CFA approval, Technical secrecy' },
+    { id: 'STATUTORY', label: 'Tax & Statutory', icon: Receipt, count: SECTOR_FAQS.filter(f => f.category === 'STATUTORY').length, desc: 'GST TDS 2%, IT Act 43A, PAN-Aadhaar compliance' },
+    { id: 'AUDIT', label: 'CAG & Anti-Cartel', icon: ShieldCheck, count: SECTOR_FAQS.filter(f => f.category === 'AUDIT').length, desc: 'Merkle ledger, CCI anti-collusion, Vigilance rules' }
   ];
 
   const filteredFaqs = useMemo(() => {
@@ -349,76 +376,134 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
     setExpandedId(prev => prev === id ? null : id);
   };
 
+  const activeCategoryObj = categories.find(c => c.id === selectedCategory) || categories[0];
+
   return (
-    <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-8 space-y-6 text-slate-800">
+    <div className="w-full bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-6 lg:p-8 space-y-6 text-slate-800">
       
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200">
-        <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
-              Legal &amp; Policy Helpdesk
-            </span>
-            <span className="text-xs text-slate-400">GFR 2017 &bull; PPP-MII 2017 &bull; MSMED Act</span>
-          </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-            {title}
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl">
-            {subtitle}
-          </p>
-        </div>
-
-        {/* Search */}
-        <div className="relative min-w-[280px] sm:min-w-[320px]">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search rules, exemptions, EMD, GFR, MII..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all"
-          />
-          {searchQuery && (
-            <button 
-              onClick={() => setSearchQuery('')}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 border-none bg-transparent cursor-pointer"
-            >
-              ✕
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Sector Selection Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin">
-        {categories.map(cat => {
-          const Icon = cat.icon;
-          const isSelected = selectedCategory === cat.id;
-          return (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all shrink-0 cursor-pointer border ${
-                isSelected
-                  ? 'bg-[#002855] text-white border-[#002855] shadow-sm'
-                  : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100 hover:text-slate-900'
-              }`}
-            >
-              <Icon className={`w-3.5 h-3.5 ${isSelected ? 'text-amber-400' : 'text-slate-500'}`} />
-              <span>{cat.label}</span>
-              <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-extrabold ${
-                isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
-              }`}>
-                {cat.count}
+      {!hideHeader && (
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
+                Legal &amp; Policy Knowledge Base
               </span>
-            </button>
-          );
-        })}
-      </div>
+              <span className="text-xs text-slate-400">GFR 2017 &bull; PPP-MII 2017 &bull; MSMED Act &bull; CVC Directives</span>
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+              {title}
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl">
+              {subtitle}
+            </p>
+          </div>
+        </div>
+      )}
 
-      {/* FAQ Accordion List */}
-      <div className="space-y-3">
+      {/* Two Column Layout */}
+      <div className={layout === 'two-column' ? 'grid grid-cols-1 lg:grid-cols-12 gap-6 items-start' : 'space-y-6'}>
+        
+        {/* Left Column: Category Navigation, Search & Statutory Cards */}
+        <div className={layout === 'two-column' ? 'lg:col-span-4 space-y-4' : 'space-y-4'}>
+          
+          {/* Search Box */}
+          <div className="relative">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search rules, EMD, GFR, MII, Turnkey..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-xs"
+            />
+            {searchQuery && (
+              <button 
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 border-none bg-transparent cursor-pointer"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+
+          {/* Category Vertical Nav */}
+          <div className="bg-slate-50 p-2 rounded-2xl border border-slate-200 space-y-1">
+            <div className="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+              Procurement Sectors
+            </div>
+            {categories.map(cat => {
+              const Icon = cat.icon;
+              const isSelected = selectedCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => handleCategorySelect(cat.id)}
+                  className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition-all text-left cursor-pointer border ${
+                    isSelected
+                      ? 'bg-[#002855] text-white border-[#002855] shadow-xs'
+                      : 'bg-transparent text-slate-700 border-transparent hover:bg-slate-200/70 hover:text-slate-950'
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5 min-w-0">
+                    <Icon className={`w-4 h-4 shrink-0 ${isSelected ? 'text-amber-400' : 'text-slate-500'}`} />
+                    <span className="truncate">{cat.label}</span>
+                  </div>
+                  <span className={`text-[10px] px-2 py-0.5 rounded-full font-extrabold shrink-0 ${
+                    isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-600'
+                  }`}>
+                    {cat.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Statutory References Card */}
+          <div className="bg-gradient-to-br from-slate-900 to-[#002855] text-white p-4 rounded-2xl border border-slate-800 shadow-xs space-y-2.5 text-xs">
+            <div className="flex items-center gap-2 text-amber-400 font-bold text-[11px] uppercase tracking-wider">
+              <Scale className="w-3.5 h-3.5" />
+              <span>Statutory Legal Framework</span>
+            </div>
+            <ul className="space-y-1.5 text-[11px] text-slate-300">
+              <li className="flex items-start gap-1.5">
+                <span className="text-amber-400 font-bold">•</span>
+                <span><strong>GFR 2017:</strong> Rules 149, 153, 160 &amp; 161</span>
+              </li>
+              <li className="flex items-start gap-1.5">
+                <span className="text-amber-400 font-bold">•</span>
+                <span><strong>PPP-MII 2017:</strong> Class-I (≥50%) &amp; Class-II (20-50%)</span>
+              </li>
+              <li className="flex items-start gap-1.5">
+                <span className="text-amber-400 font-bold">•</span>
+                <span><strong>MSMED Act 2006:</strong> 25% mandatory purchase quota</span>
+              </li>
+              <li className="flex items-start gap-1.5">
+                <span className="text-amber-400 font-bold">•</span>
+                <span><strong>CVC Guidelines:</strong> Anti-cartel &amp; zero-leakage norms</span>
+              </li>
+            </ul>
+            <div className="pt-2 border-t border-slate-800 text-[10px] text-slate-400 flex items-center justify-between">
+              <span>Binding Indian Law</span>
+              <span className="text-emerald-400 font-mono">100% GFR Compliant</span>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Right Column: Q&A Accordions */}
+        <div className={layout === 'two-column' ? 'lg:col-span-8 space-y-3' : 'space-y-3'}>
+          
+          {/* Active Sector Summary Bar */}
+          <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-bold text-slate-900">{activeCategoryObj.label}</span>
+              <span className="text-[11px] text-slate-500 hidden sm:inline">&bull; {activeCategoryObj.desc}</span>
+            </div>
+            <div className="text-[11px] text-slate-500 font-semibold">
+              Showing {filteredFaqs.length} {filteredFaqs.length === 1 ? 'Rule' : 'Rules'}
+            </div>
+          </div>
         {filteredFaqs.length === 0 ? (
           <div className="p-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-300">
             <HelpCircle className="w-8 h-8 text-slate-400 mx-auto mb-2" />
@@ -530,8 +615,11 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
             );
           })
         )}
+        </div>
+
       </div>
 
     </div>
   );
 };
+

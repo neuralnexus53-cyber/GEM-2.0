@@ -808,6 +808,72 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   }
 };
 
+export const ENGLISH_PHRASE_TO_KEY: Record<string, string> = {
+  'Home': 'nav.home',
+  'Procurement Officer Portal': 'nav.officer_portal',
+  'Officer Login': 'nav.officer_login',
+  'Officer Registration': 'nav.officer_register',
+  'Vendor Portal': 'nav.vendor_portal',
+  'Vendor Login': 'nav.vendor_login',
+  'Vendor Registration': 'nav.vendor_register',
+  'Operational Architecture': 'nav.operational_arch',
+  'Regulatory FAQ Dossier': 'nav.regulatory_faq',
+  'Our Initiatives': 'nav.initiatives',
+  'Portals Gateway': 'nav.portals_gateway',
+  'Live Statistics': 'nav.statistics',
+  'Statistics': 'nav.statistics',
+  'Clarification Ticket': 'nav.clarification_ticket',
+  'Menu': 'nav.menu',
+  'Sign Out': 'nav.logout',
+  'Government of India': 'gov.india',
+  'Ministry of Commerce & Industry': 'gov.ministry',
+  'GeM 2.0 Compliance & Procurement Portal': 'gov.portal_title',
+  'GEM 2.0 COMPLIANCE PORTAL': 'gov.portal_title',
+  'National Public Procurement & Sovereign Bid Evaluation Engine': 'gov.tagline',
+  'Automated Bidder Compliance & Verification Suite': 'gov.tagline',
+  'GeM Helpdesk': 'gov.helpdesk',
+  'Portal SOP': 'gov.portal_sop',
+  'Status': 'common.status',
+  'Active': 'common.active',
+  'Pending': 'common.pending',
+  'Verified': 'common.verified',
+  'CAG Audit Ledger': 'common.audit_ledger',
+  'Double-Blind Vault': 'common.sealed_vault',
+  'Compliance Score': 'common.compliance_score',
+  'Tenders': 'common.tenders',
+  'Bids / Proposals': 'common.proposals',
+  'Language': 'common.language',
+  'Search': 'common.search',
+};
+
+import { 
+  walkAndTranslateDom, 
+  triggerGoogleTranslate, 
+  getVocabTranslation 
+} from './sovereignTranslations';
+
+// Sovereign Full-DOM Translation Bridge: triggers immediate DOM text replacement and Google Translate
+export function applyFullPageTranslation(lang: LanguageCode) {
+  if (typeof window === 'undefined') return;
+  try {
+    // 1. Instant local DOM text node transformation
+    walkAndTranslateDom(lang);
+
+    // 2. Google Translate external bridge
+    if (!triggerGoogleTranslate(lang)) {
+      let count = 0;
+      const timer = setInterval(() => {
+        count++;
+        if (triggerGoogleTranslate(lang) || count > 40) {
+          clearInterval(timer);
+        }
+      }, 100);
+    }
+  } catch (err) {
+    console.error('Translation bridge error:', err);
+  }
+}
+
 interface LanguageContextType {
   language: LanguageCode;
   setLanguage: (lang: LanguageCode) => void;
@@ -834,27 +900,35 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     try {
       localStorage.setItem('gem_portal_language', lang);
       document.documentElement.lang = lang;
+      applyFullPageTranslation(lang);
     } catch (e) {}
   };
 
   useEffect(() => {
     try {
       document.documentElement.lang = language;
+      applyFullPageTranslation(language);
     } catch (e) {}
   }, [language]);
 
   const currentLanguage = SUPPORTED_LANGUAGES.find(l => l.code === language) || SUPPORTED_LANGUAGES[0];
 
-  const t = (key: string, fallback?: string): string => {
+  const t = (keyOrPhrase: string, fallback?: string): string => {
+    const resolvedKey = ENGLISH_PHRASE_TO_KEY[keyOrPhrase] || keyOrPhrase;
     const langDict = TRANSLATIONS[language];
-    if (langDict && langDict[key]) {
-      return langDict[key];
+    if (langDict && langDict[resolvedKey]) {
+      return langDict[resolvedKey];
+    }
+    // Check rich sovereign vocabulary
+    const vocabTrans = getVocabTranslation(keyOrPhrase, language);
+    if (vocabTrans) {
+      return vocabTrans;
     }
     // Fallback to English dictionary
-    if (TRANSLATIONS.en && TRANSLATIONS.en[key]) {
-      return TRANSLATIONS.en[key];
+    if (TRANSLATIONS.en && TRANSLATIONS.en[resolvedKey]) {
+      return TRANSLATIONS.en[resolvedKey];
     }
-    return fallback || key;
+    return fallback || keyOrPhrase;
   };
 
   return (
@@ -883,3 +957,4 @@ export const useLanguage = (): LanguageContextType => {
   }
   return context;
 };
+
