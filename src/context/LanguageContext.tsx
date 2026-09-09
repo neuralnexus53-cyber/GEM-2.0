@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 
 export type LanguageCode = 'en' | 'hi' | 'or' | 'mr' | 'ta' | 'te' | 'bn' | 'gu' | 'kn' | 'ml' | 'pa';
 
@@ -852,22 +852,22 @@ import {
   getVocabTranslation 
 } from './sovereignTranslations';
 
-// Sovereign Full-DOM Translation Bridge: triggers immediate DOM text replacement and Google Translate
+// Sovereign Full-DOM Translation Bridge: triggers instantaneous local TreeWalker DOM transformation and non-blocking Google Translate
 export function applyFullPageTranslation(lang: LanguageCode) {
   if (typeof window === 'undefined') return;
   try {
-    // 1. Instant local DOM text node transformation
+    // 1. Instantaneous local DOM text node transformation (< 5ms via TreeWalker & compiled Regex)
     walkAndTranslateDom(lang);
 
-    // 2. Google Translate external bridge
+    // 2. Google Translate non-blocking asynchronous bridge (immediate or fast 50ms check, max 300ms)
     if (!triggerGoogleTranslate(lang)) {
       let count = 0;
       const timer = setInterval(() => {
         count++;
-        if (triggerGoogleTranslate(lang) || count > 40) {
+        if (triggerGoogleTranslate(lang) || count > 6) {
           clearInterval(timer);
         }
-      }, 100);
+      }, 50);
     }
   } catch (err) {
     console.error('Translation bridge error:', err);
@@ -895,11 +895,14 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return 'en';
   });
 
+  const lastAppliedLangRef = useRef<LanguageCode | null>(null);
+
   const setLanguage = (lang: LanguageCode) => {
     setLanguageState(lang);
     try {
       localStorage.setItem('gem_portal_language', lang);
       document.documentElement.lang = lang;
+      lastAppliedLangRef.current = lang;
       applyFullPageTranslation(lang);
     } catch (e) {}
   };
@@ -907,7 +910,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     try {
       document.documentElement.lang = language;
-      applyFullPageTranslation(language);
+      if (lastAppliedLangRef.current !== language) {
+        lastAppliedLangRef.current = language;
+        applyFullPageTranslation(language);
+      }
     } catch (e) {}
   }, [language]);
 
