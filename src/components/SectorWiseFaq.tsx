@@ -17,6 +17,8 @@ import {
   Sparkles,
   CheckCircle2
 } from 'lucide-react';
+import { LanguageSelector } from './LanguageSelector';
+import { useLanguage } from '../context/LanguageContext';
 
 export type SectorCategory = 'ALL' | 'MSME' | 'OEM' | 'WORKS' | 'OFFICER' | 'STATUTORY' | 'AUDIT';
 
@@ -317,6 +319,7 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
   layout = 'two-column',
   hideHeader = false
 }) => {
+  const { t } = useLanguage();
   const initial = (initialSector || defaultCategory || 'ALL') as SectorCategory;
   const [selectedCategory, setSelectedCategory] = useState<SectorCategory>(initial);
   const [searchQuery, setSearchQuery] = useState('');
@@ -346,13 +349,13 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
   }, [defaultCategory]);
 
   const categories: { id: SectorCategory; label: string; icon: any; count: number; desc: string }[] = [
-    { id: 'ALL', label: 'All Sectors', icon: BookOpen, count: SECTOR_FAQS.length, desc: 'Complete master database of 50+ statutory procurement rules' },
-    { id: 'MSME', label: 'MSME & Startups', icon: Building2, count: SECTOR_FAQS.filter(f => f.category === 'MSME').length, desc: '25% quota, EMD waivers, Turnover relaxations' },
-    { id: 'OEM', label: 'OEMs & Manufacturers', icon: Factory, count: SECTOR_FAQS.filter(f => f.category === 'OEM').length, desc: 'Class-I/II local content, Brand ownership, DPIIT' },
-    { id: 'WORKS', label: 'Civil & Works', icon: HardHat, count: SECTOR_FAQS.filter(f => f.category === 'WORKS').length, desc: 'CPWD norms, 2AN-B capacity formula, BoQ locking' },
-    { id: 'OFFICER', label: 'Procurement Officers', icon: Landmark, count: SECTOR_FAQS.filter(f => f.category === 'OFFICER').length, desc: 'GFR Rule 160, CFA approval, Technical secrecy' },
-    { id: 'STATUTORY', label: 'Tax & Statutory', icon: Receipt, count: SECTOR_FAQS.filter(f => f.category === 'STATUTORY').length, desc: 'GST TDS 2%, IT Act 43A, PAN-Aadhaar compliance' },
-    { id: 'AUDIT', label: 'CAG & Anti-Cartel', icon: ShieldCheck, count: SECTOR_FAQS.filter(f => f.category === 'AUDIT').length, desc: 'Merkle ledger, CCI anti-collusion, Vigilance rules' }
+    { id: 'ALL', label: t('All Sectors'), icon: BookOpen, count: SECTOR_FAQS.length, desc: t('Complete master database of 50+ statutory procurement rules') },
+    { id: 'MSME', label: t('MSME & Startups'), icon: Building2, count: SECTOR_FAQS.filter(f => f.category === 'MSME').length, desc: t('25% quota, EMD waivers, Turnover relaxations') },
+    { id: 'OEM', label: t('OEMs & Manufacturers'), icon: Factory, count: SECTOR_FAQS.filter(f => f.category === 'OEM').length, desc: t('Class-I/II local content, Brand ownership, DPIIT') },
+    { id: 'WORKS', label: t('Civil & Works'), icon: HardHat, count: SECTOR_FAQS.filter(f => f.category === 'WORKS').length, desc: t('CPWD norms, 2AN-B capacity formula, BoQ locking') },
+    { id: 'OFFICER', label: t('Procurement Officers'), icon: Landmark, count: SECTOR_FAQS.filter(f => f.category === 'OFFICER').length, desc: t('GFR Rule 160, CFA approval, Technical secrecy') },
+    { id: 'STATUTORY', label: t('Tax & Statutory'), icon: Receipt, count: SECTOR_FAQS.filter(f => f.category === 'STATUTORY').length, desc: t('GST TDS 2%, IT Act 43A, PAN-Aadhaar compliance') },
+    { id: 'AUDIT', label: t('CAG & Anti-Cartel'), icon: ShieldCheck, count: SECTOR_FAQS.filter(f => f.category === 'AUDIT').length, desc: t('Merkle ledger, CCI anti-collusion, Vigilance rules') }
   ];
 
   const filteredFaqs = useMemo(() => {
@@ -387,16 +390,20 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
           <div>
             <div className="flex items-center gap-2 mb-1.5">
               <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 uppercase tracking-wider">
-                Legal &amp; Policy Knowledge Base
+                {t('Legal & Policy Knowledge Base')}
               </span>
-              <span className="text-xs text-slate-400">GFR 2017 &bull; PPP-MII 2017 &bull; MSMED Act &bull; CVC Directives</span>
+              <span className="text-xs text-slate-400">{t('GFR 2017 • PPP-MII 2017 • MSMED Act • CVC Directives')}</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
-              {title}
+              {t(title)}
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl">
-              {subtitle}
+              {t(subtitle)}
             </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0 self-start md:self-center bg-slate-100/90 p-1.5 rounded-xl border border-slate-200">
+            <span className="text-xs font-bold text-slate-700 hidden sm:inline">{t('Language / भाषा:')}</span>
+            <LanguageSelector variant="topbar" />
           </div>
         </div>
       )}
@@ -412,7 +419,7 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search rules, EMD, GFR, MII, Turnkey..."
+              placeholder={t('Search rules, EMD, GFR, MII, Turnkey...')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-8 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all shadow-xs"
@@ -430,7 +437,7 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
           {/* Category Vertical Nav */}
           <div className="bg-slate-50 p-2 rounded-2xl border border-slate-200 space-y-1">
             <div className="px-3 py-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-              Procurement Sectors
+              {t('Procurement Sectors')}
             </div>
             {categories.map(cat => {
               const Icon = cat.icon;
@@ -463,29 +470,29 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
           <div className="bg-gradient-to-br from-slate-900 to-[#002855] text-white p-4 rounded-2xl border border-slate-800 shadow-xs space-y-2.5 text-xs">
             <div className="flex items-center gap-2 text-amber-400 font-bold text-[11px] uppercase tracking-wider">
               <Scale className="w-3.5 h-3.5" />
-              <span>Statutory Legal Framework</span>
+              <span>{t('Statutory Legal Framework')}</span>
             </div>
             <ul className="space-y-1.5 text-[11px] text-slate-300">
               <li className="flex items-start gap-1.5">
                 <span className="text-amber-400 font-bold">•</span>
-                <span><strong>GFR 2017:</strong> Rules 149, 153, 160 &amp; 161</span>
+                <span><strong>GFR 2017:</strong> {t('Rules 149, 153, 160 & 161')}</span>
               </li>
               <li className="flex items-start gap-1.5">
                 <span className="text-amber-400 font-bold">•</span>
-                <span><strong>PPP-MII 2017:</strong> Class-I (≥50%) &amp; Class-II (20-50%)</span>
+                <span><strong>PPP-MII 2017:</strong> {t('Class-I (≥50%) & Class-II (20-50%)')}</span>
               </li>
               <li className="flex items-start gap-1.5">
                 <span className="text-amber-400 font-bold">•</span>
-                <span><strong>MSMED Act 2006:</strong> 25% mandatory purchase quota</span>
+                <span><strong>MSMED Act 2006:</strong> {t('25% mandatory purchase quota')}</span>
               </li>
               <li className="flex items-start gap-1.5">
                 <span className="text-amber-400 font-bold">•</span>
-                <span><strong>CVC Guidelines:</strong> Anti-cartel &amp; zero-leakage norms</span>
+                <span><strong>CVC Guidelines:</strong> {t('Anti-cartel & zero-leakage norms')}</span>
               </li>
             </ul>
             <div className="pt-2 border-t border-slate-800 text-[10px] text-slate-400 flex items-center justify-between">
-              <span>Binding Indian Law</span>
-              <span className="text-emerald-400 font-mono">100% GFR Compliant</span>
+              <span>{t('Binding Indian Law')}</span>
+              <span className="text-emerald-400 font-mono">{t('100% GFR Compliant')}</span>
             </div>
           </div>
 
@@ -501,19 +508,19 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
               <span className="text-[11px] text-slate-500 hidden sm:inline">&bull; {activeCategoryObj.desc}</span>
             </div>
             <div className="text-[11px] text-slate-500 font-semibold">
-              Showing {filteredFaqs.length} {filteredFaqs.length === 1 ? 'Rule' : 'Rules'}
+              {t('Showing')} {filteredFaqs.length} {filteredFaqs.length === 1 ? t('Rule') : t('Rules')}
             </div>
           </div>
         {filteredFaqs.length === 0 ? (
           <div className="p-8 text-center bg-slate-50 rounded-xl border border-dashed border-slate-300">
             <HelpCircle className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-            <p className="text-sm font-bold text-slate-700">No matching procurement FAQ found</p>
-            <p className="text-xs text-slate-500 mt-1">Try searching for keywords like &ldquo;EMD&rdquo;, &ldquo;Class-I&rdquo;, &ldquo;Rule 149&rdquo;, or &ldquo;GSTN&rdquo;.</p>
+            <p className="text-sm font-bold text-slate-700">{t('No matching procurement FAQ found')}</p>
+            <p className="text-xs text-slate-500 mt-1">{t('Try searching for keywords like "EMD", "Class-I", "Rule 149", or "GSTN".')}</p>
             <button
               onClick={() => { setSearchQuery(''); setSelectedCategory('ALL'); }}
               className="mt-3 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer border-none"
             >
-              Reset Filters
+              {t('Reset Filters')}
             </button>
           </div>
         ) : (
@@ -575,7 +582,7 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
                     <div className="p-3 bg-white rounded-lg border border-blue-100 text-slate-700 leading-relaxed">
                       <div className="text-[11px] font-bold text-blue-900 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5 text-blue-600" />
-                        Executive Direct Answer:
+                        {t('Executive Direct Answer:')}
                       </div>
                       <p className="font-semibold text-slate-900 text-xs sm:text-sm">
                         {faq.shortAnswer}
@@ -591,7 +598,7 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
                       <Scale className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
                       <div>
                         <span className="font-bold text-slate-800 text-[11px] block">
-                          Statutory &amp; Legal Authority:
+                          {t('Statutory & Legal Authority:')}
                         </span>
                         <span className="font-mono text-slate-600 text-[11px]">
                           {faq.legalReference}
@@ -601,7 +608,7 @@ export const SectorWiseFaq: React.FC<SectorWiseFaqProps> = ({
 
                     {/* Tags */}
                     <div className="flex items-center gap-1.5 flex-wrap pt-1">
-                      <span className="text-[10px] font-bold text-slate-400 uppercase mr-1">Tags:</span>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase mr-1">{t('Tags:')}</span>
                       {faq.tags.map((tag, tIdx) => (
                         <span key={tIdx} className="text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-semibold border border-slate-200">
                           #{tag}

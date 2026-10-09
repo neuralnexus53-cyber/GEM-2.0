@@ -127,7 +127,7 @@ export const DiscrepancyInspectorModal: React.FC<DiscrepancyInspectorModalProps>
           </div>
 
           {activeDiscrepancy ? (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(440px, 1fr))', gap: '14px' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3.5">
               
               <div className="card" style={{ padding: '14px', background: '#ffffff', border: '1px solid #cbd5e1', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '6px' }}>

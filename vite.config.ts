@@ -11,6 +11,7 @@ export default defineConfig({
   // Base relative path - universally compatible with Vercel, GitHub Pages, and local dev
   base: './',
   server: {
+    host: '0.0.0.0',
     port: 5173,
     open: false,
     proxy: {
@@ -20,6 +21,10 @@ export default defineConfig({
         secure: false,
       },
     },
+  },
+  preview: {
+    host: '0.0.0.0',
+    port: 5173,
   },
   build: {
     outDir: 'dist',

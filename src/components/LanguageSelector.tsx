@@ -44,34 +44,38 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   const isMinimal = variant === 'minimal';
 
   return (
-    <div className={`relative inline-block text-left ${className}`} ref={dropdownRef}>
+    <div 
+      className={`relative inline-block text-left notranslate language-selector-widget ${className}`} 
+      translate="no" 
+      ref={dropdownRef}
+    >
       {/* Trigger Button */}
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        className={`flex items-center gap-1.5 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-400/50 ${
+        className={`flex items-center gap-2 transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-amber-400/80 ${
           isTopbar
-            ? 'px-2.5 py-1 rounded-md text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 shadow-xs'
+            ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-[#00244D] hover:bg-[#003875] text-white border-2 border-amber-400/80 hover:border-amber-300 shadow-md'
             : isNavbar
-            ? 'px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-800/80 hover:bg-slate-700 text-slate-200 hover:text-white border border-slate-700 shadow-sm'
+            ? 'px-3 py-2 rounded-lg text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white border-2 border-amber-400/70 shadow-md'
             : isMinimal
             ? 'p-1.5 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-white/10'
-            : 'px-3 py-1 rounded-md text-xs font-medium text-slate-400 hover:text-white'
+            : 'px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white bg-slate-800'
         }`}
-        title="Select Language / भाषा चुनें"
+        title={`Select Language (11 Official Languages): Currently ${activeLang.label} (${activeLang.nativeLabel})`}
       >
-        <Globe size={14} className={isTopbar ? 'text-amber-400' : 'text-sky-400'} />
-        <span className="font-sans tracking-wide">
+        <Globe size={16} className="text-amber-400 shrink-0 animate-pulse" />
+        <span className="font-sans tracking-wide font-bold text-white text-xs">
           {activeLang.nativeLabel}
         </span>
-        <span className="text-[10px] opacity-70 font-normal hidden sm:inline">
-          ({activeLang.code.toUpperCase()})
+        <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-400 text-slate-950 font-mono font-extrabold uppercase shrink-0">
+          {activeLang.code.toUpperCase()}
         </span>
         <ChevronDown 
-          size={12} 
-          className={`transition-transform duration-200 opacity-80 ${isOpen ? 'rotate-180' : ''}`} 
+          size={14} 
+          className={`transition-transform duration-200 text-amber-400 shrink-0 ${isOpen ? 'rotate-180' : ''}`} 
         />
       </button>
 
@@ -79,18 +83,22 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       {isOpen && (
         <div 
           role="listbox"
-          className="absolute right-0 mt-1.5 w-64 rounded-xl bg-slate-900/95 backdrop-blur-md border border-slate-700/80 shadow-2xl z-[999] overflow-hidden py-1 animate-fadeIn"
+          className="absolute right-0 mt-1.5 w-72 rounded-xl bg-slate-900/98 backdrop-blur-md border border-slate-700/80 shadow-2xl z-[9999] overflow-hidden py-1 animate-fadeIn notranslate language-selector-dropdown"
+          translate="no"
           style={{
             boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4)'
           }}
         >
           {/* Header */}
-          <div className="px-3 py-2 border-b border-slate-800 bg-slate-950/60 flex items-center justify-between">
+          <div className="px-3 py-2 border-b border-slate-800 bg-slate-950/70 flex items-center justify-between">
             <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
               <Globe size={12} />
-              <span>Select Language (11 Official)</span>
+              <span>Select & Lock Portal Language</span>
             </span>
-            <span className="text-[9px] text-slate-400 font-mono">ଭାଷା / भाषा</span>
+            <span className="text-[9px] text-emerald-400 font-mono font-semibold flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span>{activeLang.code.toUpperCase()} Locked</span>
+            </span>
           </div>
 
           {/* Language Options Grid */}
@@ -104,28 +112,33 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                   role="option"
                   aria-selected={isSelected}
                   onClick={() => handleSelect(lang.code)}
-                  className={`w-full text-left px-3 py-2 flex items-center justify-between transition-colors cursor-pointer border-none ${
+                  className={`w-full text-left px-3.5 py-2.5 flex items-center justify-between transition-colors cursor-pointer border-none ${
                     isSelected
-                      ? 'bg-blue-600/25 text-white font-bold'
+                      ? 'bg-amber-500/15 text-white font-bold border-l-4 border-amber-400'
                       : 'bg-transparent text-slate-300 hover:bg-slate-800/70 hover:text-white'
                   }`}
                 >
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-white">
+                      <span className={`text-sm ${isSelected ? 'text-amber-300 font-bold' : 'text-white font-semibold'}`}>
                         {lang.nativeLabel}
                       </span>
                       <span className="text-xs text-slate-400 font-normal">
                         • {lang.label}
                       </span>
+                      {isSelected && (
+                        <span className="text-[9px] px-1.5 py-0.2 rounded-xs bg-amber-400/20 text-amber-300 border border-amber-400/40 uppercase font-mono font-bold">
+                          Locked
+                        </span>
+                      )}
                     </div>
-                    <span className="text-[10px] text-slate-500 font-normal">
+                    <span className="text-[10px] text-slate-500 font-normal mt-0.5">
                       {lang.region}
                     </span>
                   </div>
 
                   {isSelected && (
-                    <div className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center shrink-0 ml-2">
+                    <div className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center shrink-0 ml-2 shadow-sm">
                       <Check size={12} strokeWidth={3} />
                     </div>
                   )}

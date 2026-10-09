@@ -23,7 +23,8 @@ import {
   Unlock,
   PlusCircle,
   ExternalLink,
-  Sparkles
+  Sparkles,
+  X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { UserRole, Tender, OfficerProfile, ActiveTab, ROLE_DEFINITIONS } from '../types/procurement';
@@ -48,6 +49,8 @@ interface SidebarProps {
   officerProfile: OfficerProfile;
   onOpenOfficerProfile: () => void;
   onOpenVendorIntake: () => void;
+  isOpenMobile?: boolean;
+  setIsOpenMobile?: (open: boolean) => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -67,7 +70,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
   officerProfile,
   onOpenOfficerProfile,
   onOpenVendorIntake,
+  isOpenMobile = false,
+  setIsOpenMobile,
 }) => {
+  const handleTabClick = (tab: ActiveTab) => {
+    setActiveTab(tab);
+    if (setIsOpenMobile) {
+      setIsOpenMobile(false);
+    }
+  };
+
   const tenderNavItems = [
     {
       id: 'TENDERS' as ActiveTab,
@@ -158,10 +170,48 @@ export const Sidebar: React.FC<SidebarProps> = ({
   });
 
   return (
-    <aside className="w-64 min-w-[16rem] bg-[#08172D] text-slate-200 border-r border-[#1E3A68] flex flex-col justify-between p-3.5 h-[calc(100vh-80px)] overflow-y-auto shrink-0 shadow-lg">
-      <div className="flex flex-col gap-3.5">
-        
-        <div className="bg-[#051124] p-2.5 rounded-lg border border-[#1E3A68] space-y-1.5">
+    <>
+      {/* Mobile Drawer Overlay Backdrop */}
+      {isOpenMobile && (
+        <div
+          className="fixed inset-0 bg-black/75 z-40 lg:hidden backdrop-blur-xs transition-opacity duration-300"
+          onClick={() => setIsOpenMobile?.(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      <aside
+        className={`
+          fixed lg:static inset-y-0 left-0 z-50
+          w-72 max-w-[85vw] lg:w-64 lg:min-w-[16rem]
+          bg-[#08172D] text-slate-200 border-r border-[#1E3A68]
+          flex flex-col justify-between p-3.5
+          h-screen lg:h-[calc(100vh-80px)]
+          overflow-y-auto shrink-0 shadow-2xl lg:shadow-lg
+          transition-transform duration-300 ease-in-out
+          ${isOpenMobile ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+        `}
+      >
+        <div className="flex flex-col gap-3.5">
+          
+          {/* Mobile Drawer Header with Close Button */}
+          <div className="flex items-center justify-between pb-2 border-b border-[#1E3A68] lg:hidden">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-black tracking-wider text-[#FF9933] uppercase">GeM 2.0</span>
+              <span className="text-slate-400">•</span>
+              <span className="text-xs font-bold text-white">Officer Console</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsOpenMobile?.(false)}
+              className="p-1 rounded bg-[#001D3D] text-slate-300 hover:text-white border border-[#1E3A68] cursor-pointer"
+              aria-label="Close navigation"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="bg-[#051124] p-2.5 rounded-lg border border-[#1E3A68] space-y-1.5">
           <div className="flex items-center justify-between">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
               Authorized Jurisdiction
@@ -271,7 +321,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => handleTabClick(item.id)}
                   className={`flex items-center justify-between w-full px-2.5 py-2 rounded-lg text-left font-semibold text-xs transition-all border-none cursor-pointer ${
                     isActive
                       ? 'bg-[#002855] text-amber-400 border border-[#0284C7] font-bold shadow-sm'
@@ -307,7 +357,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => handleTabClick(item.id)}
                   className={`flex items-center justify-between w-full px-2.5 py-2 rounded-lg text-left font-semibold text-xs transition-all border-none cursor-pointer ${
                     isActive
                       ? 'bg-[#002855] text-amber-400 border border-[#0284C7] font-bold shadow-sm'
@@ -343,7 +393,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => handleTabClick(item.id)}
                   className={`flex items-center justify-between w-full px-2.5 py-2 rounded-lg text-left font-semibold text-xs transition-all border-none cursor-pointer ${
                     isActive
                       ? 'bg-[#002855] text-amber-400 border border-[#0284C7] font-bold shadow-sm'
@@ -416,5 +466,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       </div>
     </aside>
-  );
+  </>
+);
 };

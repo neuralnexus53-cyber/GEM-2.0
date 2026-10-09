@@ -62,6 +62,7 @@ export const App: React.FC = () => {
     return allowedTabs[0] || 'EVAL_QUEUE';
   });
   const [isVaultUnmasked, setIsVaultUnmasked] = useState<boolean>(false);
+  const [isOpenMobile, setIsOpenMobile] = useState<boolean>(false);
 
   // Enforce tab authorization guard
   useEffect(() => {
@@ -356,9 +357,10 @@ export const App: React.FC = () => {
         isVaultUnmasked={isVaultUnmasked}
         officerProfile={officerProfile}
         onOpenOfficerProfile={() => setShowOfficerProfileModal(true)}
+        onToggleMobileSidebar={() => setIsOpenMobile(prev => !prev)}
       />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
 
         <Sidebar
           activeTab={activeTab}
@@ -376,9 +378,11 @@ export const App: React.FC = () => {
           officerProfile={officerProfile}
           onOpenOfficerProfile={() => setShowOfficerProfileModal(true)}
           onOpenVendorIntake={() => setShowVendorIntakeModal(true)}
+          isOpenMobile={isOpenMobile}
+          setIsOpenMobile={setIsOpenMobile}
         />
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto max-h-[calc(100vh-80px)] space-y-5">
+        <main className="flex-1 w-full min-w-0 p-3 sm:p-6 lg:p-8 overflow-y-auto max-h-[calc(100vh-80px)] space-y-5">
 
           <GovHeaderStats
             tender={activeTender}

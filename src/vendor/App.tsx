@@ -66,6 +66,7 @@ import { PricingModal } from './components/billing/PricingModal';
 import { QuotaGuardModal } from './components/billing/QuotaGuardModal';
 import { SubscriptionTracker } from './components/billing/SubscriptionTracker';
 import { SectorWiseFaq } from '../components/SectorWiseFaq';
+import { LanguageSelector } from '../components/LanguageSelector';
 import { DigiLockerModal } from './components/digilocker/DigiLockerModal';
 import { DigiLockerVaultView } from './components/digilocker/DigiLockerVaultView';
 
@@ -786,13 +787,16 @@ export const App: React.FC = () => {
                 <p className="text-slate-400 text-[10px] hidden sm:block">GFR 2017 • PPP-MII 2017 • MSMED Act • CVC Directives</p>
               </div>
             </div>
-            <button
-              onClick={() => setIsFaqModalOpen(false)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-red-900/60 text-slate-300 hover:text-white transition-colors text-xs font-bold cursor-pointer border border-white/10"
-              title="Close FAQ Dossier (ESC)"
-            >
-              ✕ Close
-            </button>
+            <div className="flex items-center gap-2">
+              <LanguageSelector variant="topbar" />
+              <button
+                onClick={() => setIsFaqModalOpen(false)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-red-900/60 text-slate-300 hover:text-white transition-colors text-xs font-bold cursor-pointer border border-white/10"
+                title="Close FAQ Dossier (ESC)"
+              >
+                ✕ Close
+              </button>
+            </div>
           </div>
           <div className="flex-1 overflow-y-auto p-3 sm:p-6 bg-slate-50">
             <SectorWiseFaq defaultCategory="ALL" layout="two-column" />

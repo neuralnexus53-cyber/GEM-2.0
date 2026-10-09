@@ -6,11 +6,6 @@ import { ComplianceTicketModal } from '../components/ComplianceTicketModal';
 import { LanguageSelector } from '../components/LanguageSelector';
 import { useLanguage } from '../context/LanguageContext';
 
-export interface LandingPageProps {
-  initialFaqOpen?: boolean;
-  initialAboutOpen?: boolean;
-}
-
 const HERO_SLIDES = [
   {
     image: './images/banner1.jpg',
@@ -31,6 +26,11 @@ const HERO_SLIDES = [
     desc: 'Automated 25% MSME purchase preference enforcement and Class-I local content verification, empowering domestic manufacturers and startups nationwide.',
   },
 ];
+
+export interface LandingPageProps {
+  initialFaqOpen?: boolean;
+  initialAboutOpen?: boolean;
+}
 
 export default function LandingPage({ initialFaqOpen = false, initialAboutOpen = false }: LandingPageProps = {}) {
   const { t } = useLanguage();
@@ -197,10 +197,23 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
         </div>
       </div>
 
+      {/* National Sovereign Top Bar Strip */}
+      <div className="w-full bg-[#001428] text-slate-200 text-[11px] border-b border-slate-800 relative z-40">
+        <div style={{ height: '3px', background: 'linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%)' }} />
+        <div className="max-w-7xl mx-auto px-4 py-1.5 flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <span className="w-2 h-2 rounded-full bg-amber-400"></span>
+            <span className="font-bold text-amber-300 tracking-wide">भारत सरकार</span>
+            <span className="text-slate-500">|</span>
+            <span className="text-slate-100 font-semibold">{t('Government of India')}</span>
+            <span className="text-slate-600 hidden md:inline">•</span>
+            <span className="text-slate-400 hidden md:inline text-[11px]">{t('Ministry of Commerce & Industry')}</span>
+          </div>
+        </div>
+      </div>
+
       <header className="bg-slate-900 text-white w-full sticky top-0 z-40 shadow-lg">
         
-        <div style={{ height: '3px', background: 'linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%)' }} />
-
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           
           {/* Left Side: Menu Option + Logo & Writing */}
@@ -241,39 +254,6 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
           <div className="flex items-center space-x-2 sm:space-x-3 text-xs font-semibold">
             {/* 11-Language Selector */}
             <LanguageSelector variant="topbar" />
-
-            <nav className="hidden lg:flex items-center space-x-2.5">
-              <Link 
-                to="/gov/login" 
-                className="hover:text-blue-400 transition-colors px-2 py-1 rounded text-slate-200"
-              >
-                {t('nav.officer_login')}
-              </Link>
-              <Link 
-                to="/gov/register" 
-                className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1.5 rounded-full transition-colors flex items-center gap-1.5"
-              >
-                <i className="fa-solid fa-building-columns text-[10px]" />
-                {t('nav.officer_register')}
-              </Link>
-              <Link 
-                to="/vendor/login" 
-                className="hover:text-amber-400 transition-colors px-2 py-1 rounded text-slate-200"
-              >
-                {t('nav.vendor_login')}
-              </Link>
-              <Link 
-                to="/vendor/register" 
-                className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-full transition-colors"
-              >
-                {t('nav.vendor_register')}
-              </Link>
-            </nav>
-
-            <div className="md:hidden flex items-center gap-1.5">
-              <Link to="/gov/login" className="bg-blue-600 text-white font-bold px-2 py-1 rounded-full text-xs">Officer</Link>
-              <Link to="/vendor/login" className="bg-amber-500 text-slate-900 font-bold px-2 py-1 rounded-full text-xs">Vendor</Link>
-            </div>
           </div>
 
         </div>
@@ -329,35 +309,9 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
                     <h1 className="text-2xl sm:text-4xl md:text-5xl font-black text-white leading-tight mb-4 drop-shadow-md">
                       {t(slide.title)}
                     </h1>
-                    <p className="text-slate-200 text-xs sm:text-sm md:text-base leading-relaxed mb-6 drop-shadow">
+                    <p className="text-slate-200 text-xs sm:text-sm md:text-base leading-relaxed drop-shadow">
                       {t(slide.desc)}
                     </p>
-                    <div className="flex flex-wrap gap-2.5 sm:gap-3">
-                      <Link 
-                        to="/gov/login" 
-                        className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
-                      >
-                        <i className="fa-solid fa-lock" /> {t('nav.officer_login')}
-                      </Link>
-                      <Link 
-                        to="/gov/register" 
-                        className="bg-slate-900/90 hover:bg-slate-800 text-blue-300 border border-blue-500/40 font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
-                      >
-                        <i className="fa-solid fa-building-columns" /> {t('nav.officer_register')}
-                      </Link>
-                      <Link 
-                        to="/vendor/login" 
-                        className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
-                      >
-                        <i className="fa-solid fa-right-to-bracket" /> {t('nav.vendor_login')}
-                      </Link>
-                      <Link 
-                        to="/vendor/register" 
-                        className="bg-slate-900/90 hover:bg-slate-800 text-amber-300 border border-amber-500/40 font-bold px-5 py-2.5 rounded-lg text-xs uppercase tracking-wider transition-all shadow-lg hover:scale-105 flex items-center gap-2"
-                      >
-                        <i className="fa-solid fa-user-plus" /> {t('nav.vendor_register')}
-                      </Link>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -843,13 +797,16 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
                 </div>
               </div>
 
-              <button 
-                onClick={() => setAboutModalOpen(false)}
-                className="text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors border-none cursor-pointer flex items-center justify-center"
-                aria-label="Close Modal"
-              >
-                <i className="fa-solid fa-xmark text-lg" />
-              </button>
+              <div className="flex items-center gap-2">
+                <LanguageSelector variant="topbar" />
+                <button 
+                  onClick={() => setAboutModalOpen(false)}
+                  className="text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors border-none cursor-pointer flex items-center justify-center"
+                  aria-label="Close Modal"
+                >
+                  <i className="fa-solid fa-xmark text-lg" />
+                </button>
+              </div>
             </div>
 
             {/* Split Body: Left Sidebar + Right Content */}
@@ -1774,6 +1731,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
               </div>
 
               <div className="flex items-center gap-2">
+                <LanguageSelector variant="topbar" />
                 <button
                   type="button"
                   onClick={() => {

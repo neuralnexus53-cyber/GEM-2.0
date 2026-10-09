@@ -12,7 +12,8 @@ import {
   LogOut,
   Building2,
   ChevronDown,
-  BookOpen
+  BookOpen,
+  Menu
 } from 'lucide-react';
 import { Tender, UserRole, OfficerProfile } from '../types/procurement';
 import { ActiveTab } from './Sidebar';
@@ -28,6 +29,7 @@ interface NavbarProps {
   isVaultUnmasked: boolean;
   officerProfile: OfficerProfile;
   onOpenOfficerProfile: () => void;
+  onToggleMobileSidebar?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -39,6 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   isVaultUnmasked,
   officerProfile,
   onOpenOfficerProfile,
+  onToggleMobileSidebar,
 }) => {
   const { t } = useLanguage();
   const [istTime, setIstTime] = useState<string>('');
@@ -124,7 +127,18 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="w-full bg-[#002855] text-white border-b-2 border-[#E65100] px-3 sm:px-6 lg:px-8 py-2.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
 
         <div className="flex items-center justify-between sm:justify-start gap-3">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
+
+            {/* Mobile Sidebar Hamburger Toggle */}
+            <button
+              type="button"
+              onClick={onToggleMobileSidebar}
+              className="p-1.5 rounded-lg bg-[#001D3D] hover:bg-[#00244D] border border-[#1E3A68] text-slate-200 hover:text-white lg:hidden cursor-pointer shrink-0 transition-colors"
+              title="Open Navigation Menu"
+              aria-label="Toggle navigation menu"
+            >
+              <Menu className="w-5 h-5 text-amber-400" />
+            </button>
 
             <div className="w-10 h-10 rounded-full bg-[#001833] border border-[#FF9933]/70 flex items-center justify-center p-1.5 shrink-0 shadow-inner">
               <svg viewBox="0 0 24 24" className="w-7 h-7 text-[#FF9933] fill-current">

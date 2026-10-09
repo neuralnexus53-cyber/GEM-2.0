@@ -44,7 +44,10 @@ html.translated-rtl body {
 body > .skiptranslate,
 body > div.skiptranslate,
 body > div[class*="skiptranslate"],
-.skiptranslate:not(#google_translate_element) {
+.VIpgJd-ZVi9od-aZ2wEe-wOHMy,
+.VIpgJd-ZVi9od-aZ2wEe-Oxf5Fd,
+.VIpgJd-ZVi9od-xl07Ob-Oxf5Fd,
+.VIpgJd-ZVi9od-vH1Gmf {
   display: none !important;
   visibility: hidden !important;
   height: 0px !important;
@@ -56,6 +59,15 @@ body > div[class*="skiptranslate"],
   margin: 0 !important;
   padding: 0 !important;
   border: none !important;
+}
+
+/* Explicit guarantee for Language Selector widget visibility */
+.language-selector-widget,
+.language-selector-widget button {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 /* Hide all Google Translate iframes */
@@ -124,5 +136,31 @@ iframe.VIpgJd-ZVi9od-ORHb-Oxf5Fd,
 .goog-te-gadget > span,
 .goog-te-gadget .VIpgJd-ZVi9od-l4eHX-hSRGPd {
   display: none !important;
+}
+
+/* ==========================================================================
+   Mobile Web Optimization & Touch Device Helpers
+   ========================================================================== */
+html, body {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button, a, input, select, textarea {
+  touch-action: manipulation;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 768px) {
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
 }
 

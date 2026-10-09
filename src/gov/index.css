@@ -328,3 +328,95 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.25s ease-out forwards;
 }
+
+/* ==========================================================================
+   Responsive Modals & Cryptographic Display Styles
+   ========================================================================== */
+.modal-backdrop, .modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 60;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.modal-content {
+  background-color: #0C1A30;
+  color: #F8FAFC;
+  border: 1px solid #1E3A68;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  margin: auto;
+}
+
+.modal-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid #1E3A68;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #091528;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.modal-body {
+  padding: 14px 18px;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  padding: 14px 18px;
+  border-top: 1px solid #1E3A68;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  background: #091528;
+  flex-shrink: 0;
+}
+
+.crypto-box {
+  background: #051124;
+  border: 1px solid #1E3A68;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.725rem;
+  color: #38BDF8;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+  .gov-top-access-bar {
+    padding: 6px 12px;
+    font-size: 0.675rem;
+  }
+
+  .modal-backdrop, .modal-overlay {
+    padding: 8px;
+  }
+
+  .modal-content {
+    max-height: 94vh;
+    border-radius: 10px;
+  }
+
+  .modal-header, .modal-body, .modal-footer {
+    padding: 10px 14px;
+  }
+}

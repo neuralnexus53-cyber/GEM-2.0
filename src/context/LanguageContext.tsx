@@ -808,7 +808,7 @@ export const TRANSLATIONS: Record<LanguageCode, Record<string, string>> = {
   }
 };
 
-export const ENGLISH_PHRASE_TO_KEY: Record<string, string> = {
+const ENGLISH_PHRASE_TO_KEY: Record<string, string> = {
   'Home': 'nav.home',
   'Procurement Officer Portal': 'nav.officer_portal',
   'Officer Login': 'nav.officer_login',
@@ -849,8 +849,14 @@ export const ENGLISH_PHRASE_TO_KEY: Record<string, string> = {
 import { 
   walkAndTranslateDom, 
   triggerGoogleTranslate, 
-  getVocabTranslation 
+  getVocabTranslation,
+  registerDictionary,
+  REVERSE_VOCAB_MAP,
+  clearGoogleTranslateCookies
 } from './sovereignTranslations';
+
+// Register all translation strings to ensure instant bidirectional forward & reverse lookup across all 11 languages
+registerDictionary(TRANSLATIONS);
 
 // Sovereign Full-DOM Translation Bridge: triggers instantaneous local TreeWalker DOM transformation and non-blocking Google Translate
 export function applyFullPageTranslation(lang: LanguageCode) {
@@ -859,16 +865,22 @@ export function applyFullPageTranslation(lang: LanguageCode) {
     // 1. Instantaneous local DOM text node transformation (< 5ms via TreeWalker & compiled Regex)
     walkAndTranslateDom(lang);
 
-    // 2. Google Translate non-blocking asynchronous bridge (immediate or fast 50ms check, max 300ms)
+    // 2. Google Translate non-blocking asynchronous bridge (retries up to 30 times = 3s)
     if (!triggerGoogleTranslate(lang)) {
       let count = 0;
       const timer = setInterval(() => {
         count++;
-        if (triggerGoogleTranslate(lang) || count > 6) {
+        if (triggerGoogleTranslate(lang) || count > 30) {
           clearInterval(timer);
         }
-      }, 50);
+      }, 100);
     }
+
+    // 3. Secondary pass after 100ms to guarantee any dynamically re-rendered elements or split text nodes are caught
+    setTimeout(() => {
+      walkAndTranslateDom(lang);
+      triggerGoogleTranslate(lang);
+    }, 100);
   } catch (err) {
     console.error('Translation bridge error:', err);
   }
@@ -885,11 +897,12 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Lock language choice in active session; if first time visit, start strictly in English
   const [language, setLanguageState] = useState<LanguageCode>(() => {
     try {
-      const saved = localStorage.getItem('gem_portal_language') as LanguageCode;
-      if (saved && SUPPORTED_LANGUAGES.some(l => l.code === saved)) {
-        return saved;
+      const sessionLang = sessionStorage.getItem('gem_portal_session_lang') as LanguageCode;
+      if (sessionLang && SUPPORTED_LANGUAGES.some(l => l.code === sessionLang)) {
+        return sessionLang;
       }
     } catch (e) {}
     return 'en';
@@ -897,10 +910,33 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   const lastAppliedLangRef = useRef<LanguageCode | null>(null);
 
+  // Mount verification: if first visit or English, purge cookies and ensure clean English baseline
+  useEffect(() => {
+    try {
+      const sessionLang = sessionStorage.getItem('gem_portal_session_lang') as LanguageCode;
+      if (!sessionLang || sessionLang === 'en') {
+        clearGoogleTranslateCookies();
+        document.documentElement.lang = 'en';
+        lastAppliedLangRef.current = 'en';
+      } else if (SUPPORTED_LANGUAGES.some(l => l.code === sessionLang)) {
+        document.documentElement.lang = sessionLang;
+        lastAppliedLangRef.current = sessionLang;
+        applyFullPageTranslation(sessionLang);
+      }
+    } catch (e) {}
+  }, []);
+
   const setLanguage = (lang: LanguageCode) => {
     setLanguageState(lang);
     try {
-      localStorage.setItem('gem_portal_language', lang);
+      // Lock language for the active session
+      sessionStorage.setItem('gem_portal_session_lang', lang);
+      if (lang === 'en') {
+        localStorage.removeItem('gem_portal_language');
+        clearGoogleTranslateCookies();
+      } else {
+        localStorage.setItem('gem_portal_language', lang);
+      }
       document.documentElement.lang = lang;
       lastAppliedLangRef.current = lang;
       applyFullPageTranslation(lang);
@@ -920,21 +956,44 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const currentLanguage = SUPPORTED_LANGUAGES.find(l => l.code === language) || SUPPORTED_LANGUAGES[0];
 
   const t = (keyOrPhrase: string, fallback?: string): string => {
-    const resolvedKey = ENGLISH_PHRASE_TO_KEY[keyOrPhrase] || keyOrPhrase;
+    if (!keyOrPhrase) return fallback || '';
+
+    // Step 1: Bidirectional reversal - if keyOrPhrase is in a foreign language, reverse it to canonical English first
+    let enPhrase = keyOrPhrase.trim();
+    if (REVERSE_VOCAB_MAP.has(enPhrase)) {
+      enPhrase = REVERSE_VOCAB_MAP.get(enPhrase)!;
+    } else if (REVERSE_VOCAB_MAP.has(enPhrase.toLowerCase())) {
+      enPhrase = REVERSE_VOCAB_MAP.get(enPhrase.toLowerCase())!;
+    }
+
+    // Step 2: If target is English, return English phrase or dictionary value
+    if (language === 'en') {
+      const resolvedKey = ENGLISH_PHRASE_TO_KEY[enPhrase] || ENGLISH_PHRASE_TO_KEY[keyOrPhrase] || enPhrase;
+      if (TRANSLATIONS.en && TRANSLATIONS.en[resolvedKey]) {
+        return TRANSLATIONS.en[resolvedKey];
+      }
+      return enPhrase || fallback || keyOrPhrase;
+    }
+
+    // Step 3: Check dictionary key translation for current target language
+    const resolvedKey = ENGLISH_PHRASE_TO_KEY[enPhrase] || ENGLISH_PHRASE_TO_KEY[keyOrPhrase] || keyOrPhrase;
     const langDict = TRANSLATIONS[language];
     if (langDict && langDict[resolvedKey]) {
       return langDict[resolvedKey];
     }
-    // Check rich sovereign vocabulary
-    const vocabTrans = getVocabTranslation(keyOrPhrase, language);
+
+    // Step 4: Check sovereign vocabulary for the English phrase
+    const vocabTrans = getVocabTranslation(enPhrase, language) || getVocabTranslation(keyOrPhrase, language);
     if (vocabTrans) {
       return vocabTrans;
     }
-    // Fallback to English dictionary
+
+    // Step 5: Fallback to English dictionary
     if (TRANSLATIONS.en && TRANSLATIONS.en[resolvedKey]) {
       return TRANSLATIONS.en[resolvedKey];
     }
-    return fallback || keyOrPhrase;
+
+    return fallback || enPhrase || keyOrPhrase;
   };
 
   return (

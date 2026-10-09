@@ -144,16 +144,16 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-3 justify-between sm:justify-end">
+      <div className="flex items-center gap-2 sm:gap-3 justify-between sm:justify-end flex-wrap">
 
         {/* Active Vendor Entity & Account Selector */}
-        <div className="flex items-center gap-1.5 bg-[#001833] px-2 py-1 rounded border border-[#1E3A68] text-xs">
+        <div className="flex items-center gap-1.5 bg-[#001833] px-2 py-1 rounded border border-[#1E3A68] text-xs max-w-full">
           <Building2 className="w-3.5 h-3.5 text-amber-400 shrink-0" />
           <span className="text-[10px] text-slate-400 font-medium hidden md:inline">Account:</span>
           <select
             value="CURRENT"
             onChange={e => handleAccountSelect(e.target.value)}
-            className="bg-transparent text-slate-100 font-semibold text-[11px] focus:outline-none cursor-pointer pr-1 max-w-[210px] truncate"
+            className="bg-transparent text-slate-100 font-semibold text-[11px] focus:outline-none cursor-pointer pr-1 max-w-[140px] sm:max-w-[210px] truncate"
           >
             <option value="CURRENT" className="bg-[#002855] text-white">
               {profile.name} ({profile.role === 'OEM_SELLER' ? 'OEM Manufacturer' : profile.role === 'AUTHORIZED_RESELLER' || profile.role === 'MSME_STARTUP' ? 'MSME / Reseller' : 'Works Contractor'})

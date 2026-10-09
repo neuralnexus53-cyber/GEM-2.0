@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { LanguageSelector } from './LanguageSelector';
 
 interface ComplianceTicketModalProps {
   isOpen: boolean;
@@ -171,35 +172,38 @@ export const ComplianceTicketModal: React.FC<ComplianceTicketModalProps> = ({
         <div style={{ height: '4px', background: 'linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%)' }} />
 
         {/* Modal Header */}
-        <div className="bg-[#002855] text-white px-5 sm:px-6 py-4 flex items-center justify-between border-b border-sky-900/60 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
-              <i className="fa-solid fa-headset text-lg" />
+        <div className="bg-[#002855] text-white px-4 sm:px-6 py-3 sm:py-4 flex flex-wrap items-center justify-between gap-3 border-b border-sky-900/60 shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
+              <i className="fa-solid fa-headset text-base sm:text-lg" />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
                   Statutory Redressal Cell
                 </span>
                 <span className="text-[10px] text-slate-300">GFR 2017 &bull; Rule 173(iv)</span>
               </div>
-              <h3 className="text-base sm:text-lg font-black text-white leading-tight">
+              <h3 className="text-sm sm:text-lg font-black text-white leading-tight mt-0.5">
                 Raise a Compliance Clarification Ticket
               </h3>
             </div>
           </div>
 
-          <button 
-            onClick={onClose}
-            className="text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors border-none cursor-pointer flex items-center justify-center"
-            aria-label="Close Modal"
-          >
-            <i className="fa-solid fa-xmark text-lg" />
-          </button>
+          <div className="flex items-center gap-2 ml-auto">
+            <LanguageSelector variant="topbar" />
+            <button 
+              onClick={onClose}
+              className="text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 p-2 rounded-lg transition-colors border-none cursor-pointer flex items-center justify-center"
+              aria-label="Close Modal"
+            >
+              <i className="fa-solid fa-xmark text-lg" />
+            </button>
+          </div>
         </div>
 
         {/* Tabs: Raise Ticket vs Track Existing */}
-        <div className="bg-slate-100 border-b border-slate-200 px-5 sm:px-6 py-2.5 flex items-center justify-between shrink-0">
+        <div className="bg-slate-100 border-b border-slate-200 px-4 sm:px-6 py-2.5 flex flex-wrap items-center justify-between gap-2 shrink-0">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setActiveTab('raise')}

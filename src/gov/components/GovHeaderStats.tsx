@@ -30,7 +30,7 @@ export const GovHeaderStats: React.FC<GovHeaderStatsProps> = ({
   ledgerCount,
 }) => {
   return (
-    <div className="bg-[#051124] border border-[#1E3A68] rounded p-3 grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[#1E3A68] text-xs shadow-md">
+    <div className="bg-[#051124] border border-[#1E3A68] rounded-xl p-2 sm:p-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-0 divide-y sm:divide-y-0 sm:divide-x divide-[#1E3A68] text-xs shadow-md">
       
       <div className="px-3 py-1.5 space-y-0.5">
         <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">

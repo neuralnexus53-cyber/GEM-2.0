@@ -148,7 +148,7 @@ export const BlindGradingModal: React.FC<BlindGradingModalProps> = ({
           <button onClick={onClose} className="btn btn-outline btn-sm">✕</button>
         </div>
 
-        <div className="modal-body" style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '18px', padding: '10px 0' }}>
+        <div className="modal-body grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-4.5 p-3 sm:p-4">
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             
@@ -229,7 +229,7 @@ export const BlindGradingModal: React.FC<BlindGradingModalProps> = ({
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '6px', border: '1px solid #cbd5e1' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '4px' }}>
                   <Building2 size={14} color="#15803d" />

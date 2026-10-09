@@ -96,7 +96,7 @@ export const CAGLedgerView: React.FC<CAGLedgerViewProps> = ({
         </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: '20px' }}>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.3fr] gap-5">
         
         <div className="card" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div className="card-header">
@@ -174,7 +174,7 @@ export const CAGLedgerView: React.FC<CAGLedgerViewProps> = ({
                 <div className="crypto-box" style={{ color: 'var(--text-secondary)' }}>{selectedBlock.previousHash}</div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Merkle State Root:</div>
                   <div className="crypto-box" style={{ fontSize: '0.7rem' }}>{selectedBlock.merkleRoot}</div>
