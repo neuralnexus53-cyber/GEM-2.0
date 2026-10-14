@@ -3812,10 +3812,14 @@ let activeObserver: MutationObserver | null = null;
 
 let isTranslating = false;
 
-
+// Google Translate mutates the same text nodes as the local walker. Stop the
+// observer before a Google pass so the two translation systems never race.
+export function stopDomTranslationObserver() {
+  activeObserver?.disconnect();
+  activeObserver = null;
+}
 
 // Sovereign Ultra High-Speed DOM Walker: translates entire active page in < 5ms using native TreeWalker and compiled regex
-
 export function walkAndTranslateDom(lang: LanguageCode) {
 
   if (typeof window === 'undefined' || !document.body) return;
@@ -4517,4 +4521,3 @@ export function triggerGoogleTranslate(lang: LanguageCode): boolean {
   return false;
 
 }
-
