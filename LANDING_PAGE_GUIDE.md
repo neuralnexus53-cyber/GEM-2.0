@@ -39,7 +39,7 @@ The hero begins around lines 310-381.
 
 - Slide content is defined in `HERO_SLIDES` near the top of the file.
 - Images are stored under `public/images/`.
-- The carousel auto-advances every 5.5 seconds and uses cloned first/last slides for a seamless loop.
+- The carousel auto-advances every 5.5 seconds and wraps across the three configured slides.
 - Previous/next buttons and slide dots are inside the hero section.
 
 ### 3. Main content

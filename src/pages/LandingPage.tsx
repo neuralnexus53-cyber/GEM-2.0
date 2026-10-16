@@ -27,12 +27,6 @@ const HERO_SLIDES = [
   },
 ];
 
-const LOOPED_HERO_SLIDES = [
-  HERO_SLIDES[HERO_SLIDES.length - 1],
-  ...HERO_SLIDES,
-  HERO_SLIDES[0],
-];
-
 const LANDING_LANGUAGES: Array<{ code: LanguageCode; label: string; nativeLabel: string }> = [
   { code: 'en', label: 'English', nativeLabel: 'English' },
   { code: 'hi', label: 'Hindi', nativeLabel: 'हिन्दी' },
@@ -72,8 +66,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Hero carousel state
-  const [currentSlide, setCurrentSlide] = useState(1);
-  const [heroTransitionEnabled, setHeroTransitionEnabled] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   // Live Stats Drawer state
   const [statsOpen, setStatsOpen] = useState(false);
@@ -112,27 +105,10 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
   // Auto-advance hero carousel
   useEffect(() => {
     const id = setInterval(() => {
-      setCurrentSlide(s => s + 1);
+      setCurrentSlide(s => (s + 1) % HERO_SLIDES.length);
     }, 5500);
     return () => clearInterval(id);
   }, []);
-
-  const handleHeroTransitionEnd = () => {
-    if (currentSlide === 0) {
-      setHeroTransitionEnabled(false);
-      setCurrentSlide(HERO_SLIDES.length);
-    } else if (currentSlide === LOOPED_HERO_SLIDES.length - 1) {
-      setHeroTransitionEnabled(false);
-      setCurrentSlide(1);
-    }
-  };
-
-  useEffect(() => {
-    if (!heroTransitionEnabled) {
-      const id = requestAnimationFrame(() => setHeroTransitionEnabled(true));
-      return () => cancelAnimationFrame(id);
-    }
-  }, [heroTransitionEnabled]);
 
   // Synchronize URL hash with FAQ / Dossier modal state
   useEffect(() => {
@@ -336,11 +312,10 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
       <section className="landing-hero relative w-full overflow-hidden bg-slate-950 group h-[440px] sm:h-[480px] md:h-[520px] lg:h-[560px] min-h-[420px]">
         
         <div 
-          className={`relative w-full h-full flex ${heroTransitionEnabled ? 'transition-transform duration-700 ease-in-out' : ''}`}
+          className="relative w-full h-full flex transition-transform duration-700 ease-in-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-          onTransitionEnd={handleHeroTransitionEnd}
         >
-          {LOOPED_HERO_SLIDES.map((slide, idx) => (
+          {HERO_SLIDES.map((slide, idx) => (
             <div key={idx} className="w-full min-w-full h-full flex-shrink-0 relative">
               <img 
                 src={slide.image} 
@@ -379,14 +354,14 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
         <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent pointer-events-none z-10" />
 
         <button 
-          onClick={() => setCurrentSlide(s => s - 1)}
+          onClick={() => setCurrentSlide(s => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
           className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full w-11 h-11 cursor-pointer transition focus:outline-none z-30 flex items-center justify-center border-none"
           aria-label="Previous Slide"
         >
           <i className="fa-solid fa-chevron-left text-lg" />
         </button>
         <button 
-          onClick={() => setCurrentSlide(s => s + 1)}
+          onClick={() => setCurrentSlide(s => (s + 1) % HERO_SLIDES.length)}
           className="absolute top-1/2 right-4 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full w-11 h-11 cursor-pointer transition focus:outline-none z-30 flex items-center justify-center border-none"
           aria-label="Next Slide"
         >
@@ -397,9 +372,9 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
           {HERO_SLIDES.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => setCurrentSlide(idx + 1)}
+              onClick={() => setCurrentSlide(idx)}
               className={`h-2 rounded-full transition-all border-none cursor-pointer ${
-                currentSlide === idx + 1 ? 'w-8 bg-amber-500' : 'w-2 bg-white/50 hover:bg-white/80'
+                currentSlide === idx ? 'w-8 bg-amber-500' : 'w-2 bg-white/50 hover:bg-white/80'
               }`}
               aria-label={`Slide ${idx + 1}`}
             />
