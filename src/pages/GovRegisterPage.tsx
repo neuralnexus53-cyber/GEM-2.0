@@ -16,6 +16,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { LanguageSelector } from '../components/LanguageSelector';
+import './AuthPages.css';
 
 const DEFAULT_OFFICER_PHOTO = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&auto=format&fit=crop&q=80';
 
@@ -185,11 +186,11 @@ export default function GovRegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col font-sans">
+    <div className="auth-page min-h-screen bg-slate-950 text-white flex flex-col font-sans">
       
       <div style={{ height: '3px', background: 'linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%)' }} />
 
-      <header className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between">
+      <header className="auth-page-header bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 no-underline text-white">
           <img 
             src="./images/logoclone1.png" 
@@ -224,7 +225,7 @@ export default function GovRegisterPage() {
         </div>
       </header>
 
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-8">
+      <main className="auth-page-main flex-1 flex items-center justify-center p-4 sm:p-8">
         <div className="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
           
           <div className="absolute -top-24 -right-24 w-56 h-56 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -594,7 +595,7 @@ export default function GovRegisterPage() {
         </div>
       </main>
 
-      <footer className="bg-slate-900/60 border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500">
+      <footer className="auth-page-footer bg-slate-900/60 border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500">
         <span>GEM 2.0 PROCUREMENT SUITE • Ministry of Commerce &amp; Industry • Smart India Hackathon 2026</span>
       </footer>
 
