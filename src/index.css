@@ -98,7 +98,10 @@ iframe.VIpgJd-ZVi9od-ORHb-Oxf5Fd,
 .goog-te-balloon-frame,
 .goog-tooltip,
 .goog-tooltip:hover,
-.goog-te-spinner-pos {
+.goog-te-spinner,
+.goog-te-spinner-pos,
+.goog-te-spinner-pos img,
+.goog-te-spinner-pos > div {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -163,4 +166,3 @@ button, a, input, select, textarea {
     height: 4px;
   }
 }
-

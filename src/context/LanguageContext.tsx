@@ -846,41 +846,71 @@ const ENGLISH_PHRASE_TO_KEY: Record<string, string> = {
   'Search': 'common.search',
 };
 
-import { 
+import {
   walkAndTranslateDom, 
-  triggerGoogleTranslate, 
+  triggerGoogleTranslate,
   getVocabTranslation,
   registerDictionary,
   REVERSE_VOCAB_MAP,
-  clearGoogleTranslateCookies
+  clearGoogleTranslateCookies,
+  stopDomTranslationObserver
 } from './sovereignTranslations';
 
 // Register all translation strings to ensure instant bidirectional forward & reverse lookup across all 11 languages
 registerDictionary(TRANSLATIONS);
 
-// Sovereign Full-DOM Translation Bridge: triggers instantaneous local TreeWalker DOM transformation and non-blocking Google Translate
+// Monotonic run id: every language switch invalidates previously scheduled
+// fallback work so stale async callbacks cannot revert the latest selection.
+let translationRunId = 0;
+
+function resetGoogleTranslationState() {
+  if (typeof document === 'undefined') return;
+  document.documentElement.classList.remove('translated-ltr', 'translated-rtl');
+}
+
+// Local-first flow:
+// 1) translate known vocabulary immediately in the current DOM
+// 2) trigger Google Translate as a non-blocking fallback for residual text
+// This keeps the UI visible while async fallback catches up.
 export function applyFullPageTranslation(lang: LanguageCode) {
   if (typeof window === 'undefined') return;
+  const runId = ++translationRunId;
   try {
-    // 1. Instantaneous local DOM text node transformation (< 5ms via TreeWalker & compiled Regex)
+    stopDomTranslationObserver();
+    resetGoogleTranslationState();
+
+    if (lang === 'en') {
+      walkAndTranslateDom('en');
+      triggerGoogleTranslate('en');
+      [100, 400, 1000].forEach((delay) => {
+        setTimeout(() => {
+          if (runId !== translationRunId) return;
+          triggerGoogleTranslate('en');
+          walkAndTranslateDom('en');
+        }, delay);
+      });
+      return;
+    }
+
+    // Apply the local vocabulary immediately; Google Translate fills in
+    // hardcoded content asynchronously without blocking the existing page.
     walkAndTranslateDom(lang);
 
-    // 2. Google Translate non-blocking asynchronous bridge (retries up to 30 times = 3s)
-    if (!triggerGoogleTranslate(lang)) {
-      let count = 0;
-      const timer = setInterval(() => {
-        count++;
-        if (triggerGoogleTranslate(lang) || count > 30) {
-          clearInterval(timer);
+    // Wrapper ensures delayed retries no-op if a newer language selection exists.
+    const applyGoogleTranslation = () => {
+      if (runId !== translationRunId) return true;
+      return triggerGoogleTranslate(lang);
+    };
+
+    if (!applyGoogleTranslation()) {
+      let attempts = 0;
+      const timer = window.setInterval(() => {
+        attempts += 1;
+        if (applyGoogleTranslation() || attempts >= 30) {
+          window.clearInterval(timer);
         }
       }, 100);
     }
-
-    // 3. Secondary pass after 100ms to guarantee any dynamically re-rendered elements or split text nodes are caught
-    setTimeout(() => {
-      walkAndTranslateDom(lang);
-      triggerGoogleTranslate(lang);
-    }, 100);
   } catch (err) {
     console.error('Translation bridge error:', err);
   }
@@ -926,6 +956,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     } catch (e) {}
   }, []);
 
+  // Single source of truth for user-initiated language switches.
+  // Persist choice first, then apply the local-first + fallback translation flow.
   const setLanguage = (lang: LanguageCode) => {
     setLanguageState(lang);
     try {
@@ -943,6 +975,8 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     } catch (e) {}
   };
 
+  // Safety net for any state-driven language updates that did not originate
+  // from setLanguage in this render pass.
   useEffect(() => {
     try {
       document.documentElement.lang = language;
@@ -1022,4 +1056,3 @@ export const useLanguage = (): LanguageContextType => {
   }
   return context;
 };
-
