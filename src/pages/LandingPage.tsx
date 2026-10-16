@@ -27,6 +27,12 @@ const HERO_SLIDES = [
   },
 ];
 
+const LOOPED_HERO_SLIDES = [
+  HERO_SLIDES[HERO_SLIDES.length - 1],
+  ...HERO_SLIDES,
+  HERO_SLIDES[0],
+];
+
 const LANDING_LANGUAGES: Array<{ code: LanguageCode; label: string; nativeLabel: string }> = [
   { code: 'en', label: 'English', nativeLabel: 'English' },
   { code: 'hi', label: 'Hindi', nativeLabel: 'हिन्दी' },
@@ -66,7 +72,8 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   // Hero carousel state
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(1);
+  const [heroTransitionEnabled, setHeroTransitionEnabled] = useState(true);
 
   // Live Stats Drawer state
   const [statsOpen, setStatsOpen] = useState(false);
@@ -105,10 +112,27 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
   // Auto-advance hero carousel
   useEffect(() => {
     const id = setInterval(() => {
-      setCurrentSlide(s => (s + 1) % HERO_SLIDES.length);
+      setCurrentSlide(s => s + 1);
     }, 5500);
     return () => clearInterval(id);
   }, []);
+
+  const handleHeroTransitionEnd = () => {
+    if (currentSlide === 0) {
+      setHeroTransitionEnabled(false);
+      setCurrentSlide(HERO_SLIDES.length);
+    } else if (currentSlide === LOOPED_HERO_SLIDES.length - 1) {
+      setHeroTransitionEnabled(false);
+      setCurrentSlide(1);
+    }
+  };
+
+  useEffect(() => {
+    if (!heroTransitionEnabled) {
+      const id = requestAnimationFrame(() => setHeroTransitionEnabled(true));
+      return () => cancelAnimationFrame(id);
+    }
+  }, [heroTransitionEnabled]);
 
   // Synchronize URL hash with FAQ / Dossier modal state
   useEffect(() => {
@@ -269,8 +293,11 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
                 }}
               />
               <div className="flex flex-col">
-                <span className="font-extrabold text-sm sm:text-base text-white. tracking-tight leading-tight whitespace-nowrap">
-                  {t('GEM 2.0 COMPLIANCE PORTAL')}
+                <span className="landing-brand-title landing-brand-title-full font-extrabold text-sm sm:text-base text-white tracking-tight leading-tight whitespace-nowrap">
+                  GEM 2.0 COMPLIANCE PORTAL
+                </span>
+                <span className="landing-brand-title landing-brand-title-mobile font-extrabold text-sm text-white tracking-tight leading-tight whitespace-nowrap">
+                  GEM 2.0 COMPLIANCE
                 </span>
                 <span className="text-[10px] text-amber-400 font-medium tracking-wider whitespace-nowrap hidden sm:inline">
                   {t('Automated Bidder Compliance & Verification Suite')}
@@ -309,10 +336,11 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
       <section className="landing-hero relative w-full overflow-hidden bg-slate-950 group h-[440px] sm:h-[480px] md:h-[520px] lg:h-[560px] min-h-[420px]">
         
         <div 
-          className="relative w-full h-full flex transition-transform duration-700 ease-in-out"
+          className={`relative w-full h-full flex ${heroTransitionEnabled ? 'transition-transform duration-700 ease-in-out' : ''}`}
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          onTransitionEnd={handleHeroTransitionEnd}
         >
-          {HERO_SLIDES.map((slide, idx) => (
+          {LOOPED_HERO_SLIDES.map((slide, idx) => (
             <div key={idx} className="w-full min-w-full h-full flex-shrink-0 relative">
               <img 
                 src={slide.image} 
@@ -351,14 +379,14 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
         <div className="absolute bottom-0 left-0 right-0 h-44 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent pointer-events-none z-10" />
 
         <button 
-          onClick={() => setCurrentSlide(s => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
+          onClick={() => setCurrentSlide(s => s - 1)}
           className="absolute top-1/2 left-4 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full w-11 h-11 cursor-pointer transition focus:outline-none z-30 flex items-center justify-center border-none"
           aria-label="Previous Slide"
         >
           <i className="fa-solid fa-chevron-left text-lg" />
         </button>
         <button 
-          onClick={() => setCurrentSlide(s => (s + 1) % HERO_SLIDES.length)}
+          onClick={() => setCurrentSlide(s => s + 1)}
           className="absolute top-1/2 right-4 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white rounded-full w-11 h-11 cursor-pointer transition focus:outline-none z-30 flex items-center justify-center border-none"
           aria-label="Next Slide"
         >
@@ -369,9 +397,9 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
           {HERO_SLIDES.map((_, idx) => (
             <button
               key={idx}
-              onClick={() => setCurrentSlide(idx)}
+              onClick={() => setCurrentSlide(idx + 1)}
               className={`h-2 rounded-full transition-all border-none cursor-pointer ${
-                currentSlide === idx ? 'w-8 bg-amber-500' : 'w-2 bg-white/50 hover:bg-white/80'
+                currentSlide === idx + 1 ? 'w-8 bg-amber-500' : 'w-2 bg-white/50 hover:bg-white/80'
               }`}
               aria-label={`Slide ${idx + 1}`}
             />
@@ -557,7 +585,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 
-            <div className="group relative flex flex-col justify-between bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 border border-slate-700 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
+            <div className="landing-portal-card group relative flex flex-col justify-between bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 border border-slate-700 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
               <div className="absolute -top-16 -right-16 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl group-hover:scale-150 transition-all duration-500 pointer-events-none" />
               <div>
                 <div className="w-14 h-14 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-400 mb-6 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors duration-300">
@@ -574,7 +602,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
                   <li className="flex items-center gap-2"><i className="fa-solid fa-check text-amber-400" /> Make-in-India local content self-declaration</li>
                 </ul>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-700/60">
+              <div className="landing-portal-divider flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-700/60">
                 <Link 
                   to="/vendor/register" 
                   className="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-4 rounded-xl text-center text-xs uppercase tracking-wider transition-all"
@@ -590,7 +618,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
               </div>
             </div>
 
-            <div className="group relative flex flex-col justify-between bg-gradient-to-br from-blue-950 to-slate-900 rounded-2xl p-8 border border-blue-900/60 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
+            <div className="landing-portal-card group relative flex flex-col justify-between bg-gradient-to-br from-blue-950 to-slate-900 rounded-2xl p-8 border border-blue-900/60 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
               <div className="absolute -top-16 -right-16 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl group-hover:scale-150 transition-all duration-500 pointer-events-none" />
               <div>
                 <div className="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
@@ -607,7 +635,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
                   <li className="flex items-center gap-2"><i className="fa-solid fa-check text-blue-400" /> Immutable CAG Cryptographic Audit Ledger</li>
                 </ul>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-blue-900/60">
+              <div className="landing-portal-divider flex flex-col sm:flex-row gap-3 pt-4 border-t border-blue-900/60">
                 <Link 
                   to="/gov/register" 
                   className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl text-center text-xs uppercase tracking-wider transition-all"

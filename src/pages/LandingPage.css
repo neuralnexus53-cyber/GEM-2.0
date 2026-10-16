@@ -123,6 +123,37 @@
   display: none;
 }
 
+.landing-brand-title-mobile {
+  display: none;
+}
+
+.landing-portals > div:first-child p {
+  color: var(--landing-ink) !important;
+  font-weight: 600;
+}
+
+.landing-portal-card {
+  border-width: 1px;
+}
+
+.landing-portal-card p {
+  color: #e2e8f0 !important;
+  font-weight: 500;
+}
+
+.landing-portal-card ul {
+  color: #f1f5f9 !important;
+  font-weight: 600;
+}
+
+.landing-portal-card li {
+  line-height: 1.5;
+}
+
+.landing-portal-card .landing-portal-divider {
+  border-color: rgba(226, 232, 240, 0.3);
+}
+
 .landing-hero img {
   transition: transform 700ms ease;
 }
@@ -247,6 +278,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
     font-size: 0.76rem;
+  }
+
+  .landing-brand-title-full {
+    display: none;
+  }
+
+  .landing-brand-title-mobile {
+    display: inline;
   }
 
   .landing-header .landing-subnav {

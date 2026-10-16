@@ -22,6 +22,7 @@ In `LandingPage.tsx`, navigation starts around the first large JSX return block:
 - Sticky landing header and logo: around lines 243-276
 - Desktop navigation row: around lines 277-308
 - Landing language selector component: near the top of the file, around lines 29-57
+- The desktop/tablet brand label is `GEM 2.0 COMPLIANCE PORTAL`; phones use the shorter `GEM 2.0 COMPLIANCE` label.
 
 To change navigation labels or destinations, update the links and buttons in these sections. Use `scrollToSection('section-id')` for links that stay on the landing page.
 
@@ -38,7 +39,7 @@ The hero begins around lines 310-381.
 
 - Slide content is defined in `HERO_SLIDES` near the top of the file.
 - Images are stored under `public/images/`.
-- The carousel auto-advances every 5.5 seconds.
+- The carousel auto-advances every 5.5 seconds and uses cloned first/last slides for a seamless loop.
 - Previous/next buttons and slide dots are inside the hero section.
 
 ### 3. Main content
