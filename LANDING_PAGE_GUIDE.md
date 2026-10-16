@@ -9,7 +9,7 @@ This guide covers only the public landing page. The landing page is implemented 
 | `src/pages/LandingPage.tsx` | Landing page structure, navigation actions, carousel, modal state, section content, and footer content |
 | `src/pages/LandingPage.css` | Landing-only colors, language selector styling, mobile/tablet/laptop responsive rules, and mobile action bar |
 | `src/App.tsx` | Routes the public landing page at `/#/` and opens landing modals for `/#/faq` and `/#/dossier` |
-| `src/context/LanguageContext.tsx` | Shared translation state used by the landing page; the landing selector intentionally exposes only English and Hindi |
+| `src/context/LanguageContext.tsx` | Shared translation state used by the landing page; visible language controls expose only English and Hindi |
 
 ## Page map
 
@@ -22,6 +22,7 @@ In `LandingPage.tsx`, navigation starts around the first large JSX return block:
 - Sticky landing header and logo: around lines 243-276
 - Desktop navigation row: around lines 277-308
 - Landing language selector component: near the top of the file, around lines 29-57
+- Shared language selector: `src/components/LanguageSelector.tsx`; it also exposes only English and Hindi and displays labels without language-code badges.
 - The desktop/tablet brand label is `GEM 2.0 COMPLIANCE PORTAL`; phones use the shorter `GEM 2.0 COMPLIANCE` label.
 
 To change navigation labels or destinations, update the links and buttons in these sections. Use `scrollToSection('section-id')` for links that stay on the landing page.

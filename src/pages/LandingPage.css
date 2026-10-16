@@ -64,15 +64,6 @@
   white-space: nowrap;
 }
 
-.landing-language-code {
-  padding: 2px 5px;
-  border-radius: 4px;
-  background: var(--landing-saffron);
-  color: var(--landing-deep-navy);
-  font-size: 9px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
 .landing-language-navbar {
   padding: 8px 10px;
   background: rgba(6, 21, 42, 0.9);
@@ -231,10 +222,6 @@
 
   .landing-language-topbar::after {
     right: 27px;
-  }
-
-  .landing-language-topbar .landing-language-code {
-    font-size: 8px;
   }
 
   .landing-header {

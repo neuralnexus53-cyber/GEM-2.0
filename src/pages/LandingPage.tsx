@@ -50,7 +50,6 @@ function LandingLanguageSelector({ variant = 'topbar' }: { variant?: 'topbar' | 
           </option>
         ))}
       </select>
-      <span className="landing-language-code">{activeLanguage.code.toUpperCase()}</span>
     </label>
   );
 }
