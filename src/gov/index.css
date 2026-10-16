@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+.gov-mobile-actions {
+  display: none;
+}
+
 :root {
   color-scheme: dark;
   --gov-navy-dark: #001D3D;
@@ -402,6 +406,71 @@ body {
 }
 
 @media (max-width: 768px) {
+  body {
+    padding-bottom: 70px;
+  }
+
+  .gov-navbar .gov-top-access-bar {
+    display: none;
+  }
+
+  .gov-navbar > div:last-child {
+    padding: 8px 12px;
+    min-height: 58px;
+  }
+
+  .gov-navbar h1 {
+    max-width: 190px;
+    font-size: 0.72rem;
+  }
+
+  .gov-content {
+    max-height: none;
+    padding: 12px;
+    padding-bottom: 18px;
+  }
+
+  .gov-content .gov-table {
+    min-width: 640px;
+  }
+
+  .gov-mobile-actions {
+    position: fixed;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    left: 10px;
+    right: 10px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    z-index: 45;
+    padding: 6px;
+    border: 1px solid rgba(56, 189, 248, 0.22);
+    border-radius: 16px;
+    background: rgba(5, 17, 36, 0.95);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(16px);
+  }
+
+  .gov-mobile-actions button {
+    display: flex;
+    min-height: 48px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    border: 0;
+    border-radius: 11px;
+    background: transparent;
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+  .gov-mobile-actions button.is-active {
+    background: rgba(8, 145, 178, 0.25);
+    color: #67e8f9;
+  }
+
   .gov-top-access-bar {
     padding: 6px 12px;
     font-size: 0.675rem;

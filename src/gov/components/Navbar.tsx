@@ -85,7 +85,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full shadow-lg">
+    <header className="gov-navbar sticky top-0 z-40 w-full shadow-lg">
 
       <div className="tricolor-strip" />
 

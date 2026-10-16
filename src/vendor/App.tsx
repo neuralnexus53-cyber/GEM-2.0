@@ -257,7 +257,7 @@ export const App: React.FC = () => {
             </div>
           </div>
 
-          <main className="flex-1 px-4 sm:px-6 lg:px-8 py-5 max-w-6xl w-full mx-auto space-y-4">
+          <main className="vendor-content flex-1 px-4 sm:px-6 lg:px-8 py-5 max-w-6xl w-full mx-auto space-y-4">
             
             {activeTab === 'OVERVIEW' && (
               <div className="space-y-4">
@@ -720,6 +720,25 @@ export const App: React.FC = () => {
         </div>
 
       </div>
+
+      <nav className="vendor-mobile-actions" aria-label="Quick actions">
+        <button type="button" className={activeTab === 'OVERVIEW' ? 'is-active' : ''} onClick={() => handleTabChange('OVERVIEW')}>
+          <Home className="w-4 h-4" />
+          <span>Home</span>
+        </button>
+        <button type="button" className={activeTab === 'OCR_SCANNER' || activeTab === 'AI_DOCS' ? 'is-active' : ''} onClick={() => handleTabChange('OCR_SCANNER')}>
+          <FileCheck2 className="w-4 h-4" />
+          <span>Scan</span>
+        </button>
+        <button type="button" className={activeTab === 'ELIGIBILITY' || activeTab === 'LLAMA_PREQUAL' ? 'is-active' : ''} onClick={() => handleTabChange('ELIGIBILITY')}>
+          <ShieldCheck className="w-4 h-4" />
+          <span>Check</span>
+        </button>
+        <button type="button" className={isOpenMobile ? 'is-active' : ''} onClick={() => setIsOpenMobile(true)}>
+          <Layers className="w-4 h-4" />
+          <span>Menu</span>
+        </button>
+      </nav>
 
       <HowItWorksGuide
         isOpen={isGuideOpen}

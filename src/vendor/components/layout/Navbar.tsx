@@ -46,7 +46,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const { user, logout } = useAuth();
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-800/80 bg-[#080C16]/90 backdrop-blur-xl">
+    <header className="vendor-navbar sticky top-0 z-40 w-full border-b border-slate-800/80 bg-[#080C16]/90 backdrop-blur-xl">
       
       <div className="bg-gradient-to-r from-cyan-950/40 via-slate-900/60 to-blue-950/40 border-b border-cyan-500/15 px-4 py-1 text-xs text-slate-400 flex items-center justify-between">
         <div className="flex items-center gap-3">

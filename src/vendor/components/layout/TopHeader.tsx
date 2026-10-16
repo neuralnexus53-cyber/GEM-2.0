@@ -86,7 +86,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-[#002855] text-white border-b-2 border-[#E65100] px-3 sm:px-6 lg:px-8 py-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-md">
+    <header className="vendor-top-header sticky top-0 z-30 w-full bg-[#002855] text-white border-b-2 border-[#E65100] px-3 sm:px-6 lg:px-8 py-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-md">
 
       <div className="flex items-center justify-between sm:justify-start gap-3">
         <div className="flex items-center gap-3">
