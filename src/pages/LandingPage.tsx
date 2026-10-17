@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import { SectorWiseFaq } from '../components/SectorWiseFaq';
 import { OperationalArchitecture } from '../components/OperationalArchitecture';
 import { ComplianceTicketModal } from '../components/ComplianceTicketModal';
-import { LanguageSelector } from '../components/LanguageSelector';
-import { useLanguage } from '../context/LanguageContext';
+import { LanguageCode, useLanguage } from '../context/LanguageContext';
+import './LandingPage.css';
 
 const HERO_SLIDES = [
   {
@@ -26,6 +26,33 @@ const HERO_SLIDES = [
     desc: 'Automated 25% MSME purchase preference enforcement and Class-I local content verification, empowering domestic manufacturers and startups nationwide.',
   },
 ];
+
+const LANDING_LANGUAGES: Array<{ code: LanguageCode; label: string; nativeLabel: string }> = [
+  { code: 'en', label: 'English', nativeLabel: 'English' },
+  { code: 'hi', label: 'Hindi', nativeLabel: 'हिन्दी' },
+];
+
+function LandingLanguageSelector({ variant = 'topbar' }: { variant?: 'topbar' | 'navbar' }) {
+  const { language, setLanguage } = useLanguage();
+  const activeLanguage = LANDING_LANGUAGES.find(item => item.code === language) || LANDING_LANGUAGES[0];
+
+  return (
+    <label className={`landing-language-selector landing-language-${variant}`}>
+      <span className="landing-language-label">Language</span>
+      <select
+        aria-label="Select landing page language"
+        value={activeLanguage.code}
+        onChange={event => setLanguage(event.target.value as LanguageCode)}
+      >
+        {LANDING_LANGUAGES.map(item => (
+          <option key={item.code} value={item.code}>
+            {item.nativeLabel}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
 
 export interface LandingPageProps {
   initialFaqOpen?: boolean;
@@ -143,7 +170,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
   };
 
   return (
-    <div className="bg-gray-100 font-sans text-slate-800 relative min-h-screen">
+    <div className="landing-page bg-gray-100 font-sans text-slate-800 relative min-h-screen">
 
       <div 
         className={`fixed top-0 left-0 w-full bg-slate-950/95 backdrop-blur-lg z-50 transition-transform duration-500 ease-in-out text-white shadow-2xl border-b border-slate-800 ${
@@ -164,7 +191,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
           <h3 className="text-xl font-bold text-white mb-4">{t('GeM 2.0 Compliance Portal Navigation', 'GeM 2.0 Compliance Portal Navigation')}</h3>
           
           <div className="mb-6 flex items-center justify-center">
-            <LanguageSelector variant="navbar" />
+            <LandingLanguageSelector variant="navbar" />
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 px-6 text-center max-w-4xl">
@@ -198,7 +225,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
       </div>
 
       {/* National Sovereign Top Bar Strip */}
-      <div className="w-full bg-[#001428] text-slate-200 text-[11px] border-b border-slate-800 relative z-40">
+      <div className="landing-topbar w-full bg-[#001428] text-slate-200 text-[11px] border-b border-slate-800 relative z-40">
         <div style={{ height: '3px', background: 'linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%)' }} />
         <div className="max-w-7xl mx-auto px-4 py-1.5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2 sm:gap-3">
@@ -212,7 +239,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
         </div>
       </div>
 
-      <header className="bg-slate-900 text-white w-full sticky top-0 z-40 shadow-lg">
+      <header className="landing-header bg-slate-900 text-white w-full sticky top-0 z-40 shadow-lg">
         
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           
@@ -241,8 +268,11 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
                 }}
               />
               <div className="flex flex-col">
-                <span className="font-extrabold text-sm sm:text-base text-white tracking-tight leading-tight whitespace-nowrap">
-                  {t('GEM 2.0 COMPLIANCE PORTAL')}
+                <span className="landing-brand-title landing-brand-title-full font-extrabold text-sm sm:text-base text-white tracking-tight leading-tight whitespace-nowrap">
+                  GEM 2.0 COMPLIANCE PORTAL
+                </span>
+                <span className="landing-brand-title landing-brand-title-mobile font-extrabold text-sm text-white tracking-tight leading-tight whitespace-nowrap">
+                  GEM 2.0 COMPLIANCE
                 </span>
                 <span className="text-[10px] text-amber-400 font-medium tracking-wider whitespace-nowrap hidden sm:inline">
                   {t('Automated Bidder Compliance & Verification Suite')}
@@ -252,13 +282,13 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
           </div>
 
           <div className="flex items-center space-x-2 sm:space-x-3 text-xs font-semibold">
-            {/* 11-Language Selector */}
-            <LanguageSelector variant="topbar" />
+            {/* Landing page language selector */}
+            <LandingLanguageSelector variant="topbar" />
           </div>
 
         </div>
 
-        <div className="bg-[#002855] border-t border-sky-900/60">
+        <div className="landing-subnav bg-[#002855] border-t border-sky-900/60">
           <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-[11px] font-bold tracking-wider text-slate-100 uppercase">
             <div className="flex items-center space-x-6 overflow-x-auto py-1">
               <Link to="/" className="hover:text-amber-400 transition-colors text-amber-400">{t('Home')}</Link>
@@ -278,7 +308,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
 
       </header>
 
-      <section className="relative w-full overflow-hidden bg-slate-950 group h-[440px] sm:h-[480px] md:h-[520px] lg:h-[560px] min-h-[420px]">
+      <section className="landing-hero relative w-full overflow-hidden bg-slate-950 group h-[440px] sm:h-[480px] md:h-[520px] lg:h-[560px] min-h-[420px]">
         
         <div 
           className="relative w-full h-full flex transition-transform duration-700 ease-in-out"
@@ -354,8 +384,8 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
       <main className="w-full bg-gradient-to-b from-slate-950 via-slate-900/10 to-gray-50 text-slate-800 pb-16 relative">
         
         {/* Four Cards Grid: Overlaps blended banner edge with minimized vertical space */}
-        <section id="about" className="max-w-7xl mx-auto px-4 -mt-12 sm:-mt-16 md:-mt-20 relative z-30 text-slate-800">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 items-stretch">
+        <section id="about" className="landing-about max-w-7xl mx-auto px-4 -mt-12 sm:-mt-16 md:-mt-20 relative z-30 text-slate-800">
+          <div className="landing-about-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 items-stretch">
             
             {/* Box 1: About GeM Public Procurement */}
             <div 
@@ -462,7 +492,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
           </div>
         </section>
 
-        <section id="statistics" className="max-w-7xl mx-auto px-4 py-8 text-slate-800">
+        <section id="statistics" className="landing-statistics max-w-7xl mx-auto px-4 py-8 text-slate-800">
           <div className="bg-slate-900 rounded-2xl p-8 md:p-12 text-center relative overflow-hidden shadow-xl border border-slate-800">
             <div className="absolute -top-24 -left-24 w-64 h-64 bg-amber-500/20 rounded-full blur-3xl" />
             <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl" />
@@ -514,7 +544,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
           </div>
         </section>
 
-        <section id="portals" className="max-w-7xl mx-auto px-4 py-12 md:py-16 text-slate-800">
+        <section id="portals" className="landing-portals max-w-7xl mx-auto px-4 py-12 md:py-16 text-slate-800">
           <div className="text-center mb-10">
             <span className="text-amber-500 font-bold text-xs uppercase tracking-widest mb-2 block">
               {t('Unified Role-Based Architecture')}
@@ -529,7 +559,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
 
-            <div className="group relative flex flex-col justify-between bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 border border-slate-700 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
+            <div className="landing-portal-card group relative flex flex-col justify-between bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 border border-slate-700 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
               <div className="absolute -top-16 -right-16 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl group-hover:scale-150 transition-all duration-500 pointer-events-none" />
               <div>
                 <div className="w-14 h-14 bg-amber-500/20 rounded-xl flex items-center justify-center text-amber-400 mb-6 group-hover:bg-amber-500 group-hover:text-slate-900 transition-colors duration-300">
@@ -546,7 +576,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
                   <li className="flex items-center gap-2"><i className="fa-solid fa-check text-amber-400" /> Make-in-India local content self-declaration</li>
                 </ul>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-700/60">
+              <div className="landing-portal-divider flex flex-col sm:flex-row gap-3 pt-4 border-t border-slate-700/60">
                 <Link 
                   to="/vendor/register" 
                   className="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 px-4 rounded-xl text-center text-xs uppercase tracking-wider transition-all"
@@ -562,7 +592,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
               </div>
             </div>
 
-            <div className="group relative flex flex-col justify-between bg-gradient-to-br from-blue-950 to-slate-900 rounded-2xl p-8 border border-blue-900/60 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
+            <div className="landing-portal-card group relative flex flex-col justify-between bg-gradient-to-br from-blue-950 to-slate-900 rounded-2xl p-8 border border-blue-900/60 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden">
               <div className="absolute -top-16 -right-16 w-48 h-48 bg-blue-500/20 rounded-full blur-3xl group-hover:scale-150 transition-all duration-500 pointer-events-none" />
               <div>
                 <div className="w-14 h-14 bg-blue-500/20 rounded-xl flex items-center justify-center text-blue-400 mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
@@ -579,7 +609,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
                   <li className="flex items-center gap-2"><i className="fa-solid fa-check text-blue-400" /> Immutable CAG Cryptographic Audit Ledger</li>
                 </ul>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-blue-900/60">
+              <div className="landing-portal-divider flex flex-col sm:flex-row gap-3 pt-4 border-t border-blue-900/60">
                 <Link 
                   to="/gov/register" 
                   className="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl text-center text-xs uppercase tracking-wider transition-all"
@@ -600,7 +630,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
         </section>
 
         {/* GeM 2.0 End-to-End Operational Architecture in Simple Words & Stepwise with Photos */}
-        <section id="architecture" className="py-16 bg-slate-50 border-t border-slate-200 scroll-mt-16">
+        <section id="architecture" className="landing-architecture py-16 bg-slate-50 border-t border-slate-200 scroll-mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <OperationalArchitecture
               onOpenFaqDossier={(category = 'ALL') => {
@@ -612,7 +642,7 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
 
       </main>
 
-      <footer className="bg-slate-900 text-slate-400 pt-12 pb-8 text-xs font-normal border-t border-slate-800">
+      <footer className="landing-footer bg-slate-900 text-slate-400 pt-12 pb-8 text-xs font-normal border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pb-10 border-b border-slate-800">
@@ -765,6 +795,25 @@ export default function LandingPage({ initialFaqOpen = false, initialAboutOpen =
 
         </div>
       </footer>
+
+       <nav className="landing-mobile-actions" aria-label="Landing page shortcuts">
+         <button type="button" onClick={() => scrollToSection('portals')}>
+           <i className="fa-solid fa-door-open" />
+           <span>{t('Portals')}</span>
+         </button>
+         <button type="button" onClick={() => scrollToSection('architecture')}>
+           <i className="fa-solid fa-diagram-project" />
+           <span>{t('How it works')}</span>
+         </button>
+         <button type="button" onClick={() => scrollToSection('statistics')}>
+           <i className="fa-solid fa-chart-line" />
+           <span>{t('Live stats')}</span>
+         </button>
+         <button type="button" onClick={() => setDrawerOpen(true)}>
+           <i className="fa-solid fa-bars" />
+           <span>{t('Menu')}</span>
+         </button>
+       </nav>
 
        {aboutModalOpen && (
         <div 

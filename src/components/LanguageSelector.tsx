@@ -17,7 +17,8 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const activeLang = SUPPORTED_LANGUAGES.find(l => l.code === language) || SUPPORTED_LANGUAGES[0];
+  const visibleLanguages = SUPPORTED_LANGUAGES.filter(lang => lang.code === 'en' || lang.code === 'hi');
+  const activeLang = visibleLanguages.find(l => l.code === language) || visibleLanguages[0];
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -64,14 +65,11 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             ? 'p-1.5 rounded-md text-xs font-medium text-slate-300 hover:text-white hover:bg-white/10'
             : 'px-3 py-1.5 rounded-lg text-xs font-medium text-slate-200 hover:text-white bg-slate-800'
         }`}
-        title={`Select Language (11 Official Languages): Currently ${activeLang.label} (${activeLang.nativeLabel})`}
+        title={`Select language: Currently ${activeLang.label}`}
       >
         <Globe size={16} className="text-amber-400 shrink-0 animate-pulse" />
         <span className="font-sans tracking-wide font-bold text-white text-xs">
           {activeLang.nativeLabel}
-        </span>
-        <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-400 text-slate-950 font-mono font-extrabold uppercase shrink-0">
-          {activeLang.code.toUpperCase()}
         </span>
         <ChevronDown 
           size={14} 
@@ -95,15 +93,11 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
               <Globe size={12} />
               <span>Select & Lock Portal Language</span>
             </span>
-            <span className="text-[9px] text-emerald-400 font-mono font-semibold flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <span>{activeLang.code.toUpperCase()} Locked</span>
-            </span>
           </div>
 
           {/* Language Options Grid */}
           <div className="max-h-72 overflow-y-auto py-1 divide-y divide-slate-800/40">
-            {SUPPORTED_LANGUAGES.map((lang) => {
+            {visibleLanguages.map((lang) => {
               const isSelected = lang.code === language;
               return (
                 <button
@@ -123,18 +117,7 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                       <span className={`text-sm ${isSelected ? 'text-amber-300 font-bold' : 'text-white font-semibold'}`}>
                         {lang.nativeLabel}
                       </span>
-                      <span className="text-xs text-slate-400 font-normal">
-                        • {lang.label}
-                      </span>
-                      {isSelected && (
-                        <span className="text-[9px] px-1.5 py-0.2 rounded-xs bg-amber-400/20 text-amber-300 border border-amber-400/40 uppercase font-mono font-bold">
-                          Locked
-                        </span>
-                      )}
                     </div>
-                    <span className="text-[10px] text-slate-500 font-normal mt-0.5">
-                      {lang.region}
-                    </span>
                   </div>
 
                   {isSelected && (
@@ -147,11 +130,6 @@ export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
             })}
           </div>
 
-          {/* Footer note */}
-          <div className="px-3 py-1.5 bg-slate-950/80 border-t border-slate-800 text-[9px] text-slate-400 flex items-center justify-between">
-            <span>Digital India Bhashini</span>
-            <span className="text-amber-400 font-semibold">11 Official Languages</span>
-          </div>
         </div>
       )}
     </div>

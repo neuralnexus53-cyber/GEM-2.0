@@ -382,7 +382,7 @@ export const App: React.FC = () => {
           setIsOpenMobile={setIsOpenMobile}
         />
 
-        <main className="flex-1 w-full min-w-0 p-3 sm:p-6 lg:p-8 overflow-y-auto max-h-[calc(100vh-80px)] space-y-5">
+        <main className="gov-content flex-1 w-full min-w-0 p-3 sm:p-6 lg:p-8 overflow-y-auto max-h-[calc(100vh-80px)] space-y-5">
 
           <GovHeaderStats
             tender={activeTender}
@@ -434,6 +434,25 @@ export const App: React.FC = () => {
           </div>
         </main>
       </div>
+
+      <nav className="gov-mobile-actions" aria-label="Quick actions">
+        <button type="button" className={activeTab === 'EVAL_QUEUE' ? 'is-active' : ''} onClick={() => setActiveTab('EVAL_QUEUE')}>
+          <ShieldAlert className="w-4 h-4" />
+          <span>Queue</span>
+        </button>
+        <button type="button" className={activeTab === 'AI_SCORECARD' ? 'is-active' : ''} onClick={() => setActiveTab('AI_SCORECARD')}>
+          <Lock className="w-4 h-4" />
+          <span>AI Check</span>
+        </button>
+        <button type="button" className={activeTab === 'CAG_LEDGER' ? 'is-active' : ''} onClick={() => setActiveTab('CAG_LEDGER')}>
+          <ShieldAlert className="w-4 h-4" />
+          <span>Ledger</span>
+        </button>
+        <button type="button" className={isOpenMobile ? 'is-active' : ''} onClick={() => setIsOpenMobile(true)}>
+          <Lock className="w-4 h-4" />
+          <span>Menu</span>
+        </button>
+      </nav>
 
       <GovFooter />
 

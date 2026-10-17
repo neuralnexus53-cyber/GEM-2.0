@@ -22,6 +22,7 @@ import {
 import { AuthProvider, useAuth } from '../vendor/context/AuthContext';
 import { api } from '../vendor/services/api';
 import { LanguageSelector } from '../components/LanguageSelector';
+import './AuthPages.css';
 
 const PRESET_AVATARS = [
   { label: 'Industrial Tech', url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&auto=format&fit=crop&q=80' },
@@ -158,11 +159,11 @@ function VendorRegisterForm() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col font-sans">
+    <div className="auth-page min-h-screen bg-slate-950 text-white flex flex-col font-sans">
       
       <div style={{ height: '3px', background: 'linear-gradient(90deg, #ff9933 33.3%, #ffffff 33.3%, #ffffff 66.6%, #138808 66.6%)' }} />
 
-      <header className="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between">
+      <header className="auth-page-header bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-3 no-underline text-white">
           <img 
             src="./images/logoclone1.png" 
@@ -197,7 +198,7 @@ function VendorRegisterForm() {
         </div>
       </header>
 
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-8">
+      <main className="auth-page-main flex-1 flex items-center justify-center p-4 sm:p-8">
         <div className="w-full max-w-3xl bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-10 shadow-2xl">
           
           <div className="mb-8 text-center">
@@ -702,7 +703,7 @@ function VendorRegisterForm() {
         </div>
       </main>
 
-      <footer className="bg-slate-900/60 border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500">
+      <footer className="auth-page-footer bg-slate-900/60 border-t border-slate-800/80 py-4 px-6 text-center text-xs text-slate-500">
         <span>GEM 2.0 COMPLIANCE PORTAL • Ministry of Commerce & Industry • Smart India Hackathon 2026</span>
       </footer>
 
